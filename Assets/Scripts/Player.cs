@@ -3,14 +3,42 @@ using System;
 
 public partial class Player : CharacterBody2D
 {
-    public const float Speed = 300.0f;
-    public const float JumpVelocity = -400.0f;
+    #region Properties
+    // Jump properties
+    [Export] public float JumpHeight = 145; //pixels
+    [Export] public float TimeInAir = 0.2F; //honestly no idea
+    [Export] public float JumpSpeed;
+    [Export] public float Gravity;
+    [Export] private float _jumpLockout = 10; //frames
+    [Export] private float _currentJumpBuffer;
 
-    // Get the gravity from the project settings to be synced with RigidBody nodes.
-    public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+    // Move properties
+    [Export] public float Speed = 300f; //pixels per second
+    [Export] public float GroundSpeedCap = 500; //pixels per second
+    [Export] public float Friction = 40; //no idea
+    [Export] public float BaseWallJumpAway = 350;
+    [Export] public float WallJumpScale = 2;
 
-    // Set Gravity at runtime
-    // PhysicsServer2D.AreaSetParam(GetViewport().FindWorld2D().Space, PhysicsServer2D.AreaParameter.Gravity, <VAL>);
+    // Dash properties
+    [Export] public float DashSpeed = 400;
+    [Export] public float DashDistance = 200;
+    private float _currentDashDistance;
+
+    // Slide properties
+    [Export] public float SlideSpeed = 600;
+    [Export] public float SlideDistance = 200;
+    private float _currentSlideDistance;
+
+    // State properties
+    private bool _isFacingLeft;
+    private bool _isJumping;
+    private bool _isDashing;
+    private bool _isCrouching;
+    private bool _isSliding;
+    private bool _isDying;
+    private bool _canDash;
+    private bool _canSlide;
+    #endregion
 
     public override void _Ready()
     {
@@ -21,27 +49,39 @@ public partial class Player : CharacterBody2D
         // Set current stats?
 
         // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
-        // GRAVITY = (float)(JUMP_HEIGHT / (2 * Math.Pow(TIME_IN_AIR, 2)));
-        // JUMP_SPEED = (float)Math.Sqrt(2 * JUMP_HEIGHT * GRAVITY);
+        Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
+        JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
+
+        // Set Project gravity at runtime
+        PhysicsServer2D.AreaSetParam(GetViewport().FindWorld2D().Space, PhysicsServer2D.AreaParameter.Gravity, Gravity);
     }
 
     // TODO: Probably rework the physics to be unique, these so far are the default Godot template
 
     public override void _PhysicsProcess(double delta) // Movement
     {
-        Vector2 velocity = Velocity;
+        var velocity = Velocity;
 
-        // Add the gravity.
+        var right = Input.IsActionPressed("PlayerRight");
+        var left = Input.IsActionPressed("PlayerLeft");
+
+        var crouch = Input.IsActionPressed("PlayerDown");
+        var jump = Input.IsActionJustPressed("PlayerJump");
+
+        // var dash = Input.IsActionJustPressed("PlayerDash");
+        var shoot = Input.IsActionJustPressed("PlayerShoot");
+
+        // Add the gravity
         if (!IsOnFloor())
-            velocity.Y += gravity * (float)delta;
+            velocity.Y += Gravity * (float)delta;
 
-        // Handle Jump.
-        if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-            velocity.Y = JumpVelocity;
+        // Handle Jump
+        if (jump)
+            velocity = StartJump(velocity);
 
-        // Get the input direction and handle the movement/deceleration.
-        // As good practice, you should replace UI actions with custom gameplay actions.
-        Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+        // Get the input direction and handle the movement/deceleration
+        // As good practice, you should replace UI actions with custom gameplay actions
+        var direction = Input.GetVector("PlayerLeft", "PlayerRight", "PlayerDown", "PlayerUp");
         if (direction != Vector2.Zero)
         {
             velocity.X = direction.X * Speed;
@@ -50,6 +90,8 @@ public partial class Player : CharacterBody2D
         {
             velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed); // Applying friction
         }
+
+
 
         Velocity = velocity;
         MoveAndSlide();
@@ -64,34 +106,48 @@ public partial class Player : CharacterBody2D
     }
 
     #region Movement Methods
-    private void StartJump()
+    private Vector2 StartJump(Vector2 velocity)
     {
+        if (IsOnFloor())
+        {
+            velocity.Y -= JumpSpeed;
+        }
 
+        else if (IsOnWall())
+        {
+            // Do wall jump
+        }
+
+        _isJumping = true;
+        _currentJumpBuffer += 1;
+
+        return velocity;
     }
 
     private void StopJump()
     {
-
+        _isJumping = false;
+        _currentJumpBuffer = 0;
     }
 
     private void StartCrouch()
     {
-
+        _isCrouching = true;
     }
 
     private void StopCrouch()
     {
-
+        _isCrouching = false;
     }
 
     private void StartSlide()
     {
-
+        _isSliding = true;
     }
 
     private void StopSlide()
     {
-
+        _isSliding = false;
     }
 
     private void StartDash()
