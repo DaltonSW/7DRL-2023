@@ -1,0 +1,46 @@
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://buomjnobb1kni"]
+
+[ext_resource type="Texture2D" uid="uid://mbo3q12s5wp7" path="res://Assets/Tiles/GreyPlatformSprites.png" id="1_e032l"]
+[ext_resource type="Texture2D" uid="uid://byfrpxdrfq7uw" path="res://Assets/Tiles/BrownPlatformSprites.png" id="2_l6h7h"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kle17"]
+texture = ExtResource("1_e032l")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xjtsp"]
+texture = ExtResource("2_l6h7h")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+
+[resource]
+sources/1 = SubResource("TileSetAtlasSource_kle17")
+sources/2 = SubResource("TileSetAtlasSource_xjtsp")
