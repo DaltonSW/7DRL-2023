@@ -56,42 +56,31 @@ public partial class Player : CharacterBody2D
         PhysicsServer2D.AreaSetParam(GetViewport().FindWorld2D().Space, PhysicsServer2D.AreaParameter.Gravity, Gravity);
     }
 
-    // TODO: Probably rework the physics to be unique, these so far are the default Godot template
-
     public override void _PhysicsProcess(double delta) // Movement
     {
         var velocity = Velocity;
 
         var right = Input.IsActionPressed("PlayerRight");
         var left = Input.IsActionPressed("PlayerLeft");
-
-        var crouch = Input.IsActionPressed("PlayerDown");
+        var down = Input.IsActionPressed("PlayerDown");
         var jump = Input.IsActionJustPressed("PlayerJump");
 
         // var dash = Input.IsActionJustPressed("PlayerDash");
         var shoot = Input.IsActionJustPressed("PlayerShoot");
 
-        // Add the gravity
         if (!IsOnFloor())
             velocity.Y += Gravity * (float)delta;
 
-        // Handle Jump
         if (jump)
             velocity = StartJump(velocity);
 
-        // Get the input direction and handle the movement/deceleration
-        // As good practice, you should replace UI actions with custom gameplay actions
-        var direction = Input.GetVector("PlayerLeft", "PlayerRight", "PlayerDown", "PlayerUp");
-        if (direction != Vector2.Zero)
-        {
-            velocity.X = direction.X * Speed;
-        }
-        else
-        {
-            velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed); // Applying friction
-        }
+        if (right)
+            velocity.X = Math.Max(velocity.X - Speed, GroundSpeedCap);
 
+        if (left)
+            velocity.X = Math.Min(velocity.X + Speed, -GroundSpeedCap);
 
+        velocity.X = Mathf.MoveToward(velocity.X, 0, Friction);
 
         Velocity = velocity;
         MoveAndSlide();
