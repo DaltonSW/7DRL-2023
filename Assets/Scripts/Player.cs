@@ -290,6 +290,38 @@ namespace Cowball
             GetParent().AddChild(bullet);
         }
 
+        private void AddItem(Item newItem)
+        {
+            if (newItem.StatToChange == StatToChange.None)
+            {
+                // newItem.ThingToDo()
+                return;
+            }
+
+            switch (newItem.StatToChange)
+            {
+                case StatToChange.Health:
+                    _currentHealth += (int)newItem.AmountToChange;
+                    break;
+
+                case StatToChange.Speed:
+                    Speed += (float)newItem.AmountToChange;
+                    break;
+
+                case StatToChange.FireRate:
+                    // We'll need a shot cooldown
+                    break;
+
+                case StatToChange.JumpSpeed:
+                    JumpSpeed += (float)newItem.AmountToChange;
+                    break;
+
+                case StatToChange.None:
+                default:
+                    break;
+            }
+        }
+
 
         public void RecalcPhysics()
         {
