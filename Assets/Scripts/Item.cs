@@ -27,10 +27,8 @@ namespace Cowball
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            var image = Image.LoadFromFile($"res://Assets/Sprites/Items/{_spriteFilename}.png");
-            var spriteTexture = ImageTexture.CreateFromImage(image);
             _sprite = GetNode<Sprite2D>("./Sprite");
-            _sprite.Texture = spriteTexture;
+            _sprite.Texture = GD.Load<Texture2D>($"res://Assets/Sprites/Items/{_spriteFilename}.png");
 
         }
 
