@@ -10,9 +10,9 @@ public partial class Player : CharacterBody2D
 
     #region Properties
     // Constants
-    [Export] private float MAX_HEALTH = 5;
-    private const float INVINCIBILITY_BUFFER = 0.5F;
-    private const int SPRITE_SCALE = 1;
+    [Export] private float _maxHealth = 5;
+    private const float InvincibilityBuffer = 0.5F;
+    private const int SpriteScale = 1;
 
     // Jump properties
     [Export] public float JumpHeight = 145; //pixels
@@ -55,33 +55,17 @@ public partial class Player : CharacterBody2D
     private float _currentHealth;
 
     // Sprites
-    private AnimatedSprite2D healthSprite;
-    private AnimatedSprite2D animatedSprite;
-    private Sprite2D crouchingSprite;
-    private Sprite2D slidingSprite;
+    private AnimatedSprite2D _healthSprite;
+    private AnimatedSprite2D _animatedSprite;
 
-    // Physics collision boxes
-    private CollisionShape2D[] normalCollisionBoxes;
-    private CollisionShape2D crouchingCollision;
-    private CollisionShape2D crouchingArrowUpShape;
-    private Area2D crouchingArrowUp;
-    private CollisionShape2D slidingCollision;
-    
-    private Area2D meleeCollision;
-    private CollisionShape2D meleeCollisionShape;
-
-    // Interaction (non-physics) collision boxes
-    private CollisionShape2D normalInteraction;
-    private CollisionShape2D crouchingInteraction;
-    private CollisionShape2D slidingInteraction;
+    private CollisionPolygon2D _collisionArea; // Physics collisions
+    private CollisionPolygon2D _interactionArea; // Non-physics interactions
 
     // Sounds
-    private AudioStreamPlayer audioPlayer;
-    private AudioStreamWav jumpSound;
-    private AudioStreamWav shootSound;
-    private AudioStreamWav hurtSound;
-    private AudioStreamWav guitarHitSound;
-    private AudioStreamWav guitarMissSound;
+    private AudioStreamPlayer _audioPlayer;
+    private AudioStreamWav _jumpSound;
+    private AudioStreamWav _shootSound;
+    private AudioStreamWav _hurtSound;
 
 
     #endregion
@@ -93,6 +77,9 @@ public partial class Player : CharacterBody2D
         // Load interaction area 
         // Load sounds
         // Set current stats?
+
+        _collisionArea = GetNode<CollisionPolygon2D>("CollisionArea");
+        _interactionArea = GetNode<CollisionPolygon2D>("InteractionArea");
 
         // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
         Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
@@ -194,31 +181,16 @@ public partial class Player : CharacterBody2D
     #region Visual Methods
     private void ClearSpritesAndHitboxes()
     {
-        animatedSprite.Visible = false;
-        crouchingSprite.Visible = false;
-        slidingSprite.Visible = false;
-
-        foreach (CollisionShape2D normalCollisionBox in normalCollisionBoxes)
-        {
-            normalCollisionBox.SetDeferred("disabled", true);
-        }
-        crouchingCollision.SetDeferred("disabled", true);
-        crouchingArrowUpShape.SetDeferred("disabled", true);
-        slidingCollision.SetDeferred("disabled", true);
-
-        normalInteraction.SetDeferred("disabled", true);
-        crouchingInteraction.SetDeferred("disabled", true);
-        slidingInteraction.SetDeferred("disabled", true);
+        _animatedSprite.Visible = false;
+        _collisionArea.SetDeferred("disabled", true);
+        _interactionArea.SetDeferred("disabled", true);
     }
 
     private void ActivateNormalSpriteAndHitboxes()
     {
-        animatedSprite.Visible = true;
-        foreach (CollisionShape2D normalCollisionBox in normalCollisionBoxes)
-        {
-            normalCollisionBox.SetDeferred("disabled", false);
-        }
-        normalInteraction.SetDeferred("disabled", false);
+        _animatedSprite.Visible = true;
+        _collisionArea.SetDeferred("disabled", false);
+        _interactionArea.SetDeferred("disabled", false);
     }
 
     private void SwitchToNormalSpriteAndHitboxes()
@@ -227,60 +199,26 @@ public partial class Player : CharacterBody2D
         ActivateNormalSpriteAndHitboxes();
     }
 
-    private void ActivateCrouchSpriteAndHitboxes()
-    {
-        crouchingSprite.Visible = true;
-        crouchingCollision.SetDeferred("disabled", false);
-        crouchingArrowUpShape.SetDeferred("disabled", false);
-        crouchingInteraction.SetDeferred("disabled", false);
-    }
-
-    private void SwitchToCrouchSpriteAndHitboxes()
-    {
-        ClearSpritesAndHitboxes();
-        ActivateCrouchSpriteAndHitboxes();
-    }
-
-    private void ActivateSlideSpriteAndHitboxes()
-    {
-        slidingSprite.Visible = true;
-        slidingCollision.SetDeferred("disabled", false);
-        crouchingArrowUpShape.SetDeferred("disabled", false);
-        slidingInteraction.SetDeferred("disabled", false);
-    }
-
-    private void SwitchToSlideSpriteAndHitboxes()
-    {
-        ClearSpritesAndHitboxes();
-        ActivateSlideSpriteAndHitboxes();
-    }
-
     private void CycleTransparency(bool lighten)
     {
-        Color tempNormal = animatedSprite.Modulate;
-        Color tempCrouch = crouchingSprite.Modulate;
-        Color tempSlide = slidingSprite.Modulate;
+        var tempNormal = _animatedSprite.Modulate;
 
-        tempNormal.A = lighten ? 1 : 0.5F;	
-        tempCrouch.A = lighten ? 1 : 0.5F;	
-        tempSlide.A = lighten ? 1 : 0.5F;
+        tempNormal.A = lighten ? 1 : 0.5F;
 
-        animatedSprite.Modulate = tempNormal;
-        crouchingSprite.Modulate = tempCrouch;
-        slidingSprite.Modulate = tempSlide;
+        _animatedSprite.Modulate = tempNormal;
     }
-    
+
     private void Face(bool left)
     {
-        int xMultiplier = left ? -1 : 1;
-        GlobalTransform = new Transform2D(new Vector2(xMultiplier * SPRITE_SCALE, 0), new Vector2(0, SPRITE_SCALE), new Vector2(Position.X, Position.Y));
+        var xMultiplier = left ? -1 : 1;
+        GlobalTransform = new Transform2D(new Vector2(xMultiplier * SpriteScale, 0), new Vector2(0, SpriteScale), new Vector2(Position.X, Position.Y));
         _isFacingLeft = left;
     }
 
     private void FaceRight() { Face(false); }
     private void FaceLeft() { Face(true); }
     #endregion
-    
+
     public void RecalcPhysics()
     {
         Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
@@ -291,13 +229,13 @@ public partial class Player : CharacterBody2D
     {
         SwitchToNormalSpriteAndHitboxes();
         CycleTransparency(true);
-        animatedSprite.Play("health_death");
+        _animatedSprite.Play("health_death");
         Die();
     }
 
     private void Die()
     {
-        healthSprite.Frame = 0;
+        _healthSprite.Frame = 0;
         _isDying = true;
         ProcessMode = ProcessModeEnum.Always;
         GetTree().Paused = true;
@@ -305,7 +243,7 @@ public partial class Player : CharacterBody2D
 
     public void FallAndDie()
     {
-        animatedSprite.Play("fall_death");
+        _animatedSprite.Play("fall_death");
         Die();
         Tween tween = GetTree().CreateTween();
         var endPosition = new Vector2(Position.X, Position.Y + 200);
@@ -323,8 +261,8 @@ public partial class Player : CharacterBody2D
 
     public void HealPlayer()
     {
-        _currentHealth = MAX_HEALTH;
-        healthSprite.Frame = 5;
+        _currentHealth = _maxHealth;
+        _healthSprite.Frame = 5;
     }
 
     public void HurtPlayer()
@@ -334,10 +272,10 @@ public partial class Player : CharacterBody2D
             _currentInvincibility = 0.016667F;
             CycleTransparency(false);
             _currentHealth--;
-            healthSprite.Frame = (int)_currentHealth;
-            audioPlayer.Stream = hurtSound;
-            audioPlayer.Play();
-            if(_currentHealth == 0)
+            _healthSprite.Frame = (int)_currentHealth;
+            _audioPlayer.Stream = _hurtSound;
+            _audioPlayer.Play();
+            if (_currentHealth == 0)
             {
                 KillPlayer();
             }
@@ -351,19 +289,19 @@ public partial class Player : CharacterBody2D
         HealPlayer();
         ClearSpritesAndHitboxes();
         ActivateNormalSpriteAndHitboxes();
-        animatedSprite.Play("idle");
+        _animatedSprite.Play("idle");
         ProcessMode = ProcessModeEnum.Inherit;
         _isDying = false;
     }
 
     private void LoadSounds()
     {
-        audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
-        audioPlayer.VolumeDb = -18;
+        _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
+        _audioPlayer.VolumeDb = -18;
 
-        jumpSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/jump.wav");
-        shootSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/shoot.wav");
-        hurtSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/hurt.wav");
+        _jumpSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/jump.wav");
+        _shootSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/shoot.wav");
+        _hurtSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/hurt.wav");
         //guitarHitSound = GD.Load<AudioStreamSample>("res://Sounds/SFX/guitar_hit.wav");
         //guitarMissSound = GD.Load<AudioStreamSample>("res://Sounds/SFX/guitar_miss.wav");
         GD.Print("Sounds");
