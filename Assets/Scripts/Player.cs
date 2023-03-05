@@ -82,6 +82,7 @@ namespace Cowball
 
         // Scenes
         private PackedScene _bulletScene;
+        private PackedScene _itemScene;
 
         // Misc
         private List<Item> _items;
@@ -97,6 +98,7 @@ namespace Cowball
             // Set current stats?
 
             _bulletScene = GD.Load<PackedScene>("res://Assets/Scenes/Bullet.tscn");
+            _itemScene = GD.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
 
             _collisionArea = GetNode<CollisionPolygon2D>("CollisionPolygon");
             _interactionArea = GetNode<CollisionPolygon2D>("InteractionPolygon");
@@ -173,7 +175,10 @@ namespace Cowball
             }
 
             if (shoot)
+            {
+                SpawnItem();
                 Shoot();
+            }
 
             velocity.X = Mathf.MoveToward(velocity.X, 0, Friction);
 
@@ -293,6 +298,15 @@ namespace Cowball
             bullet.Position = bulletSpawn.GlobalPosition;
             bullet.Rotation = _armGunNode.Rotation;
             GetParent().AddChild(bullet);
+        }
+
+        private void SpawnItem()
+        {
+            var item = (Item)_itemScene.Instantiate();
+            var itemParams = new ItemParams("Heart", "heart", StatToChange.Health, 1);
+            item.Initialize(itemParams);
+            item.Position = GlobalPosition;
+            GetParent().AddChild(item);
         }
 
         private void AddItem(Item newItem)

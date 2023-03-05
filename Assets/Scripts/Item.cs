@@ -12,7 +12,10 @@ namespace Cowball
         JumpSpeed,
     }
 
-    public partial class Item : Node
+    public readonly record struct ItemParams(string ItemName, string SpriteFilename, StatToChange StatToChange,
+        double AmountToChange);
+
+    public partial class Item : Node2D
     {
         public StatToChange StatToChange;
         public double AmountToChange;
@@ -20,27 +23,13 @@ namespace Cowball
         private string _spriteFilename;
         private Sprite2D _sprite;
 
-        public Item(string itemName, string spriteFilename, StatToChange statToChange, double amountToChange)
-        {
-            StatToChange = statToChange;
-            AmountToChange = amountToChange;
-            _spriteFilename = spriteFilename;
-            _itemName = itemName;
-        }
-
-        // IDK how to do what David wants to do with this
-        // TODO: This
-        // public Item(string itemName, string spriteFilename, Func<T> function)
-        // {
-        //
-        // }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            var spriteTexture =
-                ImageTexture.CreateFromImage(Image.LoadFromFile($"res://Assets/Sprites/Items/{_spriteFilename}.png"));
-            _sprite = GetNode<Sprite2D>("Sprite");
+            var image = Image.LoadFromFile($"res://Assets/Sprites/Items/{_spriteFilename}.png");
+            var spriteTexture = ImageTexture.CreateFromImage(image);
+            _sprite = GetNode<Sprite2D>("./Sprite");
             _sprite.Texture = spriteTexture;
 
         }
@@ -48,6 +37,14 @@ namespace Cowball
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(double delta)
         {
+        }
+
+        public void Initialize(ItemParams itemParams)
+        {
+            StatToChange = itemParams.StatToChange;
+            AmountToChange = itemParams.AmountToChange;
+            _spriteFilename = itemParams.SpriteFilename;
+            _itemName = itemParams.ItemName;
         }
     }
 }
