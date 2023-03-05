@@ -24,7 +24,7 @@ namespace Cowball
         [Export] private float _currentJumpBuffer;
 
         // Move properties
-        [Export] public float Speed = 300f; //pixels per second
+        [Export] public float Speed = 300F; //pixels per second
         [Export] public float GroundSpeedCap = 500; //pixels per second
         [Export] public float Friction = 40; //no idea
         [Export] public float BaseWallJumpAway = 350;
@@ -42,7 +42,8 @@ namespace Cowball
 
         // Drop properties
         [Export] public float DropGravMult = 10;
-        [Export] public float DropBounceMult = 2;
+        [Export] public float DropInitBoost = 750;
+        [Export] public float DropBounceMult = 0.2F;
         private Vector2 _dropInitPos;
 
         // State properties
@@ -125,7 +126,8 @@ namespace Cowball
                 if (drop && !_isDropping)
                 {
                     _isDropping = true;
-                    Gravity *= DropGravMult;
+                    // Gravity *= DropGravMult;
+                    velocity.Y = DropInitBoost;
                     velocity.X = 0;
                     _dropInitPos = GlobalPosition;
                 }
@@ -135,7 +137,7 @@ namespace Cowball
             if (!_isDropping)
             {
                 if (jump)
-                    velocity = StartJump(velocity);
+                    velocity = StartJump(velocity, JumpSpeed);
 
                 if (right)
                 {
@@ -154,10 +156,15 @@ namespace Cowball
             {
                 _isDropping = false;
                 var totalDistFallen = Mathf.Abs(_dropInitPos.Y - GlobalPosition.Y);
-                Gravity /= DropGravMult;
-                JumpHeight *= DropBounceMult;
-                velocity = StartJump(velocity);
-                JumpHeight /= DropBounceMult;
+                // Gravity /= DropGravMult;
+                // JumpHeight *= DropBounceMult;
+                var speed = JumpSpeed;
+                if (totalDistFallen > JumpHeight)
+                {
+                    speed += (float)Math.Sqrt(2 * totalDistFallen * DropBounceMult * Gravity);
+                }
+                velocity = StartJump(velocity, speed);
+                // JumpHeight /= DropBounceMult;
             }
 
             if (shoot)
@@ -180,11 +187,11 @@ namespace Cowball
         }
 
         #region Movement Methods
-        private Vector2 StartJump(Vector2 velocity)
+        private Vector2 StartJump(Vector2 velocity, float jumpSpeed)
         {
             if (IsOnFloor())
             {
-                velocity.Y -= JumpSpeed;
+                velocity.Y -= jumpSpeed;
             }
 
             else if (IsOnWall())
