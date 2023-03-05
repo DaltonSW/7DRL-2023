@@ -60,6 +60,7 @@ namespace Cowball
         private AnimatedSprite2D _animatedSprite;
         private Sprite2D _ballSprite;
         private Sprite2D _hatSprite;
+        private Node2D _armGunNode;
 
         private CollisionPolygon2D _collisionArea; // Physics collisions
         private CollisionPolygon2D _interactionArea; // Non-physics interactions
@@ -84,8 +85,9 @@ namespace Cowball
             _collisionArea = GetNode<CollisionPolygon2D>("CollisionPolygon");
             _interactionArea = GetNode<CollisionPolygon2D>("InteractionPolygon");
 
-            _ballSprite = GetNode<Sprite2D>("Ball");
-            _hatSprite = GetNode<Sprite2D>("Hat");
+            _ballSprite = GetNode<Sprite2D>("BallSprite");
+            _hatSprite = GetNode<Sprite2D>("HatSprite");
+            _armGunNode = GetNode<Node2D>("ArmGun");
 
             // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
             Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
@@ -134,6 +136,8 @@ namespace Cowball
         public override void _Process(double delta)
         {
             base._Process(delta);
+
+            _armGunNode.Rotation = _ballSprite.GetAngleTo(GetGlobalMousePosition());
 
             // Animation checking / changing
             // Timer countdowns and resets (invincibility, shooting cooldown, etc)

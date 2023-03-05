@@ -18,7 +18,7 @@ position = Vector2(12, -3)
 texture = ExtResource("4_wh71h")
 offset = Vector2(0, 0.5)
 
-[node name="Marker2D" type="Marker2D" parent="ArmGun/ArmGunSprite"]
+[node name="BulletSpawn" type="Marker2D" parent="ArmGun/ArmGunSprite"]
 position = Vector2(5, -0.5)
 gizmo_extents = 4.0
 
