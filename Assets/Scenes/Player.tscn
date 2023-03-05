@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Assets/Scripts/Player.cs" id="1_wxbm8"]
 [ext_resource type="Texture2D" uid="uid://i6qqkqxbftfx" path="res://Assets/Sprites/Cowball/cowball.png" id="2_5juqf"]
 [ext_resource type="Texture2D" uid="uid://dagxk3ex64gko" path="res://Assets/Sprites/Cowball/hat.png" id="3_kovn6"]
-[ext_resource type="Texture2D" uid="uid://w43drgbc35gq" path="res://Assets/Sprites/Cowball/gun.png" id="4_wh71h"]
+[ext_resource type="Texture2D" uid="uid://77r4ey7f60jy" path="res://Assets/Sprites/Cowball/gun.png" id="4_wh71h"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_57f4n"]
 radius = 8.0
@@ -11,17 +11,24 @@ radius = 8.0
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_wxbm8")
 
-[node name="Ball" type="Sprite2D" parent="."]
+[node name="ArmGun" type="Node2D" parent="."]
+
+[node name="ArmGunSprite" type="Sprite2D" parent="ArmGun"]
+position = Vector2(12, -3)
+texture = ExtResource("4_wh71h")
+offset = Vector2(0, 0.5)
+
+[node name="Marker2D" type="Marker2D" parent="ArmGun/ArmGunSprite"]
+position = Vector2(5, -0.5)
+gizmo_extents = 4.0
+
+[node name="BallSprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_5juqf")
 
 [node name="CircleCollision" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("CircleShape2D_57f4n")
 disabled = true
-
-[node name="Hat" type="Sprite2D" parent="."]
-position = Vector2(-0.5, -8)
-texture = ExtResource("3_kovn6")
 
 [node name="CollisionPolygon" type="CollisionPolygon2D" parent="."]
 visible = false
@@ -31,7 +38,6 @@ polygon = PackedVector2Array(8, -2, 7, -2, 7, -4, 6, -4, 6, -5, 5, -5, 5, -6, 4,
 visible = false
 polygon = PackedVector2Array(8, -2, 7, -2, 7, -4, 6, -4, 6, -5, 5, -5, 5, -6, 4, -6, 4, -7, 2, -7, 2, -8, -2, -8, -2, -7, -4, -7, -4, -6, -5, -6, -5, -5, -6, -5, -6, -4, -7, -4, -7, -2, -8, -2, -8, 2, -7, 2, -7, 4, -6, 4, -6, 5, -5, 5, -5, 6, -4, 6, -4, 7, -2, 7, -2, 8, 2, 8, 2, 7, 4, 7, 4, 6, 5, 6, 5, 5, 6, 5, 6, 4, 7, 4, 7, 2, 8, 2)
 
-[node name="ArmGun" type="Sprite2D" parent="."]
-position = Vector2(13, -3)
-texture = ExtResource("4_wh71h")
-offset = Vector2(-0.5, 0.5)
+[node name="HatSprite" type="Sprite2D" parent="."]
+position = Vector2(-0.5, -8)
+texture = ExtResource("3_kovn6")
