@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Cowball
 {
@@ -80,6 +82,9 @@ namespace Cowball
 
         // Scenes
         private PackedScene _bulletScene;
+
+        // Misc
+        private List<Item> _items;
 
         #endregion
 
@@ -292,6 +297,8 @@ namespace Cowball
 
         private void AddItem(Item newItem)
         {
+            _items.Add(newItem);
+
             if (newItem.StatToChange == StatToChange.None)
             {
                 // newItem.ThingToDo()
