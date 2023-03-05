@@ -17,7 +17,7 @@ namespace Cowball
 
         // Jump properties
         [Export] public float JumpHeight = 145; //pixels
-        [Export] public float TimeInAir = 0.2F; //honestly no idea
+        [Export] public float TimeInAir = 0.33F; //honestly no idea
         [Export] public float JumpSpeed;
         [Export] public float Gravity;
         [Export] private float _jumpLockout = 10; //frames
@@ -50,10 +50,9 @@ namespace Cowball
         private bool _canDash;
         private bool _canSlide;
 
-        private float _currentInvincibility = 0;
-
         // Health
         private float _currentHealth;
+        private float _currentInvincibility = 0;
 
         // Sprites
         private AnimatedSprite2D _healthSprite;
@@ -62,6 +61,7 @@ namespace Cowball
         private Sprite2D _hatSprite;
         private Node2D _armGunNode;
 
+        // Player bounding
         private CollisionPolygon2D _collisionArea; // Physics collisions
         private CollisionPolygon2D _interactionArea; // Non-physics interactions
 
@@ -71,6 +71,8 @@ namespace Cowball
         private AudioStreamWav _shootSound;
         private AudioStreamWav _hurtSound;
 
+        // Scenes
+        private PackedScene _bulletScene;
 
         #endregion
 
@@ -81,6 +83,8 @@ namespace Cowball
             // Load interaction area 
             // Load sounds
             // Set current stats?
+
+            _bulletScene = GD.Load<PackedScene>("res://Assets/Scenes/Bullet.tscn");
 
             _collisionArea = GetNode<CollisionPolygon2D>("CollisionPolygon");
             _interactionArea = GetNode<CollisionPolygon2D>("InteractionPolygon");
@@ -126,6 +130,9 @@ namespace Cowball
                 velocity.X = Math.Min(velocity.X + Speed, -GroundSpeedCap);
                 FaceLeft();
             }
+
+            if (shoot)
+                Shoot();
 
             velocity.X = Mathf.MoveToward(velocity.X, 0, Friction);
 
@@ -237,6 +244,16 @@ namespace Cowball
         public void FaceRight() { Face(false); }
 
         #endregion
+
+        private void Shoot()
+        {
+            var bullet = (Bullet)_bulletScene.Instantiate();
+            var bulletSpawn = GetNode<Marker2D>("ArmGun/BulletSpawn");
+            bullet.Position = bulletSpawn.GlobalPosition;
+            bullet.Rotation = _armGunNode.Rotation;
+            GetParent().AddChild(bullet);
+        }
+
 
         public void RecalcPhysics()
         {

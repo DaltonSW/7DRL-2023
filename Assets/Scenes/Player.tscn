@@ -13,14 +13,14 @@ script = ExtResource("1_wxbm8")
 
 [node name="ArmGun" type="Node2D" parent="."]
 
+[node name="BulletSpawn" type="Marker2D" parent="ArmGun"]
+position = Vector2(17, -3.5)
+gizmo_extents = 4.0
+
 [node name="ArmGunSprite" type="Sprite2D" parent="ArmGun"]
 position = Vector2(12, -3)
 texture = ExtResource("4_wh71h")
 offset = Vector2(0, 0.5)
-
-[node name="BulletSpawn" type="Marker2D" parent="ArmGun/ArmGunSprite"]
-position = Vector2(5, -0.5)
-gizmo_extents = 4.0
 
 [node name="BallSprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_5juqf")
