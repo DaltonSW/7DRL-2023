@@ -58,6 +58,8 @@ namespace Cowball
         // Sprites
         private AnimatedSprite2D _healthSprite;
         private AnimatedSprite2D _animatedSprite;
+        private Sprite2D _ballSprite;
+        private Sprite2D _hatSprite;
 
         private CollisionPolygon2D _collisionArea; // Physics collisions
         private CollisionPolygon2D _interactionArea; // Non-physics interactions
@@ -79,8 +81,11 @@ namespace Cowball
             // Load sounds
             // Set current stats?
 
-            _collisionArea = GetNode<CollisionPolygon2D>("CollisionArea");
-            _interactionArea = GetNode<CollisionPolygon2D>("InteractionArea");
+            _collisionArea = GetNode<CollisionPolygon2D>("CollisionPolygon");
+            _interactionArea = GetNode<CollisionPolygon2D>("InteractionPolygon");
+
+            _ballSprite = GetNode<Sprite2D>("Ball");
+            _hatSprite = GetNode<Sprite2D>("Hat");
 
             // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
             Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
@@ -109,10 +114,16 @@ namespace Cowball
                 velocity = StartJump(velocity);
 
             if (right)
+            {
                 velocity.X = Math.Max(velocity.X - Speed, GroundSpeedCap);
+                FaceRight();
+            }
 
             if (left)
+            {
                 velocity.X = Math.Min(velocity.X + Speed, -GroundSpeedCap);
+                FaceLeft();
+            }
 
             velocity.X = Mathf.MoveToward(velocity.X, 0, Friction);
 
@@ -211,13 +222,16 @@ namespace Cowball
 
         private void Face(bool left)
         {
-            var xMultiplier = left ? -1 : 1;
-            GlobalTransform = new Transform2D(new Vector2(xMultiplier * SpriteScale, 0), new Vector2(0, SpriteScale), new Vector2(Position.X, Position.Y));
+            // var xMultiplier = left ? -1 : 1;
+            // GlobalTransform = new Transform2D(new Vector2(xMultiplier * SpriteScale, 0), new Vector2(0, SpriteScale), new Vector2(Position.X, Position.Y));
             _isFacingLeft = left;
+            _ballSprite.FlipH = left;
+            _hatSprite.FlipH = left;
         }
 
-        private void FaceRight() { Face(false); }
-        private void FaceLeft() { Face(true); }
+        public void FaceLeft() { Face(true); }
+        public void FaceRight() { Face(false); }
+
         #endregion
 
         public void RecalcPhysics()
