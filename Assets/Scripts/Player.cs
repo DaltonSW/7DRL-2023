@@ -40,6 +40,11 @@ namespace Cowball
         [Export] public float SlideDistance = 200;
         private float _currentSlideDistance;
 
+        // Drop properties
+        [Export] public float DropGravMult = 10;
+        [Export] public float DropBounceMult = 2;
+        private Vector2 _dropInitPos;
+
         // State properties
         private bool _isFacingLeft;
         private bool _isJumping;
@@ -47,6 +52,7 @@ namespace Cowball
         private bool _isCrouching;
         private bool _isSliding;
         private bool _isDying;
+        private bool _isDropping;
         private bool _canDash;
         private bool _canSlide;
 
@@ -108,27 +114,50 @@ namespace Cowball
             var right = Input.IsActionPressed("PlayerRight");
             var left = Input.IsActionPressed("PlayerLeft");
             var down = Input.IsActionPressed("PlayerDown");
+            var drop = Input.IsActionJustPressed("PlayerDown");
             var jump = Input.IsActionJustPressed("PlayerJump");
 
             // var dash = Input.IsActionJustPressed("PlayerDash");
             var shoot = Input.IsActionJustPressed("PlayerShoot");
 
             if (!IsOnFloor())
-                velocity.Y += Gravity * (float)delta;
-
-            if (jump)
-                velocity = StartJump(velocity);
-
-            if (right)
             {
-                velocity.X = Math.Max(velocity.X - Speed, GroundSpeedCap);
-                FaceRight();
+                if (drop && !_isDropping)
+                {
+                    _isDropping = true;
+                    Gravity *= DropGravMult;
+                    velocity.X = 0;
+                    _dropInitPos = GlobalPosition;
+                }
+                velocity.Y += Gravity * (float)delta;
             }
 
-            if (left)
+            if (!_isDropping)
             {
-                velocity.X = Math.Min(velocity.X + Speed, -GroundSpeedCap);
-                FaceLeft();
+                if (jump)
+                    velocity = StartJump(velocity);
+
+                if (right)
+                {
+                    velocity.X = Math.Max(velocity.X - Speed, GroundSpeedCap);
+                    FaceRight();
+                }
+
+                if (left)
+                {
+                    velocity.X = Math.Min(velocity.X + Speed, -GroundSpeedCap);
+                    FaceLeft();
+                }
+            }
+
+            else if (IsOnFloor())
+            {
+                _isDropping = false;
+                var totalDistFallen = Mathf.Abs(_dropInitPos.Y - GlobalPosition.Y);
+                Gravity /= DropGravMult;
+                JumpHeight *= DropBounceMult;
+                velocity = StartJump(velocity);
+                JumpHeight /= DropBounceMult;
             }
 
             if (shoot)
@@ -343,5 +372,7 @@ namespace Cowball
             GD.Print("Sounds");
         }
     }
-
 }
+
+
+
