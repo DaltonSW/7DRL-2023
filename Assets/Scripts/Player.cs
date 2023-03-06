@@ -21,12 +21,13 @@ namespace Cowball
         [Export] public float JumpHeight = 40; //pixels
         [Export] public float TimeInAir = 0.2F; //honestly no idea
         [Export] public float JumpSpeed;
-        [Export] public float Gravity = 2;
+        [Export] public float Gravity;
         [Export] private float _jumpLockout = 10; //frames
         [Export] private float _currentJumpBuffer;
+        [Export] public double MaxVertSpeed = 400F;
 
         // Move properties
-        [Export] public float Speed = 80F; //pixels per second
+        [Export] public float Speed = 150F; //pixels per second
         [Export] public float GroundSpeedCap = 400; //pixels per second
         [Export] public float Friction = 60; //no idea
         [Export] public float BaseWallJumpAway = 350;
@@ -108,7 +109,7 @@ namespace Cowball
             _armGunNode = GetNode<Node2D>("ArmGun");
 
             // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
-            // Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
+            Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
             JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
 
             _items = new List<Item>();
@@ -169,7 +170,7 @@ namespace Cowball
                 {
                     speed += (float)Math.Sqrt(2 * totalDistFallen * DropBounceMult * Gravity);
                 }
-                velocity = StartJump(velocity, speed);
+                velocity = StartJump(velocity, (float)Mathf.Min(speed, MaxVertSpeed));
             }
 
             if (shoot)
