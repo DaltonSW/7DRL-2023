@@ -31,17 +31,16 @@ shape = SubResource("CircleShape2D_57f4n")
 disabled = true
 
 [node name="CollisionPolygon" type="CollisionPolygon2D" parent="."]
-visible = false
-polygon = PackedVector2Array(8, -2, 7, -2, 7, -4, 6, -4, 6, -5, 5, -5, 5, -6, 4, -6, 4, -7, 2, -7, 2, -8, -2, -8, -2, -7, -4, -7, -4, -6, -5, -6, -5, -5, -6, -5, -6, -4, -7, -4, -7, -2, -8, -2, -8, 2, -7, 2, -7, 4, -6, 4, -6, 5, -5, 5, -5, 6, -4, 6, -4, 7, -2, 7, -2, 8, 2, 8, 2, 7, 4, 7, 4, 6, 5, 6, 5, 5, 6, 5, 6, 4, 7, 4, 7, 2, 8, 2)
+polygon = PackedVector2Array(-8, 2, -7, 4, -6, 4, -6, 5, -5, 5, -5, 6, -4, 6, -4, 7, -2, 7, -2, 8, 2, 8, 2, 7, 4, 7, 4, 6, 5, 6, 5, 5, 6, 5, 6, 4, 7, 4, 8, 2)
 
 [node name="HatSprite" type="Sprite2D" parent="."]
 position = Vector2(-0.5, -8)
 texture = ExtResource("3_kovn6")
 
 [node name="Area2D" type="Area2D" parent="."]
+visible = false
 
 [node name="InteractionPolygon" type="CollisionPolygon2D" parent="Area2D"]
-visible = false
 polygon = PackedVector2Array(8, -2, 7, -2, 7, -4, 6, -4, 6, -5, 5, -5, 5, -6, 4, -6, 4, -7, 2, -7, 2, -8, -2, -8, -2, -7, -4, -7, -4, -6, -5, -6, -5, -5, -6, -5, -6, -4, -7, -4, -7, -2, -8, -2, -8, 2, -7, 2, -7, 4, -6, 4, -6, 5, -5, 5, -5, 6, -4, 6, -4, 7, -2, 7, -2, 8, 2, 8, 2, 7, 4, 7, 4, 6, 5, 6, 5, 5, 6, 5, 6, 4, 7, 4, 7, 2, 8, 2)
 
 [connection signal="area_entered" from="Area2D" to="." method="OnAreaEntered"]
