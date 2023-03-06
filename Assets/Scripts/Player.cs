@@ -26,7 +26,7 @@ namespace Cowball
         [Export] private float _currentJumpBuffer;
 
         // Move properties
-        [Export] public float Speed = 300F; //pixels per second
+        [Export] public float Speed = 80F; //pixels per second
         [Export] public float GroundSpeedCap = 500; //pixels per second
         [Export] public float Friction = 40; //no idea
         [Export] public float BaseWallJumpAway = 350;
@@ -101,7 +101,7 @@ namespace Cowball
             _itemScene = GD.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
 
             _collisionArea = GetNode<CollisionPolygon2D>("CollisionPolygon");
-            _interactionArea = GetNode<CollisionPolygon2D>("InteractionPolygon");
+            // _interactionArea = GetNode<CollisionPolygon2D>("InteractionPolygon");
 
             _ballSprite = GetNode<Sprite2D>("BallSprite");
             _hatSprite = GetNode<Sprite2D>("HatSprite");
@@ -110,6 +110,8 @@ namespace Cowball
             // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
             Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
             JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
+
+            _items = new List<Item>();
 
             // Set Project gravity at runtime
             PhysicsServer2D.AreaSetParam(GetViewport().FindWorld2D().Space, PhysicsServer2D.AreaParameter.Gravity, Gravity);
@@ -133,7 +135,6 @@ namespace Cowball
                 if (drop && !_isDropping)
                 {
                     _isDropping = true;
-                    // Gravity *= DropGravMult;
                     velocity.Y = DropInitBoost;
                     velocity.X = 0;
                     _dropInitPos = GlobalPosition;
@@ -148,13 +149,13 @@ namespace Cowball
 
                 if (right)
                 {
-                    velocity.X = Math.Max(velocity.X - Speed, GroundSpeedCap);
+                    velocity.X = Math.Min(velocity.X + Speed, GroundSpeedCap);
                     FaceRight();
                 }
 
                 if (left)
                 {
-                    velocity.X = Math.Min(velocity.X + Speed, -GroundSpeedCap);
+                    velocity.X = Math.Max(velocity.X - Speed, -GroundSpeedCap);
                     FaceLeft();
                 }
             }
@@ -163,15 +164,12 @@ namespace Cowball
             {
                 _isDropping = false;
                 var totalDistFallen = Mathf.Abs(_dropInitPos.Y - GlobalPosition.Y);
-                // Gravity /= DropGravMult;
-                // JumpHeight *= DropBounceMult;
                 var speed = JumpSpeed;
                 if (totalDistFallen > JumpHeight)
                 {
                     speed += (float)Math.Sqrt(2 * totalDistFallen * DropBounceMult * Gravity);
                 }
                 velocity = StartJump(velocity, speed);
-                // JumpHeight /= DropBounceMult;
             }
 
             if (shoot)
@@ -206,7 +204,7 @@ namespace Cowball
 
             else if (IsOnWall())
             {
-                // Do wall jump
+                // Do wall jump, if we even have one
             }
 
             _isJumping = true;
@@ -305,7 +303,9 @@ namespace Cowball
             var item = (Item)_itemScene.Instantiate();
             var itemParams = new ItemParams("Heart", "heart", StatToChange.Health, 1);
             item.Initialize(itemParams);
-            item.Position = GlobalPosition;
+            var position = GlobalPosition;
+            position.X += 50;
+            item.Position = position;
             GetParent().AddChild(item);
         }
 
@@ -341,6 +341,13 @@ namespace Cowball
                 default:
                     break;
             }
+        }
+
+        public void OnAreaEntered(Area2D area)
+        {
+            if (!area.IsInGroup("items")) return;
+            var item = area.GetParent<Item>();
+            item.QueueFree();
         }
 
 

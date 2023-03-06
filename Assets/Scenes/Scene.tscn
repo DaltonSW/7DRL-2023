@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://buomjnobb1kni" path="res://Assets/Tiles/GreyPlatforms.tres" id="1_h7111"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="2_fkqyy"]
 
-[node name="Node2D" type="Node2D"]
+[node name="Level" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
 scale = Vector2(2, 2)
