@@ -19,16 +19,17 @@ namespace Cowball
 
         // Jump properties
         [Export] public float JumpHeight = 40; //pixels
-        [Export] public float TimeInAir = 0.2F; //honestly no idea
+        [Export] public float TimeInAir = 0.18F; //honestly no idea
         [Export] public float JumpSpeed;
         [Export] public float Gravity;
         [Export] private float _jumpLockout = 10; //frames
         [Export] private float _currentJumpBuffer;
-        [Export] public double MaxVertSpeed = 400F;
+        [Export] public float MaxVertSpeed = 465F; // pixels above ground (360 will cap you at half of a 720p window)
+        [Export] public float JumpBrakeDamping = 1F;
 
         // Move properties
         [Export] public float Speed = 150F; //pixels per second
-        [Export] public float GroundSpeedCap = 400; //pixels per second
+        [Export] public float GroundSpeedCap = 375; //pixels per second
         [Export] public float Friction = 60; //no idea
         [Export] public float BaseWallJumpAway = 350;
         [Export] public float WallJumpScale = 2;
@@ -45,8 +46,8 @@ namespace Cowball
 
         // Drop properties
         [Export] public float DropGravMult = 10;
-        [Export] public float DropInitBoost = 750;
-        [Export] public float DropBounceMult = 0.7F;
+        [Export] public float DropInitBoost = 600;
+        [Export] public float DropBounceMult = 0.4F;
         private Vector2 _dropInitPos;
 
         // State properties
@@ -164,13 +165,22 @@ namespace Cowball
             else if (IsOnFloor())
             {
                 _isDropping = false;
-                var totalDistFallen = Mathf.Abs(_dropInitPos.Y - GlobalPosition.Y);
-                var speed = JumpSpeed;
-                if (totalDistFallen > JumpHeight * 0.8)
+                if (Input.IsActionPressed("BrakeBounce"))
                 {
-                    speed += (float)Math.Sqrt(2 * totalDistFallen * DropBounceMult * Gravity);
+                    velocity = StartJump(velocity, (float)(JumpSpeed * JumpBrakeDamping));
                 }
-                velocity = StartJump(velocity, (float)Mathf.Min(speed, MaxVertSpeed));
+
+                else
+                {
+                    var totalDistFallen = Mathf.Abs(_dropInitPos.Y - GlobalPosition.Y);
+                    var speed = JumpSpeed;
+                    if (totalDistFallen > JumpHeight * 0.6) // Arbitrary value
+                    {
+                        speed += (float)Math.Sqrt(2 * totalDistFallen * DropBounceMult * Gravity);
+                    }
+                    velocity = StartJump(velocity, (float)Mathf.Min(speed, MaxVertSpeed));
+                }
+
             }
 
             if (shoot)
