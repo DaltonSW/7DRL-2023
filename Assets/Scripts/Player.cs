@@ -58,6 +58,7 @@ namespace Cowball
         private bool _isSliding;
         private bool _isDying;
         private bool _isDropping;
+        private bool _isHardDropping;
         private bool _canDash;
         private bool _canSlide;
 
@@ -125,21 +126,21 @@ namespace Cowball
 
             var right = Input.IsActionPressed("PlayerRight");
             var left = Input.IsActionPressed("PlayerLeft");
-            var down = Input.IsActionPressed("PlayerDown");
-            var drop = Input.IsActionJustPressed("PlayerDown");
-            var jump = Input.IsActionJustPressed("PlayerJump");
 
-            // var dash = Input.IsActionJustPressed("PlayerDash");
+            var softDrop = Input.IsActionJustPressed("SoftBounce");
+            var hardDrop = Input.IsActionJustPressed("HardBounce");
+
             var shoot = Input.IsActionJustPressed("PlayerShoot");
 
             if (!IsOnFloor())
             {
-                if (drop && !_isDropping)
+                if (softDrop || hardDrop)
                 {
                     _isDropping = true;
                     velocity.Y = DropInitBoost;
                     //velocity.X = 0;
                     _dropInitPos = GlobalPosition;
+                    _isHardDropping = hardDrop;
                 }
                 velocity.Y += Gravity * (float)delta;
             }
@@ -162,12 +163,11 @@ namespace Cowball
                 velocity = StartJump(velocity, JumpSpeed);
             }
 
-            else if (IsOnFloor())
+            else if (IsOnFloor()) // If is dropping and on floor
             {
-                _isDropping = false;
-                if (Input.IsActionPressed("BrakeBounce"))
+                if (_isHardDropping)
                 {
-                    velocity = StartJump(velocity, (float)(JumpSpeed * JumpBrakeDamping));
+                    velocity = StartJump(velocity, (JumpSpeed * JumpBrakeDamping));
                 }
 
                 else
@@ -178,8 +178,10 @@ namespace Cowball
                     {
                         speed += (float)Math.Sqrt(2 * totalDistFallen * DropBounceMult * Gravity);
                     }
-                    velocity = StartJump(velocity, (float)Mathf.Min(speed, MaxVertSpeed));
+                    velocity = StartJump(velocity, Mathf.Min(speed, MaxVertSpeed));
                 }
+                _isDropping = false;
+                _isHardDropping = false;
 
             }
 
