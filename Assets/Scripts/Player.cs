@@ -46,7 +46,8 @@ namespace Cowball
 
         // Drop properties
         [Export] public float DropGravMult = 10;
-        [Export] public float DropInitBoost = 600;
+        [Export] public float SoftDropInitBoost = 600;
+        [Export] public float HardDropInitBoost = 750;
         [Export] public float DropBounceMult = 0.4F;
         private Vector2 _dropInitPos;
 
@@ -64,12 +65,12 @@ namespace Cowball
 
         // Health
         private float _currentHealth;
-        private float _currentInvincibility = 0;
+        private float _currentInvincibility;
 
         // Sprites
         private AnimatedSprite2D _healthSprite;
         private AnimatedSprite2D _animatedSprite;
-        private Sprite2D _ballSprite;
+        private AnimatedSprite2D _ballSprite;
         private Sprite2D _hatSprite;
         private Node2D _armGunNode;
 
@@ -95,20 +96,19 @@ namespace Cowball
         public override void _Ready()
         {
             base._Ready();
-            // Load PackedScenes
-            // Load interaction area 
-            // Load sounds
-            // Set current stats?
 
             _bulletScene = GD.Load<PackedScene>("res://Assets/Scenes/Bullet.tscn");
             _itemScene = GD.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
 
             _collisionArea = GetNode<CollisionPolygon2D>("CollisionPolygon");
-            // _interactionArea = GetNode<CollisionPolygon2D>("InteractionPolygon");
+            _interactionArea = GetNode<CollisionPolygon2D>("Area2D/InteractionPolygon");
 
-            _ballSprite = GetNode<Sprite2D>("BallSprite");
+            // _ballSprite = GetNode<Sprite2D>("BallSprite");
+            _ballSprite = GetNode<AnimatedSprite2D>("AnimatedBallSprite");
             _hatSprite = GetNode<Sprite2D>("HatSprite");
             _armGunNode = GetNode<Node2D>("ArmGun");
+
+            _ballSprite.Animation = "normal";
 
             // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
             Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
@@ -132,58 +132,69 @@ namespace Cowball
 
             var shoot = Input.IsActionJustPressed("PlayerShoot");
 
-            if (!IsOnFloor())
+            if (right) // Move right
             {
-                if (softDrop || hardDrop)
+                velocity.X = Math.Min(velocity.X + Speed, GroundSpeedCap);
+                FaceRight();
+            }
+
+            if (left) // Move left
+            {
+                velocity.X = Math.Max(velocity.X - Speed, -GroundSpeedCap);
+                FaceLeft();
+            }
+
+            if (!IsOnFloor()) // If in the air, check for bounce start and apply gravity
+            {
+                if (softDrop || hardDrop) // If either drop is pressed...
                 {
                     _isDropping = true;
-                    velocity.Y = DropInitBoost;
-                    //velocity.X = 0;
+                    velocity.Y = softDrop ? SoftDropInitBoost : HardDropInitBoost; // Set velocity based on which
                     _dropInitPos = GlobalPosition;
                     _isHardDropping = hardDrop;
                 }
                 velocity.Y += Gravity * (float)delta;
             }
 
-            if (right)
+            else // If on floor...
             {
-                velocity.X = Math.Min(velocity.X + Speed, GroundSpeedCap);
-                FaceRight();
-            }
-
-            if (left)
-            {
-                velocity.X = Math.Max(velocity.X - Speed, -GroundSpeedCap);
-                FaceLeft();
-            }
-
-            if (!_isDropping)
-            {
-                // if (jump)
-                velocity = StartJump(velocity, JumpSpeed);
-            }
-
-            else if (IsOnFloor()) // If is dropping and on floor
-            {
-                if (_isHardDropping)
+                if (!_isDropping) // ... and not dropping...
                 {
-                    velocity = StartJump(velocity, (JumpSpeed * JumpBrakeDamping));
-                }
-
-                else
-                {
-                    var totalDistFallen = Mathf.Abs(_dropInitPos.Y - GlobalPosition.Y);
-                    var speed = JumpSpeed;
-                    if (totalDistFallen > JumpHeight * 0.6) // Arbitrary value
+                    if (_ballSprite.Frame == 4)
                     {
-                        speed += (float)Math.Sqrt(2 * totalDistFallen * DropBounceMult * Gravity);
+                        velocity = StartJump(velocity, JumpSpeed); // ...normal jump
+                        _ballSprite.Animation = "normal";
                     }
-                    velocity = StartJump(velocity, Mathf.Min(speed, MaxVertSpeed));
-                }
-                _isDropping = false;
-                _isHardDropping = false;
 
+                    else if (_ballSprite.Animation == "normal")
+                    {
+                        // _ballSprite.Animation = "squish";
+                        _ballSprite.Play("squish");
+                    }
+                }
+
+                else // If on floor and IS dropping...
+                {
+                    if (_isHardDropping) // If hard dropping, do dampened jump
+                    {
+                        velocity = StartJump(velocity, (JumpSpeed * JumpBrakeDamping));
+                    }
+
+                    else // Handle bouncy stuff
+                    {
+                        var totalDistFallen = Mathf.Abs(_dropInitPos.Y - GlobalPosition.Y);
+                        var speed = JumpSpeed;
+                        if (totalDistFallen > JumpHeight * 0.6) // Arbitrary value
+                        {
+                            speed += (float)Math.Sqrt(2 * totalDistFallen * DropBounceMult * Gravity);
+                        }
+                        velocity = StartJump(velocity, Mathf.Min(speed, MaxVertSpeed));
+                    }
+                    _isDropping = false;
+                    _isHardDropping = false;
+                }
             }
+
 
             if (shoot)
             {
@@ -225,37 +236,6 @@ namespace Cowball
 
             return velocity;
         }
-
-        private void StopJump()
-        {
-            _isJumping = false;
-            _currentJumpBuffer = 0;
-        }
-
-        private void StartCrouch()
-        {
-            _isCrouching = true;
-        }
-
-        private void StopCrouch()
-        {
-            _isCrouching = false;
-        }
-
-        private void StartSlide()
-        {
-            _isSliding = true;
-        }
-
-        private void StopSlide()
-        {
-            _isSliding = false;
-        }
-
-        private void StartDash()
-        {
-
-        }
         #endregion
 
         #region Visual Methods
@@ -290,8 +270,6 @@ namespace Cowball
 
         private void Face(bool left)
         {
-            // var xMultiplier = left ? -1 : 1;
-            // GlobalTransform = new Transform2D(new Vector2(xMultiplier * SpriteScale, 0), new Vector2(0, SpriteScale), new Vector2(Position.X, Position.Y));
             _isFacingLeft = left;
             _ballSprite.FlipH = left;
             _hatSprite.FlipH = left;
