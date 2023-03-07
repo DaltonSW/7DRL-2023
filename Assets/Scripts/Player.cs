@@ -70,7 +70,7 @@ namespace Cowball
         // Sprites
         private AnimatedSprite2D _healthSprite;
         private AnimatedSprite2D _animatedSprite;
-        private Sprite2D _ballSprite;
+        private AnimatedSprite2D _ballSprite;
         private Sprite2D _hatSprite;
         private Node2D _armGunNode;
 
@@ -101,11 +101,14 @@ namespace Cowball
             _itemScene = GD.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
 
             _collisionArea = GetNode<CollisionPolygon2D>("CollisionPolygon");
-            _interactionArea = GetNode<CollisionPolygon2D>("InteractionPolygon");
+            _interactionArea = GetNode<CollisionPolygon2D>("Area2D/InteractionPolygon");
 
-            _ballSprite = GetNode<Sprite2D>("BallSprite");
+            // _ballSprite = GetNode<Sprite2D>("BallSprite");
+            _ballSprite = GetNode<AnimatedSprite2D>("AnimatedBallSprite");
             _hatSprite = GetNode<Sprite2D>("HatSprite");
             _armGunNode = GetNode<Node2D>("ArmGun");
+
+            _ballSprite.Animation = "normal";
 
             // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
             Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
@@ -157,7 +160,17 @@ namespace Cowball
             {
                 if (!_isDropping) // ... and not dropping...
                 {
-                    velocity = StartJump(velocity, JumpSpeed); // ...normal jump
+                    if (_ballSprite.Frame == 4)
+                    {
+                        velocity = StartJump(velocity, JumpSpeed); // ...normal jump
+                        _ballSprite.Animation = "normal";
+                    }
+
+                    else if (_ballSprite.Animation == "normal")
+                    {
+                        // _ballSprite.Animation = "squish";
+                        _ballSprite.Play("squish");
+                    }
                 }
 
                 else // If on floor and IS dropping...
