@@ -88,6 +88,9 @@ namespace Cowball
         private AudioStreamWav _shootSound;
         private AudioStreamWav _hurtSound;
 
+        // Other Child Nodes
+        private Camera2D _camera;
+
         // Scenes
         private PackedScene _bulletScene;
         private PackedScene _itemScene;
@@ -106,6 +109,8 @@ namespace Cowball
 
             _collisionArea = GetNode<CollisionPolygon2D>("CollisionPolygon");
             _interactionArea = GetNode<CollisionPolygon2D>("Area2D/InteractionPolygon");
+
+            _camera = GetNode<Camera2D>("Camera");
 
             // _ballSprite = GetNode<Sprite2D>("BallSprite");
             _ballSprite = GetNode<AnimatedSprite2D>("AnimatedBallSprite");
@@ -442,6 +447,30 @@ namespace Cowball
             //guitarHitSound = GD.Load<AudioStreamSample>("res://Sounds/SFX/guitar_hit.wav");
             //guitarMissSound = GD.Load<AudioStreamSample>("res://Sounds/SFX/guitar_miss.wav");
             GD.Print("Sounds");
+        }
+
+        public void SetCameraLimits(RectIntBounds limits)
+        {
+            _camera.SetLimits(limits);
+        }
+    }
+
+    /// Adds methods to Camera2D.
+    // TODO: move to separate file if we add other method extensions
+    public static class Camera2DExtensions
+    {
+        /// Convenience method to set all Camera limits at once.
+        public static void SetLimits(this Camera2D camera, RectIntBounds limits)
+        {
+            camera.SetLimits(limits.left, limits.right, limits.top, limits.bottom);
+        }
+
+        private static void SetLimits(this Camera2D camera, int limitLeft, int limitRight, int limitTop, int limitBottom)
+        {
+            camera.LimitLeft = limitLeft;
+            camera.LimitRight = limitRight;
+            camera.LimitTop = limitTop;
+            camera.LimitBottom = limitBottom;
         }
     }
 }
