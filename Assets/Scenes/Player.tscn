@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.cs" id="1_wxbm8"]
 [ext_resource type="Texture2D" uid="uid://i6qqkqxbftfx" path="res://Assets/Sprites/Cowball/cowball.png" id="2_5juqf"]
-[ext_resource type="Texture2D" uid="uid://cxkixqf4rha3i" path="res://Assets/Sprites/Cowball/gun_redesign.png" id="2_x8rrt"]
+[ext_resource type="Texture2D" uid="uid://77r4ey7f60jy" path="res://Assets/Sprites/Cowball/gun.png" id="2_yio7n"]
 [ext_resource type="Texture2D" uid="uid://bhwkx23dyai4c" path="res://Assets/Sprites/Cowball/squish/squish_0.png" id="5_5p181"]
 [ext_resource type="Texture2D" uid="uid://cnpoadg6kmbie" path="res://Assets/Sprites/Cowball/squish/squish_1.png" id="6_jhvfq"]
 [ext_resource type="Texture2D" uid="uid://c52vjgh0k277w" path="res://Assets/Sprites/Cowball/squish/squish_2.png" id="7_wl4ys"]
 [ext_resource type="Texture2D" uid="uid://cvujkw3m63bc1" path="res://Assets/Sprites/Cowball/squish/squish_3.png" id="8_ib8s5"]
-[ext_resource type="Texture2D" uid="uid://bj7imihhfg8t" path="res://Assets/Sprites/Cowball/hat_redesign.png" id="9_2b8ns"]
+[ext_resource type="Texture2D" uid="uid://dagxk3ex64gko" path="res://Assets/Sprites/Cowball/hat.png" id="8_ru85m"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_3y0rk"]
 animations = [{
@@ -57,7 +57,7 @@ gizmo_extents = 4.0
 
 [node name="ArmGunSprite" type="Sprite2D" parent="ArmGun"]
 position = Vector2(9, 0)
-texture = ExtResource("2_x8rrt")
+texture = ExtResource("2_yio7n")
 
 [node name="BallSprite" type="Sprite2D" parent="."]
 visible = false
@@ -78,7 +78,7 @@ polygon = PackedVector2Array(-8, 2, -7, 4, -6, 4, -6, 5, -5, 5, -5, 6, -4, 6, -4
 
 [node name="HatSprite" type="Sprite2D" parent="."]
 position = Vector2(-0.5, -9)
-texture = ExtResource("9_2b8ns")
+texture = ExtResource("8_ru85m")
 
 [node name="Area2D" type="Area2D" parent="."]
 visible = false
