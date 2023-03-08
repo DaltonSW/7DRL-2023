@@ -67,6 +67,10 @@ namespace Cowball
         private float _currentHealth;
         private float _currentInvincibility;
 
+        // Shooting
+        [Export] public double FireRate = 0.6;
+        private double _shotCooldown;
+
         // Sprites
         private AnimatedSprite2D _healthSprite;
         private AnimatedSprite2D _animatedSprite;
@@ -130,7 +134,7 @@ namespace Cowball
             var softDrop = Input.IsActionJustPressed("SoftBounce");
             var hardDrop = Input.IsActionJustPressed("HardBounce");
 
-            var shoot = Input.IsActionJustPressed("PlayerShoot");
+            var shoot = Input.IsActionPressed("PlayerShoot");
 
             if (right) // Move right
             {
@@ -196,11 +200,23 @@ namespace Cowball
             }
 
 
-            if (shoot)
+            if (_shotCooldown == 0)
             {
-                //SpawnItem();
-                Shoot();
+                if (shoot)
+                {
+                    //SpawnItem();
+                    Shoot();
+                    _shotCooldown += delta;
+                }
             }
+
+            else
+            {
+                _shotCooldown += delta;
+                if (_shotCooldown >= FireRate) _shotCooldown = 0;
+            }
+
+
 
             velocity.X = Mathf.MoveToward(velocity.X, 0, Friction);
 
@@ -275,8 +291,8 @@ namespace Cowball
             _hatSprite.FlipH = left;
         }
 
-        public void FaceLeft() { Face(true); }
-        public void FaceRight() { Face(false); }
+        private void FaceLeft() { Face(true); }
+        private void FaceRight() { Face(false); }
 
         #endregion
 
