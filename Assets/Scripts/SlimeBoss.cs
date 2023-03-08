@@ -55,7 +55,6 @@ namespace Cowball
 
             else if (_sprite.Animation == "squish" && !_sprite.IsPlaying())
             {
-                //Jump();
                 _sprite.Play("jump");
                 _idleLoopsCompleted = 0;
             }
