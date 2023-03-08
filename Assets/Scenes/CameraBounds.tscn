@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5g5pyx0pd6lq"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/CameraBounds.cs" id="1_kc2xe"]
+
+[node name="CameraBounds" type="Node2D"]
+script = ExtResource("1_kc2xe")
+
+[node name="TopLeft" type="Marker2D" parent="."]
+
+[node name="BottomRight" type="Marker2D" parent="."]
+position = Vector2(1280, 720)
