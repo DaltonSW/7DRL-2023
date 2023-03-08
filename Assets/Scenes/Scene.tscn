@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cnfkgjbdd3n5c"]
+[gd_scene load_steps=4 format=3 uid="uid://cnfkgjbdd3n5c"]
 
 [ext_resource type="TileSet" uid="uid://buomjnobb1kni" path="res://Assets/Tiles/GreyPlatforms.tres" id="1_h7111"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="2_fkqyy"]
+[ext_resource type="PackedScene" uid="uid://jyvid3is2ujl" path="res://Assets/Scenes/Enemies/SlimeBoss.tscn" id="3_765d2"]
 
 [node name="Level" type="Node2D"]
 
@@ -22,3 +23,6 @@ layer_1/tile_data = PackedInt32Array(1114112, 0, 0, 1179648, 0, 1, 1245184, 0, 1
 [node name="Player" parent="." instance=ExtResource("2_fkqyy")]
 position = Vector2(383, 510)
 scale = Vector2(2, 2)
+
+[node name="SlimeBoss" parent="." instance=ExtResource("3_765d2")]
+position = Vector2(765, 397)

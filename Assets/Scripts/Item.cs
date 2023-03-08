@@ -10,6 +10,8 @@ namespace Cowball
         FireRate,
         Health,
         JumpSpeed,
+        // BulletSize,
+
     }
 
     public readonly record struct ItemParams(string ItemName, string SpriteFilename, StatToChange StatToChange,
@@ -39,4 +41,15 @@ namespace Cowball
         }
     }
 }
+
+// Items:
+// Lead Underwear - Butt stomp does more damage
+// Soylent - Health up
+// Hotdog - Health up
+// Bike Pump - Higher bounce
+// Coffee - Move speed up
+// Trigger Finger - Fire rate up
+// Campfire - Flaming bullets
+// Bigger bullets - Bigger bullets
+// Hardhat - Can't take damage on your head
 

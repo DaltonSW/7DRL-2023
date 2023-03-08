@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://8qr26ydkrbdo"]
+[gd_scene load_steps=11 format=3 uid="uid://8qr26ydkrbdo"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.cs" id="1_wxbm8"]
 [ext_resource type="Texture2D" uid="uid://i6qqkqxbftfx" path="res://Assets/Sprites/Cowball/cowball.png" id="2_5juqf"]
 [ext_resource type="Texture2D" uid="uid://cxkixqf4rha3i" path="res://Assets/Sprites/Cowball/gun_redesign.png" id="2_x8rrt"]
-[ext_resource type="Texture2D" uid="uid://dukkwjod2vx4b" path="res://Assets/Sprites/Cowball/cowball_redesign.png" id="4_7af4y"]
 [ext_resource type="Texture2D" uid="uid://bhwkx23dyai4c" path="res://Assets/Sprites/Cowball/squish/squish_0.png" id="5_5p181"]
 [ext_resource type="Texture2D" uid="uid://cnpoadg6kmbie" path="res://Assets/Sprites/Cowball/squish/squish_1.png" id="6_jhvfq"]
 [ext_resource type="Texture2D" uid="uid://c52vjgh0k277w" path="res://Assets/Sprites/Cowball/squish/squish_2.png" id="7_wl4ys"]
@@ -14,7 +13,7 @@
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_7af4y")
+"texture": ExtResource("5_5p181")
 }],
 "loop": true,
 "name": &"normal",
@@ -66,7 +65,7 @@ texture = ExtResource("2_5juqf")
 
 [node name="AnimatedBallSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_3y0rk")
-animation = &"squish"
+animation = &"normal"
 
 [node name="CircleCollision" type="CollisionShape2D" parent="."]
 visible = false
@@ -74,10 +73,11 @@ shape = SubResource("CircleShape2D_57f4n")
 disabled = true
 
 [node name="CollisionPolygon" type="CollisionPolygon2D" parent="."]
+visible = false
 polygon = PackedVector2Array(-8, 2, -7, 4, -6, 4, -6, 5, -5, 5, -5, 6, -4, 6, -4, 7, -2, 7, -2, 8, 2, 8, 2, 7, 4, 7, 4, 6, 5, 6, 5, 5, 6, 5, 6, 4, 7, 4, 8, 2)
 
 [node name="HatSprite" type="Sprite2D" parent="."]
-position = Vector2(-0.5, -8)
+position = Vector2(-0.5, -9)
 texture = ExtResource("9_2b8ns")
 
 [node name="Area2D" type="Area2D" parent="."]

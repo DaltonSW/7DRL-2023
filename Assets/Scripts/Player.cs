@@ -24,7 +24,7 @@ namespace Cowball
         [Export] public float Gravity;
         [Export] private float _jumpLockout = 10; //frames
         [Export] private float _currentJumpBuffer;
-        [Export] public float MaxVertSpeed = 465F; // pixels above ground (360 will cap you at half of a 720p window)
+        [Export] public float MaxVertSpeed = 450F; // pixels above ground (360 will cap you at half of a 720p window)
         [Export] public float JumpBrakeDamping = 1F;
 
         // Move properties
@@ -47,7 +47,7 @@ namespace Cowball
         // Drop properties
         [Export] public float DropGravMult = 10;
         [Export] public float SoftDropInitBoost = 600;
-        [Export] public float HardDropInitBoost = 750;
+        [Export] public float HardDropInitBoost = 1000;
         [Export] public float DropBounceMult = 0.4F;
         private Vector2 _dropInitPos;
 
