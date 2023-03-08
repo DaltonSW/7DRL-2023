@@ -1,72 +1,72 @@
-[gd_scene load_steps=22 format=3 uid="uid://jyvid3is2ujl"]
+[gd_scene load_steps=22 format=3 uid="uid://ccgnyywbhh5sv"]
 
-[ext_resource type="Script" path="res://Assets/Scripts/SlimeBoss.cs" id="1_6ycb3"]
-[ext_resource type="Texture2D" uid="uid://05md6cftmyfw" path="res://Assets/Sprites/SlimeBoss/aniIdle.png" id="2_b663r"]
-[ext_resource type="Texture2D" uid="uid://cy14l3c757b7c" path="res://Assets/Sprites/SlimeBoss/aniJump.png" id="3_221qf"]
-[ext_resource type="Texture2D" uid="uid://dj5x71jckwowj" path="res://Assets/Sprites/SlimeBoss/aniSquish.png" id="3_ejhbp"]
+[ext_resource type="Script" path="res://Assets/Scripts/SlimeBoss.cs" id="1_hp5hd"]
+[ext_resource type="Texture2D" uid="uid://05md6cftmyfw" path="res://Assets/Sprites/SlimeBoss/aniIdle.png" id="2_l1m2h"]
+[ext_resource type="Texture2D" uid="uid://cy14l3c757b7c" path="res://Assets/Sprites/SlimeBoss/aniJump.png" id="3_sq146"]
+[ext_resource type="Texture2D" uid="uid://dj5x71jckwowj" path="res://Assets/Sprites/SlimeBoss/aniSquish.png" id="4_47gk4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x36ji"]
-atlas = ExtResource("2_b663r")
+atlas = ExtResource("2_l1m2h")
 region = Rect2(0, 0, 88, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6rusv"]
-atlas = ExtResource("2_b663r")
+atlas = ExtResource("2_l1m2h")
 region = Rect2(88, 0, 88, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mhef0"]
-atlas = ExtResource("2_b663r")
+atlas = ExtResource("2_l1m2h")
 region = Rect2(176, 0, 88, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d2lqt"]
-atlas = ExtResource("2_b663r")
+atlas = ExtResource("2_l1m2h")
 region = Rect2(264, 0, 88, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fijbo"]
-atlas = ExtResource("3_221qf")
+atlas = ExtResource("3_sq146")
 region = Rect2(0, 0, 80, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wgnx8"]
-atlas = ExtResource("3_221qf")
+atlas = ExtResource("3_sq146")
 region = Rect2(80, 0, 80, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dp1lk"]
-atlas = ExtResource("3_221qf")
+atlas = ExtResource("3_sq146")
 region = Rect2(160, 0, 80, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2ct1h"]
-atlas = ExtResource("3_221qf")
+atlas = ExtResource("3_sq146")
 region = Rect2(240, 0, 80, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i428m"]
-atlas = ExtResource("3_221qf")
+atlas = ExtResource("3_sq146")
 region = Rect2(320, 0, 80, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qe1xh"]
-atlas = ExtResource("3_ejhbp")
+atlas = ExtResource("4_47gk4")
 region = Rect2(0, 0, 128, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ypvsv"]
-atlas = ExtResource("3_ejhbp")
+atlas = ExtResource("4_47gk4")
 region = Rect2(128, 0, 128, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8bucy"]
-atlas = ExtResource("3_ejhbp")
+atlas = ExtResource("4_47gk4")
 region = Rect2(256, 0, 128, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5388f"]
-atlas = ExtResource("3_ejhbp")
+atlas = ExtResource("4_47gk4")
 region = Rect2(384, 0, 128, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eodxq"]
-atlas = ExtResource("3_ejhbp")
+atlas = ExtResource("4_47gk4")
 region = Rect2(512, 0, 128, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bmdeu"]
-atlas = ExtResource("3_ejhbp")
+atlas = ExtResource("4_47gk4")
 region = Rect2(640, 0, 128, 84)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mop5u"]
-atlas = ExtResource("3_ejhbp")
+atlas = ExtResource("4_47gk4")
 region = Rect2(768, 0, 128, 84)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_hiwvt"]
@@ -156,28 +156,16 @@ animations = [{
 "speed": 15.0
 }]
 
-[node name="SlimeBoss" type="RigidBody2D"]
-script = ExtResource("1_6ycb3")
+[node name="SlimeBoss" type="CharacterBody2D"]
+script = ExtResource("1_hp5hd")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_hiwvt")
-animation = &"jump"
-
-[node name="RightRay" type="RayCast2D" parent="."]
-target_position = Vector2(100, 0)
-
-[node name="LeftRay" type="RayCast2D" parent="."]
-target_position = Vector2(-100, 0)
-
-[node name="NormalCollision" type="CollisionPolygon2D" parent="."]
-visible = false
-position = Vector2(0, 3)
-scale = Vector2(2, 2)
-polygon = PackedVector2Array(6, -27, 10, -27, 10, -26, 13, -26, 13, -25, 16, -25, 16, -24, 18, -24, 18, -23, 20, -23, 20, -22, 21, -22, 21, -21, 23, -21, 23, -20, 24, -20, 24, -19, 25, -19, 25, -18, 27, -18, 27, -17, 28, -17, 28, -16, 29, -16, 29, -15, 30, -15, 30, -13, 31, -13, 31, -12, 32, -12, 32, -11, 33, -11, 33, -9, 34, -9, 34, -8, 35, -8, 35, -6, 36, -6, 36, -4, 37, -4, 37, -1, 38, -1, 38, 2, 39, 2, 39, 6, 40, 6, 40, 18, 39, 18, 39, 22, 38, 22, 38, 26, 37, 26, 37, 28, 36, 28, 36, 29, 35, 29, 35, 30, 34, 30, 34, 31, 33, 31, 33, 32, 32, 32, 32, 33, 31, 33, 31, 34, 30, 34, 30, 35, 28, 35, 28, 36, 26, 36, 26, 37, 23, 37, 23, 38, 18, 38, 18, 39, 10, 39, 10, 40, -10, 40, -10, 39, -18, 39, -18, 38, -23, 38, -23, 37, -26, 37, -26, 36, -28, 36, -28, 35, -30, 35, -30, 34, -31, 34, -31, 33, -32, 33, -32, 32, -33, 32, -33, 31, -34, 31, -34, 30, -35, 30, -35, 29, -36, 29, -36, 28, -37, 28, -37, 26, -38, 26, -38, 22, -39, 22, -39, 18, -40, 18, -40, 6, -39, 6, -39, 2, -38, 2, -38, -1, -37, -1, -37, -4, -36, -4, -36, -6, -35, -6, -35, -8, -34, -8, -34, -9, -33, -9, -33, -11, -32, -11, -32, -12, -31, -12, -31, -13, -30, -13, -30, -15, -29, -15, -29, -16, -28, -16, -28, -17, -27, -17, -27, -18, -25, -18, -25, -19, -24, -19, -24, -20, -23, -20, -23, -21, -21, -21, -21, -22, -20, -22, -20, -23, -18, -23, -18, -24, -16, -24, -16, -25, -13, -25, -13, -26, -10, -26, -10, -27, -6, -27, -6, -28, 6, -28)
-disabled = true
+animation = &"idle"
 
 [node name="AssLessCollision" type="CollisionPolygon2D" parent="."]
 position = Vector2(0, 3)
-scale = Vector2(2, 2)
+rotation = -3.14159
+scale = Vector2(2, -2)
 polygon = PackedVector2Array(6, -27, 10, -27, 10, -26, 13, -26, 13, -25, 16, -25, 16, -24, 18, -24, 18, -23, 20, -23, 20, -22, 21, -22, 21, -21, 23, -21, 23, -20, 24, -20, 24, -19, 25, -19, 25, -18, 27, -18, 27, -17, 28, -17, 28, -16, 29, -16, 29, -15, 30, -15, 30, -13, 31, -13, 31, -12, 32, -12, 32, -11, 33, -11, 33, -9, 34, -9, 34, -8, 35, -8, 35, -6, 36, -6, 36, -4, 37, -4, 37, -1, 38, -1, 38, 2, 39, 2, 39, 6, 40, 6, 40, 18, 39, 18, 39, 22, 38, 22, 38, 26, 37, 26, 37, 28, 36, 28, 36, 29, 35, 29, 35, 30, 31, 34.5, -31, 34.5, -36, 30.5, -37, 30.5, -37, 28.5, -38, 28.5, -39, 24.5, -38, 24.5, -39, 24.5, -39, 22, -39, 22, -39, 18, -40, 18, -40, 6, -39, 6, -39, 2, -38, 2, -38, -1, -37, -1, -37, -4, -36, -4, -36, -6, -35, -6, -35, -8, -34, -8, -34, -9, -33, -9, -33, -11, -32, -11, -32, -12, -31, -12, -31, -13, -30, -13, -30, -15, -29, -15, -29, -16, -28, -16, -28, -17, -27, -17, -27, -18, -25, -18, -25, -19, -24, -19, -24, -20, -23, -20, -23, -21, -21, -21, -21, -22, -20, -22, -20, -23, -18, -23, -18, -24, -16, -24, -16, -25, -13, -25, -13, -26, -10, -26, -10, -27, -6, -27, -6, -28, 6, -28)
