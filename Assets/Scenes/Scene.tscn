@@ -25,4 +25,4 @@ position = Vector2(383, 510)
 scale = Vector2(2, 2)
 
 [node name="SlimeBoss" parent="." instance=ExtResource("3_765d2")]
-position = Vector2(765, 397)
+position = Vector2(765, 408)
