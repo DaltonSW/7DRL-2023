@@ -11,10 +11,10 @@ script = ExtResource("1_4h4w2")
 [node name="Level" parent="." instance=ExtResource("1_lc5sq")]
 
 [node name="Player" parent="." instance=ExtResource("2_fkqyy")]
-position = Vector2(383, 510)
+position = Vector2(284, 496)
 scale = Vector2(2, 2)
 
 [node name="SlimeBoss" parent="." instance=ExtResource("4_kpmc1")]
-position = Vector2(756, 395)
+position = Vector2(580, 366)
 MinIdleLoopsBeforeJump = 1
 PercentChanceJump = 100

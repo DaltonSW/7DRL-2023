@@ -161,6 +161,9 @@ namespace Cowball
                     velocity.Y = softDrop ? SoftDropInitBoost : HardDropInitBoost; // Set velocity based on which
                     _dropInitPos = GlobalPosition;
                     _isHardDropping = hardDrop;
+
+                    var anim = softDrop ? "softDrop" : "hardDrop";
+                    _ballSprite.Play(anim);
                 }
                 velocity.Y += Gravity * (float)delta;
             }
@@ -201,6 +204,7 @@ namespace Cowball
                     }
                     _isDropping = false;
                     _isHardDropping = false;
+                    _ballSprite.Play("normal");
                 }
             }
 
