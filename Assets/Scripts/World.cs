@@ -24,6 +24,7 @@ namespace Cowball {
         public void SetUpLevel(Level level)
         {
             _player.SetCameraLimits(level.CameraBounds());
+            _player.Position = level.PlayerSpawnPosition();
         }
     }
 

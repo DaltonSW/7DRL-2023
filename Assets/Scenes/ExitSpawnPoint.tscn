@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://8qjdvvp7ywv1"]
+
+[node name="ExitSpawnPoint" type="Marker2D" groups=["ExitSpawnPoints"]]
