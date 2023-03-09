@@ -10,16 +10,16 @@ namespace Cowball {
 
         private CameraBounds? _cameraBounds;
         private Marker2D _playerSpawnPoint;
-        private List<Vector2> _itemSpawnPoints;
-        private List<Vector2> _exitSpawnPoints;
+        public List<Vector2> ItemSpawnPoints { get; private set; }
+        public List<Vector2> ExitSpawnPoints { get; private set; }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
             _cameraBounds = GetNodeOrNull<CameraBounds>("CameraBounds");
             _playerSpawnPoint = GetNode<Marker2D>("PlayerSpawnPoint");
-            _itemSpawnPoints = GetNode2DGroupPositions("ItemSpawnPoints");
-            _exitSpawnPoints = GetNode2DGroupPositions("ExitSpawnPoints");
+            ItemSpawnPoints = GetNode2DGroupPositions("ItemSpawnPoints");
+            ExitSpawnPoints = GetNode2DGroupPositions("ExitSpawnPoints");
         }
 
         private List<Vector2> GetNode2DGroupPositions(string spawnPointGroupName)

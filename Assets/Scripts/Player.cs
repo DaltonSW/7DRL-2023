@@ -209,7 +209,6 @@ namespace Cowball
             {
                 if (shoot)
                 {
-                    //SpawnItem();
                     Shoot();
                     _shotCooldown += delta;
                 }
@@ -308,15 +307,6 @@ namespace Cowball
             bullet.Position = bulletSpawn.GlobalPosition;
             bullet.Rotation = _armGunNode.Rotation;
             GetParent().AddChild(bullet);
-        }
-
-        private void SpawnItem()
-        {
-            var item = (Item)_itemScene.Instantiate();
-            var itemParams = new ItemParams("Heart", "heart", StatToChange.Health, 1);
-            item.Initialize(itemParams);
-            item.Position = GetGlobalMousePosition();
-            GetParent().AddChild(item);
         }
 
         private void AddItem(Item newItem)
