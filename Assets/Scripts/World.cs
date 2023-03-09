@@ -17,6 +17,7 @@ namespace Cowball {
         private Level _level;
 
         private PackedScene _itemScene;
+        private PackedScene _exitScene;
 
         private Random _rng;
 
@@ -27,6 +28,7 @@ namespace Cowball {
             _level = GetNode<Level>("Level");
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
+            _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
 
             _rng = new Random();
 
@@ -56,10 +58,17 @@ namespace Cowball {
             _player.Position = level.PlayerSpawnPosition();
 
             Stack<ItemParams> itemPool = CreateItemPoolShuffled();
-            foreach (Vector2 itemSpawnPoint in level.ItemSpawnPoints)
+            SpawnNodes(level.ItemSpawnPoints, () => CreateItem(itemPool.Pop()));
+            SpawnNodes(level.ExitSpawnPoints, () => _exitScene.Instantiate<Node2D>());
+        }
+
+        private void SpawnNodes(List<Vector2> spawnPoints, Func<Node2D> constructNode)
+        {
+            foreach (Vector2 spawnPoint in spawnPoints)
             {
-                Item item = CreateItem(itemPool.Pop());
-                AddItem(item, itemSpawnPoint);
+                Node2D node = constructNode();
+                GetParent().AddChild(node);
+                node.Position = spawnPoint;
             }
         }
 
@@ -86,12 +95,6 @@ namespace Cowball {
                 new ItemParams("Itchy Finger", "Poison Ivy", StatToChange.FireRate, 0.3),
                 new ItemParams("Coffee", "Coffee", StatToChange.Speed, 25),
             };
-        }
-
-        private void AddItem(Item item, Vector2 position)
-        {
-            GetParent().AddChild(item);
-            item.Position = position;
         }
 
         private Item CreateItem(ItemParams itemParams)

@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://dbqdfqobn7qsr"]
+
+[ext_resource type="Texture2D" uid="uid://ca576ek6xgygo" path="res://Assets/Sprites/Teleporter/Teleporter.png" id="1_tr4s6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pcnsq"]
+atlas = ExtResource("1_tr4s6")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n5r3n"]
+atlas = ExtResource("1_tr4s6")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7qwf0"]
+atlas = ExtResource("1_tr4s6")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kcg6x"]
+atlas = ExtResource("1_tr4s6")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rhi6y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pcnsq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n5r3n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7qwf0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kcg6x")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Exit" type="Node2D"]
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -15)
+sprite_frames = SubResource("SpriteFrames_rhi6y")

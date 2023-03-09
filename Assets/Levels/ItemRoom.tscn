@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cpa7apak8g8ph"]
+[gd_scene load_steps=5 format=3 uid="uid://cpa7apak8g8ph"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Level.cs" id="1_brgoh"]
 [ext_resource type="TileSet" uid="uid://buomjnobb1kni" path="res://Assets/Tiles/GreyPlatforms.tres" id="2_o6ybt"]
 [ext_resource type="PackedScene" uid="uid://bl8ya0ev5d5yf" path="res://Assets/Scenes/ItemSpawnPoint.tscn" id="3_ri7i3"]
+[ext_resource type="PackedScene" uid="uid://8qjdvvp7ywv1" path="res://Assets/Scenes/ExitSpawnPoint.tscn" id="4_r0e24"]
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_brgoh")
@@ -31,3 +32,9 @@ position = Vector2(690, 453)
 
 [node name="ItemSpawnPoint3" parent="." instance=ExtResource("3_ri7i3")]
 position = Vector2(829, 451)
+
+[node name="ExitSpawnPoint" parent="." instance=ExtResource("4_r0e24")]
+position = Vector2(1163, 549)
+
+[node name="ExitSpawnPoint2" parent="." instance=ExtResource("4_r0e24")]
+position = Vector2(1016, 548)
