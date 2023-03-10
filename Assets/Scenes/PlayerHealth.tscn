@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0r1wadg5l20h"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/PlayerHealth.cs" id="1_kxjyd"]
+[ext_resource type="Texture2D" uid="uid://b6iu5vg0jsoed" path="res://Assets/Sprites/HUD/16x Heart.png" id="2_lio84"]
+
+[node name="PlayerHealth" type="CanvasLayer"]
+script = ExtResource("1_kxjyd")
+
+[node name="baseHeart" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(8, 8)
+texture = ExtResource("2_lio84")
+hframes = 3
+
+[node name="Hearts" type="Node" parent="."]

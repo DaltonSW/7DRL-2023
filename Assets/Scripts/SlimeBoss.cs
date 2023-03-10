@@ -13,6 +13,10 @@ namespace Cowball
         private PackedScene _slimeScene;
         private AnimatedSprite2D _sprite;
 
+        // Health properties
+        [Export] private float _maxHealth = 100;
+        private float _currentHealth;
+
         // Attack properties
         [Export] public int MinIdleLoopsBeforeJump = 4;
         [Export] public int PercentChanceJump = 80;
@@ -22,6 +26,7 @@ namespace Cowball
         private bool _isFacingLeft;
         private bool _canFlip;
         private int _idleLoopsCompleted;
+        private int _prevSpriteFrame;
 
         // Jump properties
         [Export] public float JumpHeight = 120; //pixels
@@ -44,6 +49,8 @@ namespace Cowball
             _sprite.Play(IdleAnim);
 
             _random = new Random();
+
+            _currentHealth = _maxHealth;
 
             // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
             Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
@@ -128,9 +135,13 @@ namespace Cowball
         public override void _Process(double delta)
         {
             if (!_sprite.IsPlaying()) return;
+            var frame = _sprite.Frame;
+            if (frame == _prevSpriteFrame) return;
 
             _currentCollision.Disabled = true;
-            var frame = _sprite.Frame;
+
+            _currentCollision.Visible = false;
+
             // ReSharper disable once ConvertSwitchStatementToSwitchExpression
             switch (_sprite.Animation)
             {
@@ -147,6 +158,8 @@ namespace Cowball
                     break;
             }
             _currentCollision.Disabled = false;
+
+            _currentCollision.Visible = true;
         }
 
         public override void _PhysicsProcess(double delta)
@@ -232,13 +245,24 @@ namespace Cowball
 
         private void Shoot()
         {
-            foreach (Marker2D point in GetTree().GetNodesInGroup("slimeSpawns"))
+            foreach (var node in GetTree().GetNodesInGroup("slimeSpawns"))
             {
+                var point = (Marker2D)node;
                 var newSlime = (Slime)_slimeScene.Instantiate();
                 newSlime.GlobalPosition = point.GlobalPosition;
                 newSlime.GlobalRotation = point.GlobalRotation;
                 GetParent().AddChild(newSlime);
             }
+        }
+
+        public float GetHealthPercent()
+        {
+            return _currentHealth / _maxHealth * 100;
+        }
+
+        public void TakeDamage(float damage)
+        {
+            _currentHealth -= damage;
         }
     }
 }

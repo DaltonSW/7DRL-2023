@@ -30,6 +30,15 @@ namespace Cowball
             }
         }
 
+        public void OnBodyEntered(Node2D node)
+        {
+            if (!node.IsInGroup("boss")) return;
+            var boss = (SlimeBoss)node;
+            boss.TakeDamage(Damage);
+            GD.Print("Pow");
+            QueueFree();
+        }
+
         private void FreeBullet()
         {
             QueueFree();
