@@ -18,7 +18,7 @@ position = Vector2(284, 496)
 scale = Vector2(2, 2)
 
 [node name="SlimeBoss" parent="." instance=ExtResource("4_kpmc1")]
-position = Vector2(580, 366)
+position = Vector2(767, 395)
 MinIdleLoopsBeforeJump = 1
 PercentChanceJump = 100
 

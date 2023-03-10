@@ -187,3 +187,4 @@ position = Vector2(0, -57)
 limit_smoothed = true
 
 [connection signal="area_entered" from="Area2D" to="." method="OnAreaEntered"]
+[connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]

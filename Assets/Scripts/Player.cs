@@ -251,7 +251,6 @@ namespace Cowball
             _isJumping = true;
             _currentJumpBuffer += 1;
 
-            AddHealth();
             return velocity;
         }
         #endregion
@@ -349,9 +348,34 @@ namespace Cowball
 
         public void OnAreaEntered(Area2D area)
         {
-            if (!area.IsInGroup("items")) return;
-            var item = area.GetParent<Item>();
-            item.QueueFree();
+            if (area.IsInGroup("items"))
+            {
+                var item = area.GetParent<Item>();
+                item.QueueFree();
+                return;
+            }
+
+            if (area.IsInGroup("enemy"))
+            {
+                DamagePlayer(0.5F);
+            }
+        }
+
+        public void OnBodyEntered(Node2D node)
+        {
+            if (node.IsInGroup("boss"))
+            {
+                DamagePlayer(0.5F);
+            }
+        }
+
+        public void DamagePlayer(float damage)
+        {
+            CurrentHealth -= damage;
+            if (CurrentHealth <= 0)
+            {
+                QueueFree();
+            }
         }
 
 

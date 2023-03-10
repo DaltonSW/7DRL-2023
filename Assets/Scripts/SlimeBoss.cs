@@ -172,7 +172,7 @@ namespace Cowball
                 if (IsOnWall() && _canFlip)
                 {
                     GD.Print("WALL");
-                    velocity.X *= -1;
+                    // velocity.X *= -1;
                     _canFlip = false;
                     _isFacingLeft = !_isFacingLeft;
                     _sprite.FlipH = !_sprite.FlipH;
@@ -183,7 +183,6 @@ namespace Cowball
             {
                 if (_isJumping)
                 {
-                    velocity.X = 0;
                     _isJumping = false;
                     _sprite.Play(IdleAnim);
                     _idleLoopsCompleted = 0;
@@ -232,7 +231,37 @@ namespace Cowball
             }
 
             Velocity = velocity;
-            MoveAndSlide();
+
+            var collision = MoveAndCollide(Velocity * (float)delta);
+            if (collision == null) return;
+            //if (collision.GetCollider().IsClass("Slime")) return;
+            var normal = collision.GetNormal();
+            if (normal == Vector2.Up)
+            {
+                if (_isJumping)
+                {
+                    _isJumping = false;
+                    _sprite.Play(IdleAnim);
+                    _idleLoopsCompleted = 0;
+                }
+                Velocity = new Vector2(0, 0);
+                _canFlip = true;
+            }
+
+            else if (normal == Vector2.Left || normal == Vector2.Right)
+            {
+                if (!_canFlip) return;
+                _isFacingLeft = !_isFacingLeft;
+                _sprite.FlipH = !_sprite.FlipH;
+                _canFlip = false;
+                Velocity = Velocity.Bounce(normal);
+            }
+
+            else
+            {
+                Velocity = Velocity.Bounce(normal);
+            }
+
         }
 
         private Vector2 Jump(Vector2 velocity)
@@ -263,6 +292,11 @@ namespace Cowball
         public void TakeDamage(float damage)
         {
             _currentHealth -= damage;
+
+            if (_currentHealth <= 0)
+            {
+                QueueFree();
+            }
         }
     }
 }
