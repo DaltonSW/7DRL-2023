@@ -8,6 +8,7 @@ namespace Cowball
         private const string IdleAnim = "idle";
         private const string SquishAnim = "squish";
         private const string JumpAnim = "jump";
+        private const string DeathAnim = "death";
 
         private Random _random;
         private PackedScene _slimeScene;
@@ -134,7 +135,18 @@ namespace Cowball
 
         public override void _Process(double delta)
         {
-            if (!_sprite.IsPlaying()) return;
+            if (!_sprite.IsPlaying())
+            {
+                if (_sprite.Animation == DeathAnim)
+                {
+                    QueueFree();
+                }
+                return;
+            }
+            if (_sprite.Animation == DeathAnim)
+            {
+                return;
+            }
             var frame = _sprite.Frame;
             if (frame == _prevSpriteFrame) return;
 
@@ -164,6 +176,10 @@ namespace Cowball
 
         public override void _PhysicsProcess(double delta)
         {
+            if (_sprite.Animation == DeathAnim)
+            {
+                return;
+            }
             var velocity = Velocity;
             velocity.Y += Gravity * (float)delta;
 
@@ -186,7 +202,6 @@ namespace Cowball
                     _isJumping = false;
                     _sprite.Play(IdleAnim);
                     _idleLoopsCompleted = 0;
-                    // Shoot(); -- If we want a "hard mode" thing where he shoots twice per boing
                 }
             }
 
@@ -243,6 +258,7 @@ namespace Cowball
                     _isJumping = false;
                     _sprite.Play(IdleAnim);
                     _idleLoopsCompleted = 0;
+                    // Shoot(); // If we want a "hard mode" thing where he shoots twice per boing
                 }
                 Velocity = new Vector2(0, 0);
                 _canFlip = true;
@@ -284,19 +300,15 @@ namespace Cowball
             }
         }
 
-        public float GetHealthPercent()
-        {
-            return _currentHealth / _maxHealth * 100;
-        }
+        public float GetHealthPercent() { return _currentHealth / _maxHealth * 100; }
 
         public void TakeDamage(float damage)
         {
             _currentHealth -= damage;
 
-            if (_currentHealth <= 0)
-            {
-                QueueFree();
-            }
+            if (_currentHealth > 0) return;
+            _sprite.Play(DeathAnim);
+            _currentCollision.Disabled = true;
         }
     }
 }

@@ -3,7 +3,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Cowball {
+namespace Cowball
+{
     public partial class World : Node2D
     {
         private enum State
@@ -48,15 +49,17 @@ namespace Cowball {
         {
             switch (_state)
             {
-                case State.LoadingLevel: {
-                    SetUpLevel(_level);
-                    _state = State.Playing;
-                    break;
-                }
-                case State.Playing: { 
-                    // Do nothing 
-                    break;
-                }
+                case State.LoadingLevel:
+                    {
+                        SetUpLevel(_level);
+                        _state = State.Playing;
+                        break;
+                    }
+                case State.Playing:
+                    {
+                        // Do nothing 
+                        break;
+                    }
             }
         }
 
@@ -77,7 +80,8 @@ namespace Cowball {
 
             _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
             // TODO: only spawn after enemies are all dead
-            SpawnNodes(level.ExitSpawnPoints, () => {
+            SpawnNodes(level.ExitSpawnPoints, () =>
+            {
                 (string nextLevelFilename, PackedScene nextLevelScene) = _nextLevels.Dequeue();
                 return CreateExit(nextLevelFilename, nextLevelScene);
             });
@@ -107,16 +111,16 @@ namespace Cowball {
 
         // Items TODO:
         // Lead Underwear - Butt stomp does more damage
-        // Bike Pump - Higher bounce
         // Campfire - Flaming bullets
         // Bigger bullets - Bigger bullets
         // Hardhat - Can't take damage on your head
-        private static ItemParams[] ITEM_POOL = 
+        private static ItemParams[] ITEM_POOL =
             {
                 new ItemParams("Soylent", "Soylent", StatToChange.Health, 1),
                 new ItemParams("Hotdog", "Hot Dog", StatToChange.Health, 1),
                 new ItemParams("Itchy Finger", "Poison Ivy", StatToChange.FireRate, 0.3),
                 new ItemParams("Coffee", "Coffee", StatToChange.Speed, 25),
+                new ItemParams("Bike Pump", "Bike Pump", StatToChange.JumpSpeed, 25),
             };
 
         private static List<string> LoadLevelFilenames()

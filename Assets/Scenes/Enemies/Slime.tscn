@@ -9,9 +9,11 @@ collision_mask = 2
 script = ExtResource("1_jqyyd")
 
 [node name="Sprite" type="Sprite2D" parent="." groups=["enemy"]]
+modulate = Color(1, 0.4, 0.4, 1)
 scale = Vector2(2, 2)
 texture = ExtResource("1_1oa0y")
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="." groups=["enemy"]]
+visible = false
 scale = Vector2(2, 2)
 polygon = PackedVector2Array(2, -7, 4, -7, 4, -6, 5, -6, 5, -5, 6, -5, 6, -3, 7, -3, 7, -1, 8, -1, 8, 5, 7, 5, 7, 6, 6, 6, 6, 7, 4, 7, 4, 8, -4, 8, -4, 7, -6, 7, -6, 6, -7, 6, -7, 5, -8, 5, -8, -1, -7, -1, -7, -3, -6, -3, -6, -5, -5, -5, -5, -6, -4, -6, -4, -7, -2, -7, -2, -8, 2, -8)

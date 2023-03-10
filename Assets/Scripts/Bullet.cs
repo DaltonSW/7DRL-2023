@@ -5,7 +5,7 @@ namespace Cowball
     public partial class Bullet : Area2D
     {
 
-        [Export] public float Damage = 7.5F;
+        [Export] public float Damage = 100F;
 
         [Export] private int _speed = 700;
         [Export] private int _spread = 5;

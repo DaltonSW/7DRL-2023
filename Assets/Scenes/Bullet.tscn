@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Assets/Scripts/Bullet.cs" id="1_xqopv"]
 
 [sub_resource type="CircleShape2D" id="1"]
-radius = 4.0
+radius = 6.0
 
 [node name="Bullet" type="Area2D" groups=["playerBullet"]]
 rotation = 1.5708

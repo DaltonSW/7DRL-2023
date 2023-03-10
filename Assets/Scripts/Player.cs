@@ -363,7 +363,7 @@ namespace Cowball
 
         public void OnBodyEntered(Node2D node)
         {
-            if (node.IsInGroup("boss"))
+            if (node.IsInGroup("enemy"))
             {
                 DamagePlayer(0.5F);
             }

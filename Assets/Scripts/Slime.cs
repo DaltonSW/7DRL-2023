@@ -9,7 +9,7 @@ namespace Cowball
 
         private Sprite2D _sprite;
 
-        [Export] public float Damage = 3F;
+        [Export] public float Damage = 0.5F;
 
         [Export] private int _speed = 800;
         [Export] private int _spread = 15;
@@ -32,12 +32,17 @@ namespace Cowball
 
             if (collision != null)
             {
-                if (!collision.GetCollider().IsClass("SlimeBoss"))
+                var collName = collision.GetCollider().Get("name").ToString();
+                if (collName.Contains("Player"))
                 {
-                    Velocity = Velocity.Bounce(collision.GetNormal());
-                    _currentBounces += 1;
+                    var player = (Player)collision.GetCollider();
+                    player.DamagePlayer(Damage);
+                    QueueFree();
                 }
+                Velocity = Velocity.Bounce(collision.GetNormal());
+                _currentBounces += 1;
             }
+
             _sprite.GlobalRotation = 0;
             if (_currentBounces >= _allowedBounces)
             {

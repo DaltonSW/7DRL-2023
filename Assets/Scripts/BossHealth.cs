@@ -17,6 +17,10 @@ namespace Cowball
         public override void _Process(double delta)
         {
             _bar.Value = _slimeBoss.GetHealthPercent();
+            if (_bar.Value == 0)
+            {
+                QueueFree();
+            }
         }
     }
 }
