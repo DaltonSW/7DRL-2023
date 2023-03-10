@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c17rlpy0bqcle" path="res://Assets/Scenes/Enemies/BossHealth.tscn" id="6_v8dml"]
 
 [node name="World" type="Node2D"]
+process_mode = 3
 position = Vector2(-1, 0)
 script = ExtResource("1_4h4w2")
 

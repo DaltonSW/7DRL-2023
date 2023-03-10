@@ -4,6 +4,7 @@
 [ext_resource type="TileSet" uid="uid://bxfj5uvsar2x6" path="res://Assets/Tiles/DesertTileset.tres" id="2_w8ym1"]
 
 [node name="Level" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_t1yhm")
 
 [node name="TileMap" type="TileMap" parent="."]

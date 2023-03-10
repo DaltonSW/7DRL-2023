@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://dc2l48fcn1fh1" path="res://Assets/Collisions/SlimeBoss/squishFourEight.tscn" id="14_bs37w"]
 
 [node name="SlimeBoss" type="CharacterBody2D" groups=["boss", "enemy"]]
+process_mode = 1
 script = ExtResource("1_hp5hd")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
@@ -27,7 +28,7 @@ animation = &"idle"
 
 [node name="allZero" parent="." groups=["enemy"] instance=ExtResource("5_aybh1")]
 visible = true
-polygon = PackedVector2Array(11, -51, 16, -49, 30, -45, 41, -39, 49, -33, 59, -26, 63, -19, 72, -8, 77, 5, 81, 21, 81, 41, 74, 60, 70, 64, 61, 71, 45, 79, 20, 82, 20, 84, -20, 84, -20, 82, -38, 79, -54, 75, -70, 64, -75, 57, -80, 43, -81, 20, -75, 0, -69, -12, -61, -21, -56, -29, -47, -35, -37, -42, -25, -47, -11, -51, 0, -51)
+polygon = PackedVector2Array(11, -51, 16, -49, 30, -45, 41, -39, 49, -33, 59, -26, 63, -19, 72, -8, 77, 5, 81, 21, 81, 41, 74, 60, 70, 64, 61, 71, 45, 79, 20, 82, 20, 84, -20, 84, -20, 82, -35, 81, -39, 79, -45, 79, -54, 75, -61, 71, -70, 64, -75, 57, -80, 43, -81, 20, -75, 0, -69, -12, -61, -21, -56, -29, -47, -35, -37, -42, -25, -47, -11, -51, 0, -51)
 
 [node name="idleOneFive" parent="." groups=["enemy"] instance=ExtResource("6_mt1pq")]
 polygon = PackedVector2Array(-1, -47, 12, -47, 28, -42, 40, -37, 49, -31, 59, -23, 65, -15, 72, -8, 77, 5, 81, 21, 81, 41, 74, 60, 70, 64, 63, 71, 59, 73, 47, 79, 35, 81, 20, 82, 20, 84, -20, 84, -20, 82, -35, 81, -47, 79, -62, 73, -70, 64, -75, 57, -80, 43, -81, 20, -75, 0, -69, -12, -61, -21, -47, -33, -35, -40, -25, -43, -10, -47)

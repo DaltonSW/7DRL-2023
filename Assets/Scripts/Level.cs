@@ -4,7 +4,8 @@ using Godot;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Cowball {
+namespace Cowball
+{
     public partial class Level : Node2D
     {
 
@@ -20,12 +21,14 @@ namespace Cowball {
             _playerSpawnPoint = GetNode<Marker2D>("PlayerSpawnPoint");
             ItemSpawnPoints = GetNode2DGroupPositions("ItemSpawnPoints");
             ExitSpawnPoints = GetNode2DGroupPositions("ExitSpawnPoints");
+
+            ProcessMode = ProcessModeEnum.Pausable;
         }
 
         private List<Vector2> GetNode2DGroupPositions(string spawnPointGroupName)
         {
             return GetTree().GetNodesInGroup(spawnPointGroupName)
-                .Select(node => ((Node2D) node).Position)
+                .Select(node => ((Node2D)node).Position)
                 .ToList();
         }
 
@@ -36,11 +39,11 @@ namespace Cowball {
 
         public Vector2 PlayerSpawnPosition() => _playerSpawnPoint.Position;
 
-        public RectIntBounds CameraBounds() 
+        public RectIntBounds CameraBounds()
         {
             if (_cameraBounds is not null)
             {
-               return _cameraBounds.Bounds();
+                return _cameraBounds.Bounds();
             }
             else
             {
