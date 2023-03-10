@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dn8r6e8c1qtj2"]
+
+[ext_resource type="Texture2D" uid="uid://bul7m5ap4rakj" path="res://Assets/Sprites/SlimeBoss/MiniSlimeProjectile.png" id="1_1oa0y"]
+[ext_resource type="Script" path="res://Assets/Scripts/Slime.cs" id="1_jqyyd"]
+
+[node name="Area2D" type="Area2D"]
+script = ExtResource("1_jqyyd")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("1_1oa0y")
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="."]
+scale = Vector2(2, 2)
+polygon = PackedVector2Array(2, -7, 4, -7, 4, -6, 5, -6, 5, -5, 6, -5, 6, -3, 7, -3, 7, -1, 8, -1, 8, 5, 7, 5, 7, 6, 6, 6, 6, 7, 4, 7, 4, 8, -4, 8, -4, 7, -6, 7, -6, 6, -7, 6, -7, 5, -8, 5, -8, -1, -7, -1, -7, -3, -6, -3, -6, -5, -5, -5, -5, -6, -4, -6, -4, -7, -2, -7, -2, -8, 2, -8)
