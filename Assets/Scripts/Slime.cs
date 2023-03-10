@@ -15,7 +15,7 @@ namespace Cowball
         [Export] private int _spread = 5;
         [Export] private int _distanceAllowed = 500;
         [Export] private double _distanceTravelled;
-        // Called when the node enters the scene tree for the first time.
+
         public override void _Ready()
         {
             _sprite = GetNode<Sprite2D>("Sprite");
@@ -24,7 +24,6 @@ namespace Cowball
             RotationDegrees += _random.Next(-15, 15);
         }
 
-        // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(double delta)
         {
             var movement = new Vector2((float)(_speed * delta * Mathf.Cos(Rotation)),

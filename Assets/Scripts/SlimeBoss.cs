@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 
 namespace Cowball
 {
@@ -11,16 +10,18 @@ namespace Cowball
         private const string JumpAnim = "jump";
 
         private Random _random;
-
         private PackedScene _slimeScene;
-
         private AnimatedSprite2D _sprite;
+
+        // Attack properties
         [Export] public int MinIdleLoopsBeforeJump = 4;
-        private int _idleLoopsCompleted;
         [Export] public int PercentChanceJump = 80;
+
+        // State properties
         private bool _isJumping;
         private bool _isFacingLeft;
         private bool _canFlip;
+        private int _idleLoopsCompleted;
 
         // Jump properties
         [Export] public float JumpHeight = 120; //pixels
@@ -49,7 +50,6 @@ namespace Cowball
             JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
 
             LoadCollisions();
-
         }
 
         private void LoadCollisions()
@@ -73,44 +73,44 @@ namespace Cowball
 
             CollisionPolygon2D[] idle =
             {
-            allZero,
-            idleOneFive,
-            idleTwoFour,
-            idleThree,
-            idleTwoFour,
-            idleOneFive
-        };
+                allZero,
+                idleOneFive,
+                idleTwoFour,
+                idleThree,
+                idleTwoFour,
+                idleOneFive
+            };
 
             CollisionPolygon2D[] jump =
             {
-            allZero,
-            jumpOne,
-            jumpTwo,
-            jumpThree,
-            jumpFour
-        };
+                allZero,
+                jumpOne,
+                jumpTwo,
+                jumpThree,
+                jumpFour
+            };
 
             CollisionPolygon2D[] squish =
             {
-            allZero,
-            squishOneEleven,
-            squishTwoTen,
-            squishThreeNine,
-            squishFourEight,
-            squishFiveSeven,
-            squishSix,
-            squishFiveSeven,
-            squishFourEight,
-            squishThreeNine,
-            squishTwoTen,
-            squishOneEleven
-        };
+                allZero,
+                squishOneEleven,
+                squishTwoTen,
+                squishThreeNine,
+                squishFourEight,
+                squishFiveSeven,
+                squishSix,
+                squishFiveSeven,
+                squishFourEight,
+                squishThreeNine,
+                squishTwoTen,
+                squishOneEleven
+            };
 
             CollisionPolygon2D[][] allCollisions = {
-            idle,
-            jump,
-            squish
-        };
+                idle,
+                jump,
+                squish
+            };
 
             _idleCollisions = idle;
             _jumpCollisions = jump;
@@ -146,7 +146,6 @@ namespace Cowball
                     _currentCollision = _squishCollisions[frame];
                     break;
             }
-
             _currentCollision.Disabled = false;
         }
 
@@ -155,7 +154,6 @@ namespace Cowball
             var velocity = Velocity;
             velocity.Y += Gravity * (float)delta;
 
-            // Add the gravity.
             if (!IsOnFloor())
             {
                 if (IsOnWall() && _canFlip)
@@ -176,8 +174,8 @@ namespace Cowball
                     _isJumping = false;
                     _sprite.Play(IdleAnim);
                     _idleLoopsCompleted = 0;
+                    // Shoot(); -- If we want a "hard mode" thing where he shoots twice per boing
                 }
-
             }
 
             if (_sprite.Animation == IdleAnim) // if idle anim...
@@ -230,10 +228,6 @@ namespace Cowball
             _canFlip = true;
             var dir = _isFacingLeft ? -1 : 1;
             return new Vector2(velocity.X + JumpSpeedHoriz * dir, velocity.Y - JumpSpeed);
-
-            // Shoot out projectiles in a circle around you
-            // Maybe shoot projectiles when you land as well, as a difficulty setting?
-
         }
 
         private void Shoot()
@@ -243,7 +237,6 @@ namespace Cowball
                 var newSlime = (Slime)_slimeScene.Instantiate();
                 newSlime.GlobalPosition = point.GlobalPosition;
                 newSlime.GlobalRotation = point.GlobalRotation;
-                //newSlime.SetRotation(Rotation);
                 GetParent().AddChild(newSlime);
             }
         }

@@ -208,7 +208,6 @@ namespace Cowball
                 }
             }
 
-
             if (_shotCooldown == 0)
             {
                 if (shoot)
@@ -224,8 +223,6 @@ namespace Cowball
                 if (_shotCooldown >= FireRate) _shotCooldown = 0;
             }
 
-
-
             velocity.X = Mathf.MoveToward(velocity.X, 0, Friction);
 
             Velocity = velocity;
@@ -237,9 +234,6 @@ namespace Cowball
             base._Process(delta);
 
             _armGunNode.Rotation = _ballSprite.GetAngleTo(GetGlobalMousePosition());
-
-            // Animation checking / changing
-            // Timer countdowns and resets (invincibility, shooting cooldown, etc)
         }
 
         #region Movement Methods
@@ -248,11 +242,6 @@ namespace Cowball
             if (IsOnFloor())
             {
                 velocity.Y = -jumpSpeed;
-            }
-
-            else if (IsOnWall())
-            {
-                // Do wall jump, if we even have one
             }
 
             _isJumping = true;
@@ -334,7 +323,7 @@ namespace Cowball
                     break;
 
                 case StatToChange.FireRate:
-                    // We'll need a shot cooldown
+                    FireRate += (float)newItem.AmountToChange;
                     break;
 
                 case StatToChange.JumpSpeed:
@@ -355,11 +344,11 @@ namespace Cowball
         }
 
 
-        public void RecalcPhysics()
-        {
-            Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
-            JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
-        }
+        // public void RecalcPhysics()
+        // {
+        //     Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
+        //     JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
+        // }
 
         public void KillPlayer()
         {
@@ -381,7 +370,7 @@ namespace Cowball
         {
             _animatedSprite.Play("fall_death");
             Die();
-            Tween tween = GetTree().CreateTween();
+            var tween = GetTree().CreateTween();
             var endPosition = new Vector2(Position.X, Position.Y + 200);
             tween.TweenProperty(this, "position", endPosition, .3f)
                 .SetTrans(Tween.TransitionType.Linear)
