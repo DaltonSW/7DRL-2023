@@ -1,14 +1,12 @@
 [gd_scene load_steps=5 format=3 uid="uid://vgqhm30mywma"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.cs" id="1_4h4w2"]
-[ext_resource type="PackedScene" uid="uid://dwxkex5p0wqqo" path="res://Assets/Levels/Level.tscn" id="1_lc5sq"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="2_fkqyy"]
+[ext_resource type="PackedScene" uid="uid://cpa7apak8g8ph" path="res://Assets/Levels/ItemRoom.tscn" id="4_f3j4k"]
 [ext_resource type="PackedScene" uid="uid://ccgnyywbhh5sv" path="res://Assets/Scenes/Enemies/SlimeBoss.tscn" id="4_kpmc1"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_4h4w2")
-
-[node name="Level" parent="." instance=ExtResource("1_lc5sq")]
 
 [node name="Player" parent="." instance=ExtResource("2_fkqyy")]
 position = Vector2(284, 496)
@@ -18,3 +16,5 @@ scale = Vector2(2, 2)
 position = Vector2(580, 366)
 MinIdleLoopsBeforeJump = 1
 PercentChanceJump = 100
+
+[node name="Level" parent="." instance=ExtResource("4_f3j4k")]

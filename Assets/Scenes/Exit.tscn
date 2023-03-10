@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://dbqdfqobn7qsr"]
+[gd_scene load_steps=8 format=3 uid="uid://dbqdfqobn7qsr"]
 
+[ext_resource type="Script" path="res://Assets/Scripts/Exit.cs" id="1_lli88"]
 [ext_resource type="Texture2D" uid="uid://ca576ek6xgygo" path="res://Assets/Sprites/Teleporter/Teleporter.png" id="1_tr4s6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pcnsq"]
@@ -39,6 +40,7 @@ animations = [{
 }]
 
 [node name="Exit" type="Node2D"]
+script = ExtResource("1_lli88")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -15)

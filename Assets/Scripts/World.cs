@@ -21,16 +21,24 @@ namespace Cowball {
 
         private Random _rng;
 
+        private Queue<string> _randomLevelFilenames;
+        private Queue<(string, PackedScene)> _nextLevels;
+
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
+            _rng = new Random();
+
+            List<string> levelFilenames = LoadLevelFilenames();
+            _randomLevelFilenames = CopyToShuffledQueue(levelFilenames);
+
             _player = GetNode<Player>("Player");
+
+            // TODO: remove, load instead
             _level = GetNode<Level>("Level");
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
             _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
-
-            _rng = new Random();
 
             _state = State.LoadingLevel;
         }
@@ -52,14 +60,39 @@ namespace Cowball {
             }
         }
 
+        public Exit CreateExit(string nextLevelFilename, PackedScene nextLevelScene)
+        {
+            Exit exit = _exitScene.Instantiate<Exit>();
+            exit.Initialize(nextLevelFilename, nextLevelScene);
+            return exit;
+        }
+
         public void SetUpLevel(Level level)
         {
             _player.SetCameraLimits(level.CameraBounds());
             _player.Position = level.PlayerSpawnPosition();
 
-            Stack<ItemParams> itemPool = CreateItemPoolShuffled();
-            SpawnNodes(level.ItemSpawnPoints, () => CreateItem(itemPool.Pop()));
-            SpawnNodes(level.ExitSpawnPoints, () => _exitScene.Instantiate<Node2D>());
+            Queue<ItemParams> itemPool = CopyToShuffledQueue(ITEM_POOL);
+            SpawnNodes(level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));
+
+            _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
+            // TODO: only spawn after enemies are all dead
+            SpawnNodes(level.ExitSpawnPoints, () => {
+                (string nextLevelFilename, PackedScene nextLevelScene) = _nextLevels.Dequeue();
+                return CreateExit(nextLevelFilename, nextLevelScene);
+            });
+        }
+
+        private Queue<(string, PackedScene)> TakeAndLoadLevelsFromPool(int n)
+        {
+            var randomLevels = new Queue<(string, PackedScene)>();
+            for (int i = 0; i < n; i++)
+            {
+                string levelFilename = _randomLevelFilenames.Dequeue();
+                PackedScene levelScene = ResourceLoader.Load<PackedScene>($"res://Assets/Levels/{levelFilename}.tscn");
+                randomLevels.Enqueue((levelFilename, levelScene));
+            }
+            return randomLevels;
         }
 
         private void SpawnNodes(List<Vector2> spawnPoints, Func<Node2D> constructNode)
@@ -72,29 +105,40 @@ namespace Cowball {
             }
         }
 
-        private Stack<ItemParams> CreateItemPoolShuffled()
-        {
-            List<ItemParams> shuffledList = 
-                CreateItemPool()
-                    .OrderBy(_ => _rng.Next())
-                    .ToList();
-            return new Stack<ItemParams>(shuffledList);
-        }
-
-        private static List<ItemParams> CreateItemPool()
-        {
-            // Items TODO:
-            // Lead Underwear - Butt stomp does more damage
-            // Bike Pump - Higher bounce
-            // Campfire - Flaming bullets
-            // Bigger bullets - Bigger bullets
-            // Hardhat - Can't take damage on your head
-            return new List<ItemParams> {
+        // Items TODO:
+        // Lead Underwear - Butt stomp does more damage
+        // Bike Pump - Higher bounce
+        // Campfire - Flaming bullets
+        // Bigger bullets - Bigger bullets
+        // Hardhat - Can't take damage on your head
+        private static ItemParams[] ITEM_POOL = 
+            {
                 new ItemParams("Soylent", "Soylent", StatToChange.Health, 1),
                 new ItemParams("Hotdog", "Hot Dog", StatToChange.Health, 1),
                 new ItemParams("Itchy Finger", "Poison Ivy", StatToChange.FireRate, 0.3),
                 new ItemParams("Coffee", "Coffee", StatToChange.Speed, 25),
             };
+
+        private static List<string> LoadLevelFilenames()
+        {
+            // `using` closes the file when `file` goes out of scope.
+            // Godot editor doesn't like ".csv" files, so this has to be a ".txt".
+            using var file = FileAccess.Open("res://Assets/Levels/level_list.csv.txt", FileAccess.ModeFlags.Read);
+
+            List<string> levelFilenames = new List<string>();
+            while (file.GetPosition() < file.GetLength())
+            {
+                string[] line = file.GetCsvLine();
+                string levelFilename = line[0];
+                levelFilenames.Add(levelFilename);
+            }
+            return levelFilenames;
+        }
+
+        private Queue<T> CopyToShuffledQueue<T>(IEnumerable<T> list)
+        {
+            List<T> shuffledList = list.OrderBy(_ => _rng.Next()).ToList();
+            return new Queue<T>(shuffledList);
         }
 
         private Item CreateItem(ItemParams itemParams)
