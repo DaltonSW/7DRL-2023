@@ -1,9 +1,23 @@
-[gd_scene load_steps=22 format=3 uid="uid://ccgnyywbhh5sv"]
+[gd_scene load_steps=36 format=3 uid="uid://ccgnyywbhh5sv"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/SlimeBoss.cs" id="1_hp5hd"]
 [ext_resource type="Texture2D" uid="uid://05md6cftmyfw" path="res://Assets/Sprites/SlimeBoss/aniIdle.png" id="2_l1m2h"]
 [ext_resource type="Texture2D" uid="uid://cy14l3c757b7c" path="res://Assets/Sprites/SlimeBoss/aniJump.png" id="3_sq146"]
 [ext_resource type="Texture2D" uid="uid://dj5x71jckwowj" path="res://Assets/Sprites/SlimeBoss/aniSquish.png" id="4_47gk4"]
+[ext_resource type="PackedScene" uid="uid://dmly3wvghm7gc" path="res://Assets/Collisions/SlimeBoss/allZero.tscn" id="5_aybh1"]
+[ext_resource type="PackedScene" uid="uid://fa1y76u5yjwn" path="res://Assets/Collisions/SlimeBoss/squishOneEleven.tscn" id="5_r1exn"]
+[ext_resource type="PackedScene" uid="uid://dh6pv8u6u0kiv" path="res://Assets/Collisions/SlimeBoss/squishSix.tscn" id="6_5niv4"]
+[ext_resource type="PackedScene" uid="uid://c5huxs7cl6p70" path="res://Assets/Collisions/SlimeBoss/squishTwoTen.tscn" id="6_k60ww"]
+[ext_resource type="PackedScene" uid="uid://mnbbgnyncp4n" path="res://Assets/Collisions/SlimeBoss/idleOneFive.tscn" id="6_mt1pq"]
+[ext_resource type="PackedScene" uid="uid://cq7phgeggygal" path="res://Assets/Collisions/SlimeBoss/squishThreeNine.tscn" id="7_jo0oq"]
+[ext_resource type="PackedScene" uid="uid://c1ed265jdntof" path="res://Assets/Collisions/SlimeBoss/idleTwoFour.tscn" id="7_ohuoh"]
+[ext_resource type="PackedScene" uid="uid://wiyhq484n4lb" path="res://Assets/Collisions/SlimeBoss/idleThree.tscn" id="8_kcsbk"]
+[ext_resource type="PackedScene" uid="uid://c8ddpvt06rsoy" path="res://Assets/Collisions/SlimeBoss/jumpOne.tscn" id="9_xhbb7"]
+[ext_resource type="PackedScene" uid="uid://bw5vvwoy0sfg4" path="res://Assets/Collisions/SlimeBoss/jumpTwo.tscn" id="10_et6uu"]
+[ext_resource type="PackedScene" uid="uid://dag04r0y0wnfu" path="res://Assets/Collisions/SlimeBoss/jumpThree.tscn" id="11_wdxc3"]
+[ext_resource type="PackedScene" uid="uid://0fwut1bevtph" path="res://Assets/Collisions/SlimeBoss/jumpFour.tscn" id="12_ugipr"]
+[ext_resource type="PackedScene" uid="uid://c2xbuqrytos1o" path="res://Assets/Collisions/SlimeBoss/squishFiveSeven.tscn" id="13_pxkik"]
+[ext_resource type="PackedScene" uid="uid://dc2l48fcn1fh1" path="res://Assets/Collisions/SlimeBoss/squishFourEight.tscn" id="14_bs37w"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x36ji"]
 atlas = ExtResource("2_l1m2h")
@@ -162,8 +176,8 @@ script = ExtResource("1_hp5hd")
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_hiwvt")
-animation = &"idle"
-frame = 3
+animation = &"squish"
+frame = 6
 
 [node name="AssLessCollision" type="CollisionPolygon2D" parent="."]
 visible = false
@@ -179,20 +193,49 @@ disabled = true
 
 [node name="JumpGroup" type="Node" parent="."]
 
-[node name="idleZero" type="CollisionPolygon2D" parent="."]
-visible = false
-polygon = PackedVector2Array(11, -51, 16, -49, 30, -45, 41, -39, 49, -33, 59, -26, 63, -19, 72, -8, 77, 5, 81, 21, 81, 41, 74, 60, 70, 64, 61, 71, 45, 79, 22, 81, 16, 83, 0, 83, -18, 83, -38, 79, -54, 75, -70, 64, -75, 57, -80, 43, -81, 20, -75, 0, -69, -12, -61, -21, -56, -29, -47, -35, -37, -42, -25, -47, -11, -51, 0, -51)
+[node name="allZero" parent="." instance=ExtResource("5_aybh1")]
+polygon = PackedVector2Array(11, -51, 16, -49, 30, -45, 41, -39, 49, -33, 59, -26, 63, -19, 72, -8, 77, 5, 81, 21, 81, 41, 74, 60, 70, 64, 61, 71, 45, 79, 20, 82, 20, 84, -20, 84, -20, 82, -38, 79, -54, 75, -70, 64, -75, 57, -80, 43, -81, 20, -75, 0, -69, -12, -61, -21, -56, -29, -47, -35, -37, -42, -25, -47, -11, -51, 0, -51)
 
-[node name="idleOneFive" type="CollisionPolygon2D" parent="."]
-visible = false
-polygon = PackedVector2Array(-1, -47, 12, -47, 28, -42, 40, -37, 49, -31, 59, -23, 65, -15, 72, -8, 77, 5, 81, 21, 81, 41, 74, 60, 70, 64, 63, 71, 59, 73, 47, 79, 35, 81, 19, 83, -18, 83, -35, 81, -47, 79, -62, 73, -70, 64, -75, 57, -80, 43, -81, 20, -75, 0, -69, -12, -61, -21, -47, -33, -35, -40, -25, -43, -10, -47)
-disabled = true
+[node name="idleOneFive" parent="." instance=ExtResource("6_mt1pq")]
+polygon = PackedVector2Array(-1, -47, 12, -47, 28, -42, 40, -37, 49, -31, 59, -23, 65, -15, 72, -8, 77, 5, 81, 21, 81, 41, 74, 60, 70, 64, 63, 71, 59, 73, 47, 79, 35, 81, 20, 82, 20, 84, -20, 84, -20, 82, -35, 81, -47, 79, -62, 73, -70, 64, -75, 57, -80, 43, -81, 20, -75, 0, -69, -12, -61, -21, -47, -33, -35, -40, -25, -43, -10, -47)
 
-[node name="idleTwoFour" type="CollisionPolygon2D" parent="."]
-visible = false
-polygon = PackedVector2Array(-1, -43, 11, -43, 26, -39, 37, -35, 47, -29, 59, -23, 65, -15, 72, -8, 77, 3, 83, 21, 83, 42, 78, 59, 74, 64, 63, 71, 47, 79, 35, 82, 18, 83, -19, 83, -47, 79, -60, 73, -74, 64, -79, 57, -81, 49, -83, 41, -83, 21, -79, 7, -75, 0, -69, -12, -61, -19, -47, -29, -35, -35, -25, -39, -10, -43)
-disabled = true
+[node name="idleTwoFour" parent="." instance=ExtResource("7_ohuoh")]
+polygon = PackedVector2Array(-1, -43, 11, -43, 26, -39, 37, -35, 47, -29, 59, -23, 65, -15, 72, -8, 77, 3, 83, 21, 83, 42, 78, 59, 74, 64, 63, 71, 47, 79, 35, 82, 22, 82, 22, 84, -20, 84, -20, 82, -47, 79, -60, 73, -74, 64, -79, 57, -81, 49, -83, 41, -83, 21, -79, 7, -75, 0, -69, -12, -61, -19, -47, -29, -35, -35, -25, -39, -10, -43)
 
-[node name="idleThree" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(0, -39, 11, -39, 23, -36, 35, -31, 45, -27, 50, -25, 56, -21, 59.3097, -18.4142, 65, -15, 72, -8, 77, 1, 81, 11, 85, 23, 86, 42, 84, 45, 80, 58, 76, 64, 65, 72, 58, 75, 49, 79, 37, 81, 21, 83, -20, 83, -37, 81, -49, 79, -59, 75, -67, 71, -76, 64, -81, 57, -85, 43, -85, 23, -83, 15, -77, 0, -69, -10, -59, -20, -51.47, -25.2355, -43, -29, -33, -33, -27, -35, -21, -37, -11, -39)
-disabled = true
+[node name="idleThree" parent="." instance=ExtResource("8_kcsbk")]
+polygon = PackedVector2Array(0, -39, 11, -39, 23, -36, 35, -31, 45, -27, 50, -25, 56, -21, 59.3097, -18.4142, 65, -15, 72, -8, 77, 1, 81, 11, 85, 23, 86, 42, 84, 45, 80, 58, 76, 64, 65, 72, 58, 75, 49, 79, 37, 81, 22, 82, 22, 84, -22, 84, -22, 82, -37, 81, -49, 79, -59, 75, -67, 71, -76, 64, -81, 57, -85, 43, -85, 23, -83, 15, -77, 0, -69, -10, -59, -20, -51.47, -25.2355, -43, -29, -33, -33, -27, -35, -21, -37, -11, -39)
+
+[node name="jumpOne" parent="." instance=ExtResource("9_xhbb7")]
+polygon = PackedVector2Array(11, -59, 19, -57, 26, -53, 33, -51, 43, -45, 51, -37, 57, -31, 63, -19, 69, -9, 73, 5, 75, 14, 75, 38, 71, 48, 69, 56, 63, 63, 62, 68, 60, 68, 60, 70, 58, 70, 58, 74, 54, 74, 54, 76, 50, 76, 50, 78, 44, 78, 44, 80, 34, 80, 34, 82, 20, 82, 20, 84, -18, 84, -18, 82, -33, 82, -34, 80, -44, 80, -50, 78, -53, 75, -63, 64, -71, 53, -75, 37, -75, 13, -71, 0, -67, -11, -61, -21, -56, -29, -51, -37, -39, -47, -29, -53, -17, -57, -11, -59, 0, -59)
+
+[node name="jumpTwo" parent="." instance=ExtResource("10_et6uu")]
+polygon = PackedVector2Array(9, -67, 19, -63, 23, -63, 30, -59, 37, -53, 47, -45, 51, -41, 53, -37, 57, -31, 63, -23, 63, -16, 67, -7, 69, 7, 71, 9, 71, 34, 67, 44, 65, 57, 61, 64, 53, 71, 47, 75, 40, 79, 22, 81, 18, 82, 18, 84, -18, 84, -18, 82, -38, 79, -53, 71, -64, 59, -67, 45, -71, 33, -71, 9, -69, 1, -65, -13, -61, -24, -57, -31, -51, -41, -41, -51, -31, -57, -22, -63, -16, -65, -9, -67)
+
+[node name="jumpThree" parent="." instance=ExtResource("11_wdxc3")]
+polygon = PackedVector2Array(9, -75, 17, -73, 23, -67, 28, -66, 31, -63, 39, -59, 41, -53, 45, -51, 49, -47, 51, -41, 53, -37, 57, -31, 61, -23, 63, -11, 67, 5, 67, 31, 65, 41, 63, 52, 57, 61, 53, 67, 47, 73, 39, 77, 27, 82, 18, 82, 18, 84, -16, 84, -16, 82, -29, 82, -38, 79, -49, 71, -53, 67, -59, 59, -63, 52, -65, 41, -67, 32, -67, 6, -66, 3, -65, -4, -61, -13, -61, -24, -57, -31, -51, -41, -48, -49, -43, -51, -39, -59, -35, -61, -27, -67, -21, -71, -9, -75)
+
+[node name="jumpFour" parent="." instance=ExtResource("12_ugipr")]
+polygon = PackedVector2Array(9, -83, 17, -79, 23, -75, 29, -72, 35, -65, 41, -59, 45, -53, 49, -47, 51, -41, 53, -37, 57, -31, 59, -23, 61, -9, 63, 1, 63, 29, 61, 39, 59, 53, 55, 59, 51, 65, 49, 70, 45, 71, 39, 77, 27, 82, 16, 82, 16, 84, -16, 84, -16, 82, -27, 81, -33, 79, -37, 75, -46, 71, -51, 65, -55, 59, -59, 53, -61, 39, -63, 29, -63, 1, -61, -1, -59, -11, -57, -25, -57, -31, -51, -41, -48, -49, -45, -53, -41, -59, -35, -65, -29, -71, -21, -77, -9, -83)
+
+[node name="squishOneEleven" parent="." instance=ExtResource("5_r1exn")]
+visible = false
+polygon = PackedVector2Array(-22, -35, 21, -35, 27, -34, 29, -31, 35, -31, 37, -30, 39, -30, 41, -27, 43, -27, 45, -25, 47, -23, 51, -21, 59, -19, 61, -18, 63, -15, 65, -14, 67, -9, 69, -7, 71, -5, 76, 0, 79, 3, 81, 7, 83, 13, 85, 17, 87, 25, 87, 44, 84, 52, 83, 59, 77, 65, 73, 67, 65, 75, 59, 75, 57, 78, 51, 78, 48, 79, 40, 80, 39, 81, 22, 82, 22, 84, -22, 84, -22, 82, -39, 81, -41, 80, -49, 79, -51, 77, -57, 77, -59, 76, -66, 75, -78, 63, -83, 59, -87, 42, -87, 25, -83, 13, -78, 3, -59, -19, -51, -21, -43, -27, -35, -31)
+
+[node name="squishTwoTen" parent="." instance=ExtResource("6_k60ww")]
+visible = false
+polygon = PackedVector2Array(-14, -21, 13, -21, 15, -20, 23, -19, 25, -18, 38, -18, 39, -16, 44, -15, 47, -13, 57, -9, 63, -5, 69, -3, 71, 1, 79, 5, 83, 11, 87, 17, 88, 21, 93, 25, 95, 33, 95, 49, 93, 55, 89, 61, 85, 65, 79, 71, 69, 76, 63, 77, 60, 79, 45, 79, 42, 81, 24, 82, 24, 84, -24, 84, -24, 82, -44, 81, -45, 79, -61, 79, -63, 77, -68, 77, -72, 73, -79, 71, -85, 65, -91, 60, -93, 51, -95, 49, -95, 34, -93, 25, -88, 20, -86, 15, -81, 9, -79, 5, -75, 5, -71, -1, -68, -3, -61, -5, -57, -9, -51, -9, -47, -13, -39, -15, -37, -17, -23, -19)
+
+[node name="squishThreeNine" parent="." instance=ExtResource("7_jo0oq")]
+visible = false
+polygon = PackedVector2Array(-26, -6, 26, -5, 34, -3, 35, -1, 45, -2, 47, 1, 51, 1, 53, 3, 60, 3, 63, 7, 69, 7, 77, 11, 82, 15, 88, 19, 93, 23, 95, 30, 99, 35, 103, 39, 103, 53, 99, 60, 97, 66, 93, 69, 87, 71, 81, 74, 77, 77, 68, 78, 61, 80, 58, 81, 26, 82, 26, 84, -26, 84, -26, 82, -60, 82, -61, 79, -69, 78, -78, 76, -87, 72, -93, 69, -96, 66, -99, 59, -102, 54, -103, 39, -97, 33, -95, 27, -91, 23, -83, 15, -77, 11, -69, 7, -61, 5, -59, 3, -53, 3, -47, 0, -34, -2)
+
+[node name="squishFourEight" parent="." instance=ExtResource("14_bs37w")]
+polygon = PackedVector2Array(-16, 8, 16, 8, 17, 10, 36, 11, 37, 12, 50, 12, 51, 14, 56, 15, 57, 17, 63, 16, 65, 19, 69, 18, 71, 20, 78, 20, 79, 23, 83, 23, 85, 27, 90, 27, 93, 31, 98, 31, 101, 37, 105, 39, 108, 44, 111, 47, 111, 60, 107, 64, 102, 69, 95, 74, 85, 77, 76, 79, 62, 81, 28, 82, 28, 84, -28, 84, -28, 82, -64, 82, -65, 80, -77, 80, -79, 77, -85, 78, -87, 76, -93, 73, -97, 71, -101, 70, -105, 67, -107, 63, -111, 59, -111, 46, -109, 43, -107, 43, -105, 39, -101, 37, -99, 33, -97, 31, -93, 31, -89, 27, -83, 23, -76.2159, 21.8693, -71, 21, -65, 19, -63, 18, -57, 17, -52, 15, -49, 13, -37, 13, -34, 11, -18, 11)
+
+[node name="squishFiveSeven" parent="." instance=ExtResource("13_pxkik")]
+visible = false
+polygon = PackedVector2Array(-30, 24, 29, 24, 32, 26, 48, 26, 49, 29, 63, 29, 64, 31, 72, 31, 73, 33, 82, 33, 88, 34, 94, 37, 100, 38, 101, 41, 105, 43, 112, 45, 113, 49, 117, 52, 119, 56, 119, 63, 117, 67, 113, 71, 111, 73, 105, 75, 95, 77, 89, 79, 79, 79, 77, 81, 54, 82, 54, 84, -54, 84, -54, 82, -77, 81, -79, 79, -89, 79, -91, 77, -96, 77, -97, 75, -103, 75, -105, 74, -109, 73, -111, 71, -113, 69, -114, 67, -116, 65, -118, 63, -119, 55, -115, 53, -115, 51, -113, 49, -109, 47, -103, 43, -101, 41, -97, 39, -93, 39, -91, 37, -87, 37, -85, 35, -81, 35, -79, 33, -73, 33, -71, 31, -63, 31, -61, 29, -48, 29, -47, 27, -32, 27)
+
+[node name="squishSix" parent="." instance=ExtResource("6_5niv4")]
+visible = true
+polygon = PackedVector2Array(19, 38, 21, 41, 51, 41, 53, 43, 67, 43, 69, 44, 79, 45, 81, 47, 92, 47, 93, 49, 99, 48, 101, 50, 106, 51, 107, 53, 111, 53, 113, 55, 117, 55, 119, 57, 121, 57, 123, 59, 126, 63, 127, 70, 121, 73, 117, 75, 111, 77, 103, 77, 101, 79, 91, 79, 89, 81, 58, 82, 58, 84, -58, 84, -58, 82, -89, 81, -91, 79, -101, 79, -103, 77, -111, 77, -113, 75, -117, 75, -121, 73, -123, 71, -126, 69, -126, 63, -123, 61, -122, 57, -117, 55, -111, 53, -105, 51, -99, 49, -91, 47, -81, 47, -79, 45, -69, 45, -67, 43, -53, 43, -51, 41, -21, 40, -19, 38)
