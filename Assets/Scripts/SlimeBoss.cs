@@ -27,9 +27,9 @@ public partial class SlimeBoss : CharacterBody2D
 
     // Collisions
     private CollisionPolygon2D _currentCollision;
-    private List<CollisionPolygon2D> _idleCollisions;
-    private List<CollisionPolygon2D> _squishCollisions;
-    private List<CollisionPolygon2D> _jumpCollisions;
+    private CollisionPolygon2D[] _idleCollisions;
+    private CollisionPolygon2D[] _squishCollisions;
+    private CollisionPolygon2D[] _jumpCollisions;
 
     public override void _Ready()
     {
@@ -65,7 +65,7 @@ public partial class SlimeBoss : CharacterBody2D
 
         _currentCollision = allZero;
 
-        _idleCollisions = new List<CollisionPolygon2D>()
+        CollisionPolygon2D[] idle =
         {
             allZero,
             idleOneFive,
@@ -75,7 +75,7 @@ public partial class SlimeBoss : CharacterBody2D
             idleOneFive
         };
 
-        _jumpCollisions = new List<CollisionPolygon2D>()
+        CollisionPolygon2D[] jump =
         {
             allZero,
             jumpOne,
@@ -84,7 +84,7 @@ public partial class SlimeBoss : CharacterBody2D
             jumpFour
         };
 
-        _squishCollisions = new List<CollisionPolygon2D>()
+        CollisionPolygon2D[] squish =
         {
             allZero,
             squishOneEleven,
@@ -100,20 +100,24 @@ public partial class SlimeBoss : CharacterBody2D
             squishOneEleven
         };
 
-        foreach (var col in _idleCollisions)
+        CollisionPolygon2D[][] allCollisions = {
+            idle,
+            jump,
+            squish
+        };
+
+        _idleCollisions = idle;
+        _jumpCollisions = jump;
+        _squishCollisions = squish;
+
+        foreach (var list in allCollisions)
         {
-            col.Disabled = true;
+            foreach (var col in list)
+            {
+                col.Disabled = true;
+            }
         }
 
-        foreach (var col in _jumpCollisions)
-        {
-            col.Disabled = true;
-        }
-
-        foreach (var col in _squishCollisions)
-        {
-            col.Disabled = true;
-        }
     }
 
     public override void _Process(double delta)
