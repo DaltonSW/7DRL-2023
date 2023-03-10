@@ -1,9 +1,7 @@
-[gd_scene load_steps=36 format=3 uid="uid://ccgnyywbhh5sv"]
+[gd_scene load_steps=17 format=3 uid="uid://ccgnyywbhh5sv"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/SlimeBoss.cs" id="1_hp5hd"]
-[ext_resource type="Texture2D" uid="uid://05md6cftmyfw" path="res://Assets/Sprites/SlimeBoss/aniIdle.png" id="2_l1m2h"]
-[ext_resource type="Texture2D" uid="uid://cy14l3c757b7c" path="res://Assets/Sprites/SlimeBoss/aniJump.png" id="3_sq146"]
-[ext_resource type="Texture2D" uid="uid://dj5x71jckwowj" path="res://Assets/Sprites/SlimeBoss/aniSquish.png" id="4_47gk4"]
+[ext_resource type="SpriteFrames" uid="uid://o7ljpa5p4sqs" path="res://Assets/Scenes/Enemies/SlimeBossSpriteFrames.tres" id="2_4x2nc"]
 [ext_resource type="PackedScene" uid="uid://dmly3wvghm7gc" path="res://Assets/Collisions/SlimeBoss/allZero.tscn" id="5_aybh1"]
 [ext_resource type="PackedScene" uid="uid://fa1y76u5yjwn" path="res://Assets/Collisions/SlimeBoss/squishOneEleven.tscn" id="5_r1exn"]
 [ext_resource type="PackedScene" uid="uid://dh6pv8u6u0kiv" path="res://Assets/Collisions/SlimeBoss/squishSix.tscn" id="6_5niv4"]
@@ -19,163 +17,12 @@
 [ext_resource type="PackedScene" uid="uid://c2xbuqrytos1o" path="res://Assets/Collisions/SlimeBoss/squishFiveSeven.tscn" id="13_pxkik"]
 [ext_resource type="PackedScene" uid="uid://dc2l48fcn1fh1" path="res://Assets/Collisions/SlimeBoss/squishFourEight.tscn" id="14_bs37w"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_x36ji"]
-atlas = ExtResource("2_l1m2h")
-region = Rect2(0, 0, 88, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6rusv"]
-atlas = ExtResource("2_l1m2h")
-region = Rect2(88, 0, 88, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mhef0"]
-atlas = ExtResource("2_l1m2h")
-region = Rect2(176, 0, 88, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d2lqt"]
-atlas = ExtResource("2_l1m2h")
-region = Rect2(264, 0, 88, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fijbo"]
-atlas = ExtResource("3_sq146")
-region = Rect2(0, 0, 80, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wgnx8"]
-atlas = ExtResource("3_sq146")
-region = Rect2(80, 0, 80, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dp1lk"]
-atlas = ExtResource("3_sq146")
-region = Rect2(160, 0, 80, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2ct1h"]
-atlas = ExtResource("3_sq146")
-region = Rect2(240, 0, 80, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_i428m"]
-atlas = ExtResource("3_sq146")
-region = Rect2(320, 0, 80, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qe1xh"]
-atlas = ExtResource("4_47gk4")
-region = Rect2(0, 0, 128, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ypvsv"]
-atlas = ExtResource("4_47gk4")
-region = Rect2(128, 0, 128, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8bucy"]
-atlas = ExtResource("4_47gk4")
-region = Rect2(256, 0, 128, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5388f"]
-atlas = ExtResource("4_47gk4")
-region = Rect2(384, 0, 128, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_eodxq"]
-atlas = ExtResource("4_47gk4")
-region = Rect2(512, 0, 128, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bmdeu"]
-atlas = ExtResource("4_47gk4")
-region = Rect2(640, 0, 128, 84)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mop5u"]
-atlas = ExtResource("4_47gk4")
-region = Rect2(768, 0, 128, 84)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_hiwvt"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_x36ji")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6rusv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mhef0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d2lqt")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mhef0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6rusv")
-}],
-"loop": false,
-"name": &"idle",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fijbo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wgnx8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dp1lk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2ct1h")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_i428m")
-}],
-"loop": false,
-"name": &"jump",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qe1xh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ypvsv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8bucy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5388f")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_eodxq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bmdeu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mop5u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bmdeu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_eodxq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5388f")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8bucy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ypvsv")
-}],
-"loop": false,
-"name": &"squish",
-"speed": 15.0
-}]
-
 [node name="SlimeBoss" type="CharacterBody2D"]
 script = ExtResource("1_hp5hd")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
-sprite_frames = SubResource("SpriteFrames_hiwvt")
+sprite_frames = ExtResource("2_4x2nc")
 
 [node name="allZero" parent="." instance=ExtResource("5_aybh1")]
 polygon = PackedVector2Array(11, -51, 16, -49, 30, -45, 41, -39, 49, -33, 59, -26, 63, -19, 72, -8, 77, 5, 81, 21, 81, 41, 74, 60, 70, 64, 61, 71, 45, 79, 20, 82, 20, 84, -20, 84, -20, 82, -38, 79, -54, 75, -70, 64, -75, 57, -80, 43, -81, 20, -75, 0, -69, -12, -61, -21, -56, -29, -47, -35, -37, -42, -25, -47, -11, -51, 0, -51)
@@ -223,17 +70,21 @@ polygon = PackedVector2Array(-30, 24, 29, 24, 32, 26, 48, 26, 49, 29, 63, 29, 64
 [node name="squishSix" parent="." instance=ExtResource("6_5niv4")]
 polygon = PackedVector2Array(19, 38, 21, 41, 51, 41, 53, 43, 67, 43, 69, 44, 79, 45, 81, 47, 92, 47, 93, 49, 99, 48, 101, 50, 106, 51, 107, 53, 111, 53, 113, 55, 117, 55, 119, 57, 121, 57, 123, 59, 126, 63, 127, 70, 121, 73, 117, 75, 111, 77, 103, 77, 101, 79, 91, 79, 89, 81, 58, 82, 58, 84, -58, 84, -58, 82, -89, 81, -91, 79, -101, 79, -103, 77, -111, 77, -113, 75, -117, 75, -121, 73, -123, 71, -126, 69, -126, 63, -123, 61, -122, 57, -117, 55, -111, 53, -105, 51, -99, 49, -91, 47, -81, 47, -79, 45, -69, 45, -67, 43, -53, 43, -51, 41, -21, 40, -19, 38)
 
-[node name="slimeSpawn1" type="Marker2D" parent="."]
+[node name="slimeSpawn1" type="Marker2D" parent="." groups=["slimeSpawns"]]
 position = Vector2(-100, 0)
+rotation = 3.14159
 
-[node name="slimeSpawn2" type="Marker2D" parent="."]
+[node name="slimeSpawn2" type="Marker2D" parent="." groups=["slimeSpawns"]]
 position = Vector2(-60, -60)
+rotation = -2.35619
 
-[node name="slimeSpawn3" type="Marker2D" parent="."]
+[node name="slimeSpawn3" type="Marker2D" parent="." groups=["slimeSpawns"]]
 position = Vector2(0, -75)
+rotation = -1.5708
 
-[node name="slimeSpawn4" type="Marker2D" parent="."]
+[node name="slimeSpawn4" type="Marker2D" parent="." groups=["slimeSpawns"]]
 position = Vector2(60, -60)
+rotation = -0.785398
 
-[node name="slimeSpawn5" type="Marker2D" parent="."]
+[node name="slimeSpawn5" type="Marker2D" parent="." groups=["slimeSpawns"]]
 position = Vector2(100, 0)
