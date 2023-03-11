@@ -29,25 +29,36 @@ namespace Cowball
 
         public override void _Process(double delta)
         {
-            _armGunNode.Rotation = _sprite.GetAngleTo(_player.GlobalPosition);
-            var left = Mathf.Abs(_armGunNode.RotationDegrees) > 90 && Mathf.Abs(_armGunNode.RotationDegrees) < 180;
-            _sprite.FlipH = left;
-            _hatSprite.FlipH = left;
+            if (_player == null) return;
 
-            var dir = _player.Position - Position;
-            var distToPlayer = Mathf.Sqrt(dir.X * dir.X + dir.Y * dir.Y);
-
-            if (_shotCooldown == 0 && distToPlayer < Range)
+            try
             {
-                Shoot();
-                _shotCooldown += delta;
+                _armGunNode.Rotation = _sprite.GetAngleTo(_player.GlobalPosition);
+                var left = Mathf.Abs(_armGunNode.RotationDegrees) > 90 && Mathf.Abs(_armGunNode.RotationDegrees) < 180;
+                _sprite.FlipH = left;
+                _hatSprite.FlipH = left;
+
+                var dir = _player.Position - Position;
+                var distToPlayer = Mathf.Sqrt(dir.X * dir.X + dir.Y * dir.Y);
+
+                if (_shotCooldown == 0 && distToPlayer < Range)
+                {
+                    Shoot();
+                    _shotCooldown += delta;
+                }
+
+                else if (_shotCooldown > 0)
+                {
+                    _shotCooldown += delta;
+                    if (_shotCooldown >= FireRate) _shotCooldown = 0;
+                }
+            }
+            catch (ObjectDisposedException e)
+            {
+                Console.WriteLine(e);
+                _player = null;
             }
 
-            else if (_shotCooldown > 0)
-            {
-                _shotCooldown += delta;
-                if (_shotCooldown >= FireRate) _shotCooldown = 0;
-            }
         }
 
         public override void _PhysicsProcess(double delta)
