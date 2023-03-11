@@ -44,6 +44,8 @@ radius = 4.0
 height = 18.0
 
 [node name="Exit" type="Node2D" groups=["exits"]]
+position = Vector2(0, 4)
+scale = Vector2(2, 2)
 script = ExtResource("1_lli88")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
