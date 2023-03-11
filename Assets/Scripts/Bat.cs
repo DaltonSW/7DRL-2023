@@ -33,6 +33,7 @@ namespace Cowball
         private void OnAreaEntered(Node area)
         {
             if (!area.IsInGroup("playerBullet")) return;
+            if (area.IsInGroup("enemy")) return;
             QueueFree();
             area.QueueFree();
         }

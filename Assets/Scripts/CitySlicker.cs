@@ -13,6 +13,7 @@ namespace Cowball
 
         // Shooting
         [Export] public double FireRate = 1;
+        [Export] public double Range = 250;
         private double _shotCooldown;
 
         public override void _Ready()
@@ -32,7 +33,10 @@ namespace Cowball
             _sprite.FlipH = left;
             _hatSprite.FlipH = left;
 
-            if (_shotCooldown == 0)
+            var dir = _player.Position - Position;
+            var distToPlayer = Mathf.Sqrt(dir.X * dir.X + dir.Y * dir.Y);
+
+            if (_shotCooldown == 0 && distToPlayer < Range)
             {
                 Shoot();
                 _shotCooldown += delta;
