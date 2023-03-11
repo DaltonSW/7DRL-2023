@@ -1,12 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://djsxh7pb0tl0f"]
+[gd_scene load_steps=6 format=3 uid="uid://djsxh7pb0tl0f"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.cs" id="1_4i0je"]
 [ext_resource type="PackedScene" uid="uid://dwxkex5p0wqqo" path="res://Assets/Levels/Level.tscn" id="2_mhv18"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="3_l17c1"]
-[ext_resource type="PackedScene" uid="uid://ccgnyywbhh5sv" path="res://Assets/Scenes/Enemies/SlimeBoss.tscn" id="4_b8gse"]
 [ext_resource type="PackedScene" uid="uid://d0r1wadg5l20h" path="res://Assets/Scenes/PlayerHealth.tscn" id="5_4ahbm"]
-[ext_resource type="PackedScene" uid="uid://c17rlpy0bqcle" path="res://Assets/Scenes/Enemies/BossHealth.tscn" id="6_bx103"]
-[ext_resource type="PackedScene" uid="uid://cjbnua4ug1p24" path="res://Assets/Scenes/Enemies/Bat.tscn" id="7_hgssa"]
+[ext_resource type="PackedScene" uid="uid://dwrvwlao2orrd" path="res://Assets/Scenes/Enemies/CitySlicker.tscn" id="6_jjeuw"]
 
 [node name="World" type="Node2D"]
 process_mode = 3
@@ -19,23 +17,11 @@ script = ExtResource("1_4i0je")
 position = Vector2(284, 496)
 scale = Vector2(2, 2)
 
-[node name="SlimeBoss" parent="." instance=ExtResource("4_b8gse")]
-position = Vector2(767, 395)
-MinIdleLoopsBeforeJump = 1
-PercentChanceJump = 100
-
 [node name="PlayerHealth" parent="." instance=ExtResource("5_4ahbm")]
 scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
 
-[node name="BossHealth" parent="." instance=ExtResource("6_bx103")]
-offset_left = 842.0
-offset_top = 8.0
-offset_right = 882.0
-offset_bottom = 48.0
-metadata/_edit_use_anchors_ = true
-
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
 
-[node name="Bat" parent="." instance=ExtResource("7_hgssa")]
-position = Vector2(121, 70)
+[node name="CitySlicker" parent="." instance=ExtResource("6_jjeuw")]
+position = Vector2(786, 458)
