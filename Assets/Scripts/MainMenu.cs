@@ -39,22 +39,22 @@ public partial class MainMenu : Control
         _quitButton.Disabled = false;
     }
 
-    public void _on_StartButton_pressed()
+    private void _on_StartButton_pressed()
     {
         GetTree().ChangeSceneToFile("res://Assets/Scenes/Scene.tscn");
     }
 
-    public void _on_TutorialButton_pressed()
+    private void _on_TutorialButton_pressed()
     {
         GetTree().ChangeSceneToFile("res://Assets/Scenes/Tutorial.tscn");
     }
 
-    public void _on_QuitButton_pressed()
+    private void _on_QuitButton_pressed()
     {
         GetTree().Quit();
     }
 
-    public void _on_CreditsButton_pressed()
+    private void _on_CreditsButton_pressed()
     {
         _creditsSprite.Visible = true;
         _startButton.Disabled = true;

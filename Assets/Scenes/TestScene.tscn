@@ -25,6 +25,8 @@ transform = Transform2D(2, 0, 0, 2, 0, 0)
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
 
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+
 [node name="YouWin" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(640, 250)

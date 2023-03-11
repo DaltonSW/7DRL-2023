@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Assets/Scripts/Level.cs" id="1_t1yhm"]
 [ext_resource type="TileSet" uid="uid://bxfj5uvsar2x6" path="res://Assets/Tiles/DesertTileset.tres" id="2_w8ym1"]
 [ext_resource type="PackedScene" uid="uid://dwrvwlao2orrd" path="res://Assets/Scenes/Enemies/CitySlicker.tscn" id="3_hf00a"]
-[ext_resource type="PackedScene" uid="uid://cjbnua4ug1p24" path="res://Assets/Scenes/Enemies/Bat.tscn" id="4_h8kv5"]
+[ext_resource type="PackedScene" uid="uid://c81uxg0cjicrr" path="res://Assets/Scenes/Enemies/Bat.tscn" id="4_h8kv5"]
 
 [node name="Level" type="Node2D"]
 process_mode = 1
