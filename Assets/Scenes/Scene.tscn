@@ -16,3 +16,5 @@ scale = Vector2(2, 2)
 [node name="PlayerHealth" parent="." instance=ExtResource("5_o48m7")]
 scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
