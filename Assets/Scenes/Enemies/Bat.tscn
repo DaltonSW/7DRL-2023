@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://cjbnua4ug1p24"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Bat.cs" id="1_tenul"]
+[ext_resource type="Texture2D" uid="uid://cho11tbphho51" path="res://Assets/Sprites/Bat/aniWingFlap.png" id="1_y060b"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ci2r6"]
+atlas = ExtResource("1_y060b")
+region = Rect2(0, 0, 48, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0fym3"]
+atlas = ExtResource("1_y060b")
+region = Rect2(48, 0, 48, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7s8dl"]
+atlas = ExtResource("1_y060b")
+region = Rect2(96, 0, 48, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dhfwb"]
+atlas = ExtResource("1_y060b")
+region = Rect2(144, 0, 48, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wkt8x"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ci2r6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0fym3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7s8dl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dhfwb")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Bat" type="Area2D" groups=["enemy"]]
+scale = Vector2(2, 2)
+script = ExtResource("1_tenul")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="." groups=["enemy"]]
+position = Vector2(0, -1)
+sprite_frames = SubResource("SpriteFrames_wkt8x")
+autoplay = "default"
+
+[node name="Collision" type="CollisionPolygon2D" parent="." groups=["enemy"]]
+polygon = PackedVector2Array(-4, -3, 4, -3, 11, 1, 16, 1, 16, 4, 10, 11, 8, 12, 3, 15, -3, 15, -8, 12, -10, 11, -16, 4, -16, 1, -11, 1)
+
+[connection signal="area_entered" from="." to="." method="OnAreaEntered"]

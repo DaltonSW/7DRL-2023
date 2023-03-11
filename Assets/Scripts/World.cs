@@ -11,9 +11,11 @@ namespace Cowball
         {
             LoadingLevel,
             Playing,
-            Paused,
         }
         private State _state;
+        private AudioStreamPlayer _audioPlayer;
+        private AudioStream pauseSound;
+        private AudioStream unpauseSound;
 
         private Player _player;
         private Level _level;
@@ -35,6 +37,11 @@ namespace Cowball
             _randomLevelFilenames = CopyToShuffledQueue(levelFilenames);
 
             _player = GetNode<Player>("Player");
+            _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
+            _audioPlayer.Autoplay = false;
+
+            pauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Pause.wav");
+            unpauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Unpause.wav");
 
             // TODO: remove, load instead
             _level = GetNode<Level>("Level");
@@ -50,6 +57,7 @@ namespace Cowball
         {
             var pausing = Input.IsActionJustPressed("Pause");
             if (pausing) GetTree().Paused = !GetTree().Paused;
+
             switch (_state)
             {
                 case State.LoadingLevel:
