@@ -254,8 +254,8 @@ namespace Cowball
             if (IsOnFloor())
             {
                 velocity.Y = -jumpSpeed;
-                _audioPlayer.Stream = _jumpSound;
-                _audioPlayer.Play();
+                // _audioPlayer.Stream = _jumpSound;
+                // _audioPlayer.Play();
             }
 
             _isJumping = true;
@@ -309,8 +309,8 @@ namespace Cowball
 
         private void Shoot()
         {
-            _audioPlayer.Stream = _shootSound;
-            _audioPlayer.Play();
+            // _audioPlayer.Stream = _shootSound;
+            // _audioPlayer.Play();
 
             var bullet = (Bullet)_bulletScene.Instantiate();
             var bulletSpawn = GetNode<Marker2D>("ArmGun/BulletSpawn");
