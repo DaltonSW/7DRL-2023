@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://vgqhm30mywma"]
+[gd_scene load_steps=6 format=3 uid="uid://vgqhm30mywma"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.cs" id="1_4h4w2"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="2_fkqyy"]
+[ext_resource type="Texture2D" uid="uid://dbf6dobmdsqst" path="res://Assets/Sprites/HUD/YouWin.png" id="4_oyq8k"]
+[ext_resource type="Texture2D" uid="uid://d3ry5ltn5q215" path="res://Assets/Sprites/HUD/YouLose.png" id="5_58nmr"]
 [ext_resource type="PackedScene" uid="uid://d0r1wadg5l20h" path="res://Assets/Scenes/PlayerHealth.tscn" id="5_o48m7"]
 
 [node name="World" type="Node2D"]
@@ -19,3 +21,15 @@ scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="YouWin" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(640, 250)
+texture = ExtResource("4_oyq8k")
+
+[node name="YouLose" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(640, 250)
+texture = ExtResource("5_58nmr")

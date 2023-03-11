@@ -10,8 +10,7 @@ namespace Cowball
         FireRate,
         Health,
         JumpSpeed,
-        // BulletSize,
-
+        Damage,
     }
 
     public readonly record struct ItemParams(string ItemName, string SpriteFilename, StatToChange StatToChange,

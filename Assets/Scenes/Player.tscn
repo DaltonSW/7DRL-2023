@@ -169,9 +169,7 @@ texture = ExtResource("2_5juqf")
 [node name="AnimatedBallSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_3y0rk")
-animation = &"softDrop"
-frame = 4
-frame_progress = 1.0
+animation = &"hardDrop"
 
 [node name="CircleCollision" type="CollisionShape2D" parent="."]
 visible = false
@@ -196,6 +194,8 @@ polygon = PackedVector2Array(8, -2, 7, -2, 7, -4, 6, -4, 6, -5, 5, -5, 5, -6, 4,
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(0, -57)
 limit_smoothed = true
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
 
 [connection signal="area_entered" from="Area2D" to="." method="OnAreaEntered"]
 [connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]

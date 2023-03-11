@@ -5,6 +5,10 @@ namespace Cowball
 {
     public partial class SlimeBoss : CharacterBody2D
     {
+        #region Signals
+        [Signal] public delegate void BossKilledEventHandler();
+        #endregion
+
         private const string IdleAnim = "idle";
         private const string SquishAnim = "squish";
         private const string JumpAnim = "jump";
@@ -137,10 +141,9 @@ namespace Cowball
         {
             if (!_sprite.IsPlaying())
             {
-                if (_sprite.Animation == DeathAnim)
-                {
-                    QueueFree();
-                }
+                if (_sprite.Animation != DeathAnim) return;
+                EmitSignal(SignalName.BossKilled);
+                QueueFree();
                 return;
             }
             if (_sprite.Animation == DeathAnim)

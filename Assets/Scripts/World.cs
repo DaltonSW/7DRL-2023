@@ -11,13 +11,21 @@ namespace Cowball
         {
             LoadingLevel,
             Playing,
+            GameOver,
         }
         private State _state;
+        private AudioStreamPlayer _musicPlayer;
         private AudioStreamPlayer _audioPlayer;
+        private AudioStream _gameMusic;
         private AudioStream _pauseSound;
         private AudioStream _unpauseSound;
+        private AudioStream _bossDeath;
 
         private Player _player;
+        private SlimeBoss _boss;
+
+        private Sprite2D _youWin;
+        private Sprite2D _youLose;
 
         private bool _needToInstantiateLevelScene;
         private PackedScene _levelScene;
@@ -30,6 +38,8 @@ namespace Cowball
 
         private Queue<string> _randomLevelFilenames;
         private Queue<(string, PackedScene)> _nextLevels;
+
+        private int _enemiesLeftInLevel;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -53,12 +63,25 @@ namespace Cowball
                 _needToInstantiateLevelScene = true;
             }
             _player = GetNode<Player>("Player");
-            _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
-            _audioPlayer.Autoplay = false;
-            _audioPlayer.VolumeDb = -5f;
+            _player.Connect("PlayerKilled", new Callable(this, nameof(OnPlayerDeath)));
+
+            _youWin = GetNode<Sprite2D>("YouWin");
+            _youLose = GetNode<Sprite2D>("YouLose");
 
             _pauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Pause.wav");
             _unpauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Unpause.wav");
+            _bossDeath = GD.Load<AudioStream>("res://Assets/Sounds/BossDefeated.wav");
+            _gameMusic = GD.Load<AudioStream>("res://Assets/Sounds/Game.wav");
+
+            _musicPlayer = GetNode<AudioStreamPlayer>("MusicPlayer");
+            _musicPlayer.Autoplay = true;
+            _musicPlayer.Stream = _gameMusic;
+            _musicPlayer.VolumeDb = -5f;
+            _musicPlayer.Play();
+
+            _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
+            _audioPlayer.Autoplay = false;
+            _audioPlayer.VolumeDb = -5f;
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
             _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
@@ -72,6 +95,10 @@ namespace Cowball
             var pausing = Input.IsActionJustPressed("Pause");
             if (pausing)
             {
+                if (_state == State.GameOver)
+                {
+                    GetTree().ChangeSceneToFile("res://Assets/Scenes/MainMenu.tscn");
+                }
                 if (GetTree().Paused)
                 {
                     _audioPlayer.Stream = _unpauseSound;
@@ -121,17 +148,48 @@ namespace Cowball
         {
             _player.SetCameraLimits(level.CameraBounds());
             _player.Position = level.PlayerSpawnPosition();
+            _player.SetSpawn(level.PlayerSpawnPosition());
 
             Queue<ItemParams> itemPool = CopyToShuffledQueue(ITEM_POOL);
             SpawnNodesInLevel(level, level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));
 
             _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
-            // TODO: only spawn after enemies are all dead
-            SpawnNodesInLevel(level, level.ExitSpawnPoints, () =>
+
+            var enemies = FindEnemies();
+            foreach (var enemy in enemies)
             {
-                (string nextLevelFilename, PackedScene nextLevelScene) = _nextLevels.Dequeue();
-                return CreateExit(nextLevelFilename, nextLevelScene);
-            });
+                enemy.Connect("Died", Callable.From(() => OnEnemyDied(enemy)));
+            }
+            var boss = GetTree().GetFirstNodeInGroup("boss");
+            if (boss is not null)
+            {
+                boss.Connect("BossKilled", Callable.From(() => OnBossDeath(boss)));
+            }
+
+            SpawnExitsIfNoEnemiesRemain(null);
+        }
+
+        private Godot.Collections.Array<Node> FindEnemies()
+        {
+            return GetTree().GetNodesInGroup("root_enemy");
+        }
+
+        private void SpawnExitsIfNoEnemiesRemain(Node enemy)
+        {
+            var enemies = FindEnemies();
+            if (enemies.Count == 0 || (enemies.Count == 1 && System.Object.ReferenceEquals(enemies[0], enemy)))
+            {
+                SpawnNodesInLevel(_level, _level.ExitSpawnPoints, () =>
+                {
+                    (string nextLevelFilename, PackedScene nextLevelScene) = _nextLevels.Dequeue();
+                    return CreateExit(nextLevelFilename, nextLevelScene);
+                });
+            }
+        }
+
+        private void OnEnemyDied(Node enemy)
+        {
+            SpawnExitsIfNoEnemiesRemain(enemy);
         }
 
         private Queue<(string, PackedScene)> TakeAndLoadLevelsFromPool(int n)
@@ -161,18 +219,33 @@ namespace Cowball
             }
         }
 
-        // Items TODO:
-        // Lead Underwear - Butt stomp does more damage
-        // Campfire - Flaming bullets (Pivot -- Damage Up)
-        // Bigger bullets - Bigger bullets (Pivot -- Damage Up)
-        // Hardhat - Can't take damage on your head (Pivot -- Health Up)
+        private void OnBossDeath(Node boss)
+        {
+            _audioPlayer.Stream = _bossDeath;
+            _audioPlayer.Play();
+            GetTree().Paused = true;
+            _youWin.Visible = true;
+            _state = State.GameOver;
+        }
+
+        private void OnPlayerDeath()
+        {
+            GetTree().Paused = true;
+            _youLose.Visible = true;
+            _state = State.GameOver;
+        }
+
         private static ItemParams[] ITEM_POOL =
             {
                 new ItemParams("Soylent", "Soylent", StatToChange.Health, 1),
-                new ItemParams("Hotdog", "Hot Dog", StatToChange.Health, 1),
+                new ItemParams("Hot Dog", "Hot Dog", StatToChange.Health, 1),
                 new ItemParams("Itchy Finger", "Poison Ivy", StatToChange.FireRate, 0.3),
                 new ItemParams("Coffee", "Coffee", StatToChange.Speed, 25),
                 new ItemParams("Bike Pump", "Bike Pump", StatToChange.JumpSpeed, 25),
+                new ItemParams("Bigger Bullets", "Bigger Bullets", StatToChange.Damage, 1),
+                new ItemParams("Campfire", "Campfire", StatToChange.Damage, 1),
+                new ItemParams("Hard Hat", "Hard Hat", StatToChange.Health, 1),
+                new ItemParams("Lead Underwear", "Lead Underwear", StatToChange.Health, 1),
             };
 
         private static List<string> LoadLevelFilenames()
@@ -206,11 +279,6 @@ namespace Cowball
 
         public void LoadNextLevel(Exit exit)
         {
-            _level.QueueFree();
-            _state = State.LoadingLevel;
-            _levelScene = exit.NextLevelScene;
-            _needToInstantiateLevelScene = true;
-
             // Return other levels to pool
             var otherLevels = GetTree().GetNodesInGroup("exits")
                 .Select(node => (Exit)node)
@@ -220,6 +288,11 @@ namespace Cowball
             {
                 _randomLevelFilenames.Enqueue(otherLevel);
             }
+
+            _level.QueueFree();
+            _state = State.LoadingLevel;
+            _levelScene = exit.NextLevelScene;
+            _needToInstantiateLevelScene = true;
         }
     }
 

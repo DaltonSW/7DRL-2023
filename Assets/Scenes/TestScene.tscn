@@ -1,16 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://djsxh7pb0tl0f"]
+[gd_scene load_steps=7 format=3 uid="uid://djsxh7pb0tl0f"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.cs" id="1_4i0je"]
-[ext_resource type="PackedScene" uid="uid://dwxkex5p0wqqo" path="res://Assets/Levels/Level.tscn" id="2_mhv18"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="3_l17c1"]
 [ext_resource type="PackedScene" uid="uid://d0r1wadg5l20h" path="res://Assets/Scenes/PlayerHealth.tscn" id="5_4ahbm"]
+[ext_resource type="Texture2D" uid="uid://dbf6dobmdsqst" path="res://Assets/Sprites/HUD/YouWin.png" id="6_2qy1f"]
+[ext_resource type="PackedScene" uid="uid://d3xskiyje6mdi" path="res://Assets/Levels/Boss Level.tscn" id="6_s00ye"]
+[ext_resource type="Texture2D" uid="uid://d3ry5ltn5q215" path="res://Assets/Sprites/HUD/YouLose.png" id="7_guo8p"]
 
 [node name="World" type="Node2D"]
 process_mode = 3
 position = Vector2(-1, 0)
 script = ExtResource("1_4i0je")
 
-[node name="Level" parent="." instance=ExtResource("2_mhv18")]
+[node name="Level" parent="." instance=ExtResource("6_s00ye")]
 
 [node name="Player" parent="." instance=ExtResource("3_l17c1")]
 position = Vector2(284, 496)
@@ -22,3 +24,13 @@ scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="YouWin" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(640, 250)
+texture = ExtResource("6_2qy1f")
+
+[node name="YouLose" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(640, 250)
+texture = ExtResource("7_guo8p")

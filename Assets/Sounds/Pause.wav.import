@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://dtd3xb0vcylon"
+uid="uid://bon80clw5k6qd"
 path="res://.godot/imported/Pause.wav-26f37a092237e0952bf3bf1d76152536.sample"
 
 [deps]
@@ -12,13 +12,13 @@ dest_files=["res://.godot/imported/Pause.wav-26f37a092237e0952bf3bf1d76152536.sa
 
 [params]
 
-force/8_bit=true
+force/8_bit=false
 force/mono=false
 force/max_rate=false
 force/max_rate_hz=44100
-edit/trim=true
+edit/trim=false
 edit/normalize=false
-edit/loop_mode=1
+edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
 compress/mode=0

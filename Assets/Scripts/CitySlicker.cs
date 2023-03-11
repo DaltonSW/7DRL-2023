@@ -5,6 +5,10 @@ namespace Cowball
 {
     public partial class CitySlicker : CharacterBody2D
     {
+        #region Signals
+        [Signal] public delegate void DiedEventHandler();
+        #endregion
+
         private PackedScene _bulletScene;
         private Sprite2D _sprite;
         private Sprite2D _hatSprite;
@@ -84,13 +88,16 @@ namespace Cowball
             if (!area.IsInGroup("playerBullet")) return;
             var bullet = (Bullet)area;
             TakeDamage(bullet.Damage);
-            area.QueueFree();
+            bullet.FreeBullet();
         }
 
         private void TakeDamage(float damage)
         {
             _health -= damage;
-            if (_health <= 0) QueueFree();
+            if (_health <= 0) {
+                EmitSignal(SignalName.Died);
+                QueueFree();
+            }
         }
     }
 }

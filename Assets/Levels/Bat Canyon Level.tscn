@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://ck1f7outds1ny"]
+[gd_scene load_steps=6 format=3 uid="uid://ck1f7outds1ny"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Level.cs" id="1_m7ncn"]
 [ext_resource type="PackedScene" uid="uid://carr6is42gr4p" path="res://Assets/Level Tilemaps/Jack Nightly/Bat Canyon Tilemap.tscn" id="2_1l882"]
-[ext_resource type="PackedScene" path="res://Assets/Scenes/Enemies/Bat.tscn" id="3_ii76d"]
+[ext_resource type="PackedScene" uid="uid://c81uxg0cjicrr" path="res://Assets/Scenes/Enemies/Bat.tscn" id="3_ii76d"]
 [ext_resource type="PackedScene" uid="uid://dwrvwlao2orrd" path="res://Assets/Scenes/Enemies/CitySlicker.tscn" id="4_yj3ip"]
+[ext_resource type="PackedScene" uid="uid://8qjdvvp7ywv1" path="res://Assets/Scenes/ExitSpawnPoint.tscn" id="5_6410a"]
 
 [node name="Level" type="Node2D"]
 process_mode = 1
@@ -39,3 +40,6 @@ position = Vector2(1072, 430)
 
 [node name="CitySlicker2" parent="." instance=ExtResource("4_yj3ip")]
 position = Vector2(112, 270)
+
+[node name="ExitSpawnPoint" parent="." instance=ExtResource("5_6410a")]
+position = Vector2(915, 576)

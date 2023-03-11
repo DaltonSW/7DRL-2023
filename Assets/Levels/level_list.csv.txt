@@ -1,4 +1,8 @@
 ItemRoom
-Flatland
-Pit
 WowACube
+Bat Canyon Level
+Pillars Level
+Twin Peaks Level
+Tutorial Level
+Ascension Level
+Bat Canyon Level
