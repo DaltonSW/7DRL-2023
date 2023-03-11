@@ -21,7 +21,7 @@ namespace Cowball
             _armGunNode = GetNode<Node2D>("ArmGun");
             _sprite = GetNode<Sprite2D>("Sprite");
             _hatSprite = GetNode<Sprite2D>("HatSprite");
-            _player = GetNode<Player>("../Player");
+            _player = GetNode<Player>("../../Player");
 
             _bulletScene = GD.Load<PackedScene>("res://Assets/Scenes/Enemies/EnemyBullet.tscn");
         }
