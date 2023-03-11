@@ -67,6 +67,7 @@ namespace Cowball
         private PlayerHealth _healthHUD;
 
         // Shooting
+        [Export] public float BulletDamage = 4F;
         [Export] public double FireRate = 0.6;
         private double _shotCooldown;
 
@@ -246,6 +247,15 @@ namespace Cowball
             base._Process(delta);
 
             _armGunNode.Rotation = _ballSprite.GetAngleTo(GetGlobalMousePosition());
+            if (_currentInvincibility > 0)
+            {
+                _currentInvincibility += (float)delta;
+                if (_currentInvincibility > InvincibilityBuffer)
+                {
+                    _currentInvincibility = 0;
+                    CycleTransparency(true);
+                }
+            }
         }
 
         #region Movement Methods
@@ -254,8 +264,8 @@ namespace Cowball
             if (IsOnFloor())
             {
                 velocity.Y = -jumpSpeed;
-                _audioPlayer.Stream = _jumpSound;
-                _audioPlayer.Play();
+                // _audioPlayer.Stream = _jumpSound;
+                // _audioPlayer.Play();
             }
 
             _isJumping = true;
@@ -288,11 +298,11 @@ namespace Cowball
 
         private void CycleTransparency(bool lighten)
         {
-            var tempNormal = _animatedSprite.Modulate;
+            var tempNormal = _ballSprite.Modulate;
 
             tempNormal.A = lighten ? 1 : 0.5F;
 
-            _animatedSprite.Modulate = tempNormal;
+            _ballSprite.Modulate = tempNormal;
         }
 
         private void Face(bool left)
@@ -309,13 +319,14 @@ namespace Cowball
 
         private void Shoot()
         {
-            _audioPlayer.Stream = _shootSound;
-            _audioPlayer.Play();
+            // _audioPlayer.Stream = _shootSound;
+            // _audioPlayer.Play();
 
             var bullet = (Bullet)_bulletScene.Instantiate();
             var bulletSpawn = GetNode<Marker2D>("ArmGun/BulletSpawn");
             bullet.Position = bulletSpawn.GlobalPosition;
             bullet.Rotation = _armGunNode.Rotation;
+            bullet.SetDamage(BulletDamage);
             GetParent().AddChild(bullet);
         }
 
@@ -347,6 +358,9 @@ namespace Cowball
                     JumpSpeed += (float)newItem.AmountToChange;
                     break;
 
+                case StatToChange.Damage:
+                    BulletDamage += (float)newItem.AmountToChange;
+                    break;
                 case StatToChange.None:
                 default:
                     break;
@@ -376,6 +390,7 @@ namespace Cowball
             if (area.IsInGroup("items"))
             {
                 var item = area.GetParent<Item>();
+                AddItem(item);
                 item.QueueFree();
                 return;
             }
@@ -403,88 +418,13 @@ namespace Cowball
 
         public void DamagePlayer(float damage)
         {
+            if (_currentInvincibility < InvincibilityBuffer && _currentInvincibility != 0) return;
+            _currentInvincibility += 0.01F;
+            CycleTransparency(false);
             CurrentHealth -= damage;
-            if (CurrentHealth <= 0)
-            {
-                EmitSignal(SignalName.PlayerKilled);
-                QueueFree();
-            }
-        }
-
-
-        // public void RecalcPhysics()
-        // {
-        //     Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
-        //     JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
-        // }
-
-        public void KillPlayer()
-        {
-            SwitchToNormalSpriteAndHitboxes();
-            CycleTransparency(true);
-            _animatedSprite.Play("health_death");
-            Die();
-        }
-
-        private void Die()
-        {
-            _healthSprite.Frame = 0;
-            _isDying = true;
-            ProcessMode = ProcessModeEnum.Always;
-            GetTree().Paused = true;
-        }
-
-        public void FallAndDie()
-        {
-            _animatedSprite.Play("fall_death");
-            Die();
-            var tween = GetTree().CreateTween();
-            var endPosition = new Vector2(Position.X, Position.Y + 200);
-            tween.TweenProperty(this, "position", endPosition, .3f)
-                .SetTrans(Tween.TransitionType.Linear)
-                .SetEase(Tween.EaseType.In)
-                .SetDelay(.3f);
-            tween.TweenCallback(Callable.From(OnTweenCompleted));
-        }
-
-        public void OnTweenCompleted()
-        {
+            if (!(CurrentHealth <= 0)) return;
             EmitSignal(SignalName.PlayerKilled);
-        }
-
-        public void HealPlayer()
-        {
-            CurrentHealth = MaxHealth;
-            _healthSprite.Frame = 5;
-        }
-
-        public void HurtPlayer()
-        {
-            if (_currentInvincibility == 0)
-            {
-                _currentInvincibility = 0.016667F;
-                CycleTransparency(false);
-                CurrentHealth--;
-                _healthSprite.Frame = (int)CurrentHealth;
-                _audioPlayer.Stream = _hurtSound;
-                _audioPlayer.Play();
-                if (CurrentHealth == 0)
-                {
-                    KillPlayer();
-                }
-            }
-
-        }
-
-        public void ResetPlayer()
-        {
-            GD.Print("resetting");
-            HealPlayer();
-            ClearSpritesAndHitboxes();
-            ActivateNormalSpriteAndHitboxes();
-            _animatedSprite.Play("idle");
-            ProcessMode = ProcessModeEnum.Inherit;
-            _isDying = false;
+            QueueFree();
         }
 
         private void LoadSounds()
@@ -492,12 +432,11 @@ namespace Cowball
             _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
             _audioPlayer.VolumeDb = -18;
 
-            _jumpSound = GD.Load<AudioStreamWav>("res://Assets/Sounds/Player/jump.wav");
-            _shootSound = GD.Load<AudioStreamWav>("res://Assets/Sounds/Player/shoot.wav");
+            //_jumpSound = GD.Load<AudioStreamWav>("res://Assets/Sounds/Player/jump.wav");
+            //_shootSound = GD.Load<AudioStreamWav>("res://Assets/Sounds/Player/shoot.wav");
             //_hurtSound = GD.Load<AudioStreamWav>("res://Assets/Sounds/Player/hurt.wav");
             //guitarHitSound = GD.Load<AudioStreamSample>("res://Sounds/SFX/guitar_hit.wav");
             //guitarMissSound = GD.Load<AudioStreamSample>("res://Sounds/SFX/guitar_miss.wav");
-            GD.Print("Sounds");
         }
 
         public void SetCameraLimits(RectIntBounds limits)
