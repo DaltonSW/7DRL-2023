@@ -1,15 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://vgqhm30mywma"]
+[gd_scene load_steps=7 format=3 uid="uid://vgqhm30mywma"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.cs" id="1_4h4w2"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="2_fkqyy"]
 [ext_resource type="Texture2D" uid="uid://dbf6dobmdsqst" path="res://Assets/Sprites/HUD/YouWin.png" id="4_oyq8k"]
 [ext_resource type="Texture2D" uid="uid://d3ry5ltn5q215" path="res://Assets/Sprites/HUD/YouLose.png" id="5_58nmr"]
 [ext_resource type="PackedScene" uid="uid://d0r1wadg5l20h" path="res://Assets/Scenes/PlayerHealth.tscn" id="5_o48m7"]
+[ext_resource type="Texture2D" uid="uid://bapj3duauwxev" path="res://Assets/Backgrounds/Desert Background.png" id="6_svfef"]
 
 [node name="World" type="Node2D"]
 process_mode = 3
 position = Vector2(-1, 0)
 script = ExtResource("1_4h4w2")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(640, 361)
+scale = Vector2(2, 2)
+texture = ExtResource("6_svfef")
 
 [node name="Player" parent="." instance=ExtResource("2_fkqyy")]
 position = Vector2(284, 496)
