@@ -60,7 +60,7 @@ namespace Cowball
             FreeBullet();
         }
 
-        private void FreeBullet()
+        public void FreeBullet()
         {
             _isDisappearing = true;
             _disappearTimeRemaining = disappearTime;
