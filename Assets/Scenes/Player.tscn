@@ -169,9 +169,7 @@ texture = ExtResource("2_5juqf")
 [node name="AnimatedBallSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_3y0rk")
-animation = &"softDrop"
-frame = 4
-frame_progress = 1.0
+animation = &"hardDrop"
 
 [node name="CircleCollision" type="CollisionShape2D" parent="."]
 visible = false

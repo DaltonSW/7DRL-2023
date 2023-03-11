@@ -121,6 +121,7 @@ namespace Cowball
         {
             _player.SetCameraLimits(level.CameraBounds());
             _player.Position = level.PlayerSpawnPosition();
+            _player.SetSpawn(level.PlayerSpawnPosition());
 
             Queue<ItemParams> itemPool = CopyToShuffledQueue(ITEM_POOL);
             SpawnNodesInLevel(level, level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));

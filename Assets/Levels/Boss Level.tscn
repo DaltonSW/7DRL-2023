@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dyulxf136b2q0"]
+[gd_scene load_steps=6 format=3 uid="uid://d3xskiyje6mdi"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Level.cs" id="1_wmr4x"]
-[ext_resource type="PackedScene" uid="uid://d1vy30xegi3ak" path="res://Assets/Level Tilemaps/Jack Nightly/Boss Arena Tilemap.tscn" id="2_f4cf2"]
+[ext_resource type="PackedScene" path="res://Assets/Level Tilemaps/Jack Nightly/Boss Arena Tilemap.tscn" id="2_f4cf2"]
 [ext_resource type="PackedScene" uid="uid://ccgnyywbhh5sv" path="res://Assets/Scenes/Enemies/SlimeBoss.tscn" id="3_2a6rb"]
+[ext_resource type="PackedScene" uid="uid://c17rlpy0bqcle" path="res://Assets/Scenes/Enemies/BossHealth.tscn" id="4_y0os8"]
+[ext_resource type="Texture2D" uid="uid://dbf6dobmdsqst" path="res://Assets/Sprites/HUD/YouWin.png" id="5_sxybv"]
 
 [node name="Level" type="Node2D"]
 process_mode = 1
@@ -18,3 +20,14 @@ position = Vector2(258, 443)
 
 [node name="SlimeBoss" parent="." instance=ExtResource("3_2a6rb")]
 position = Vector2(1041, 387)
+
+[node name="BossHealth" parent="." instance=ExtResource("4_y0os8")]
+offset_left = 843.0
+offset_top = 38.0
+offset_right = 883.0
+offset_bottom = 78.0
+
+[node name="YouWin" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(640, 250)
+texture = ExtResource("5_sxybv")

@@ -1,16 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://djsxh7pb0tl0f"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.cs" id="1_4i0je"]
-[ext_resource type="PackedScene" uid="uid://dwxkex5p0wqqo" path="res://Assets/Levels/Level.tscn" id="2_mhv18"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="3_l17c1"]
+[ext_resource type="PackedScene" uid="uid://d3xskiyje6mdi" path="res://Assets/Levels/Boss Level.tscn" id="4_x2u0n"]
 [ext_resource type="PackedScene" uid="uid://d0r1wadg5l20h" path="res://Assets/Scenes/PlayerHealth.tscn" id="5_4ahbm"]
 
 [node name="World" type="Node2D"]
 process_mode = 3
 position = Vector2(-1, 0)
 script = ExtResource("1_4i0je")
-
-[node name="Level" parent="." instance=ExtResource("2_mhv18")]
 
 [node name="Player" parent="." instance=ExtResource("3_l17c1")]
 position = Vector2(284, 496)
@@ -22,3 +20,5 @@ scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Level" parent="." instance=ExtResource("4_x2u0n")]
