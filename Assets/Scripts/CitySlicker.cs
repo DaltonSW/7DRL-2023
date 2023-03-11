@@ -43,7 +43,7 @@ namespace Cowball
                 _shotCooldown += delta;
             }
 
-            else
+            else if (_shotCooldown > 0)
             {
                 _shotCooldown += delta;
                 if (_shotCooldown >= FireRate) _shotCooldown = 0;
