@@ -30,6 +30,11 @@ namespace Cowball
             }
         }
 
+        public void SetDamage(float damage)
+        {
+            Damage = damage;
+        }
+
         private void OnBodyEntered(Node2D node)
         {
             if (!node.IsInGroup("boss")) return;

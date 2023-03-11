@@ -194,18 +194,17 @@ namespace Cowball
             _state = State.GameOver;
         }
 
-        // Items TODO:
-        // Lead Underwear - Butt stomp does more damage
-        // Campfire - Flaming bullets (Pivot -- Damage Up)
-        // Bigger bullets - Bigger bullets (Pivot -- Damage Up)
-        // Hardhat - Can't take damage on your head (Pivot -- Health Up)
         private static ItemParams[] ITEM_POOL =
             {
                 new ItemParams("Soylent", "Soylent", StatToChange.Health, 1),
-                new ItemParams("Hotdog", "Hot Dog", StatToChange.Health, 1),
+                new ItemParams("Hot Dog", "Hot Dog", StatToChange.Health, 1),
                 new ItemParams("Itchy Finger", "Poison Ivy", StatToChange.FireRate, 0.3),
                 new ItemParams("Coffee", "Coffee", StatToChange.Speed, 25),
                 new ItemParams("Bike Pump", "Bike Pump", StatToChange.JumpSpeed, 25),
+                new ItemParams("Bigger Bullets", "Bigger Bullets", StatToChange.Damage, 1),
+                new ItemParams("Campfire", "Campfire", StatToChange.Damage, 1),
+                new ItemParams("Hard Hat", "Hard Hat", StatToChange.Health, 1),
+                new ItemParams("Lead Underwear", "Lead Underwear", StatToChange.Health, 1),
             };
 
         private static List<string> LoadLevelFilenames()

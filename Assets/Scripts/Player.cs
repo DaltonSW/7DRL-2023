@@ -67,6 +67,7 @@ namespace Cowball
         private PlayerHealth _healthHUD;
 
         // Shooting
+        [Export] public float BulletDamage = 4F;
         [Export] public double FireRate = 0.6;
         private double _shotCooldown;
 
@@ -325,6 +326,7 @@ namespace Cowball
             var bulletSpawn = GetNode<Marker2D>("ArmGun/BulletSpawn");
             bullet.Position = bulletSpawn.GlobalPosition;
             bullet.Rotation = _armGunNode.Rotation;
+            bullet.SetDamage(BulletDamage);
             GetParent().AddChild(bullet);
         }
 
@@ -356,6 +358,9 @@ namespace Cowball
                     JumpSpeed += (float)newItem.AmountToChange;
                     break;
 
+                case StatToChange.Damage:
+                    BulletDamage += (float)newItem.AmountToChange;
+                    break;
                 case StatToChange.None:
                 default:
                     break;
@@ -385,6 +390,7 @@ namespace Cowball
             if (area.IsInGroup("items"))
             {
                 var item = area.GetParent<Item>();
+                AddItem(item);
                 item.QueueFree();
                 return;
             }
