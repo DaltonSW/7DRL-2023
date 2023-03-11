@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://dgbihily7bk32"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Level.cs" id="1_t0xdi"]
+[ext_resource type="PackedScene" uid="uid://cwygn3qiss6aq" path="res://Assets/Level Tilemaps/Jack Nightly/Twin Peaks Tilemap.tscn" id="2_fq1x5"]
+[ext_resource type="PackedScene" path="res://Assets/Scenes/Enemies/Bat.tscn" id="3_yr1g5"]
+[ext_resource type="PackedScene" uid="uid://dwrvwlao2orrd" path="res://Assets/Scenes/Enemies/CitySlicker.tscn" id="4_f0y6t"]
+
+[node name="Level" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_t0xdi")
+
+[node name="TileMap" parent="." instance=ExtResource("2_fq1x5")]
+layer_0/tile_data = PackedInt32Array(1245191, 262144, 4, 1048585, 131072, 3, 786438, 131072, 3, 1048589, 65536, 3, 1310732, 65536, 3, 1310735, 65536, 3, 1114138, 65536, 3, 851997, 65536, 3, 852001, 0, 3, 1245216, 262144, 3)
+
+[node name="Bat" parent="." instance=ExtResource("3_yr1g5")]
+position = Vector2(152, 126)
+
+[node name="Bat2" parent="." instance=ExtResource("3_yr1g5")]
+position = Vector2(1190, 56)
+
+[node name="CitySlicker" parent="." instance=ExtResource("4_f0y6t")]
+position = Vector2(1136, 174)
+
+[node name="CitySlicker2" parent="." instance=ExtResource("4_f0y6t")]
+position = Vector2(1167, 622)
+
+[node name="CitySlicker3" parent="." instance=ExtResource("4_f0y6t")]
+position = Vector2(799, 558)
+
+[node name="CitySlicker4" parent="." instance=ExtResource("4_f0y6t")]
+position = Vector2(447, 206)
+
+[node name="PlayerSpawnPoint" type="Marker2D" parent="."]
+position = Vector2(79, 571)
