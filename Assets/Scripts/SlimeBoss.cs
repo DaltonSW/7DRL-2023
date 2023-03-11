@@ -5,6 +5,10 @@ namespace Cowball
 {
     public partial class SlimeBoss : CharacterBody2D
     {
+        #region Signals
+        [Signal] public delegate void BossKilledEventHandler();
+        #endregion
+
         private const string IdleAnim = "idle";
         private const string SquishAnim = "squish";
         private const string JumpAnim = "jump";
@@ -13,6 +17,7 @@ namespace Cowball
         private Random _random;
         private PackedScene _slimeScene;
         private AnimatedSprite2D _sprite;
+        private Sprite2D _youWin;
 
         // Health properties
         [Export] private float _maxHealth = 100;
@@ -47,6 +52,7 @@ namespace Cowball
             _slimeScene = GD.Load<PackedScene>("res://Assets/Scenes/Enemies/Slime.tscn");
 
             _sprite = GetNode<AnimatedSprite2D>("Sprite");
+            _youWin = GetNode<Sprite2D>("../YouWin");
             _sprite.Play(IdleAnim);
 
             _random = new Random();
@@ -137,10 +143,11 @@ namespace Cowball
         {
             if (!_sprite.IsPlaying())
             {
-                if (_sprite.Animation == DeathAnim)
-                {
-                    QueueFree();
-                }
+                if (_sprite.Animation != DeathAnim) return;
+                GetTree().Paused = true;
+                _youWin.Visible = true;
+                EmitSignal(SignalName.BossKilled);
+                QueueFree();
                 return;
             }
             if (_sprite.Animation == DeathAnim)

@@ -98,6 +98,8 @@ namespace Cowball
 
         // Misc
         private List<Item> _items;
+        private Vector2 _curSpawnPoint;
+        [Export] private int _bottomBound = 1500;
 
         #endregion
 
@@ -169,6 +171,10 @@ namespace Cowball
                     var anim = softDrop ? "softDrop" : "hardDrop";
                     _ballSprite.Play(anim);
                 }
+                else
+                {
+                    _ballSprite.Play("normal");
+                }
                 velocity.Y += Gravity * (float)delta;
             }
 
@@ -228,6 +234,8 @@ namespace Cowball
             }
 
             velocity.X = Mathf.MoveToward(velocity.X, 0, Friction);
+
+            if (GlobalPosition.Y > _bottomBound) Respawn();
 
             Velocity = velocity;
             MoveAndSlide();
@@ -346,6 +354,18 @@ namespace Cowball
             _healthHUD.AddHeart();
         }
 
+        public void Respawn()
+        {
+            DamagePlayer(0.5F);
+            Velocity = Vector2.Zero;
+            GlobalPosition = _curSpawnPoint;
+        }
+
+        public void SetSpawn(Vector2 spawn)
+        {
+            _curSpawnPoint = spawn;
+        }
+
         public void OnAreaEntered(Area2D area)
         {
             if (area.IsInGroup("items"))
@@ -381,6 +401,7 @@ namespace Cowball
             CurrentHealth -= damage;
             if (CurrentHealth <= 0)
             {
+                EmitSignal(SignalName.PlayerKilled);
                 QueueFree();
             }
         }

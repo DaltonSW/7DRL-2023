@@ -7,7 +7,6 @@
 script = ExtResource("1_kxjyd")
 
 [node name="baseHeart" type="Sprite2D" parent="."]
-visible = false
 position = Vector2(8, 8)
 texture = ExtResource("2_lio84")
 hframes = 3

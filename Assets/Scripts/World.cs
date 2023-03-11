@@ -11,13 +11,19 @@ namespace Cowball
         {
             LoadingLevel,
             Playing,
+            GameOver,
         }
         private State _state;
         private AudioStreamPlayer _audioPlayer;
-        private AudioStream pauseSound;
-        private AudioStream unpauseSound;
+        private AudioStream _pauseSound;
+        private AudioStream _unpauseSound;
+        private AudioStream _bossDeath;
 
         private Player _player;
+        private SlimeBoss _boss;
+
+        private Sprite2D _youWin;
+        private Sprite2D _youLose;
 
         private bool _needToInstantiateLevelScene;
         private PackedScene _levelScene;
@@ -53,11 +59,18 @@ namespace Cowball
                 _needToInstantiateLevelScene = true;
             }
             _player = GetNode<Player>("Player");
+            _player.Connect("PlayerKilled", new Callable(this, nameof(OnPlayerDeath)));
+
+            _youWin = GetNode<Sprite2D>("YouWin");
+            _youLose = GetNode<Sprite2D>("YouLose");
+
             _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
             _audioPlayer.Autoplay = false;
+            _audioPlayer.VolumeDb = -5f;
 
-            pauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Pause.wav");
-            unpauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Unpause.wav");
+            _pauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Pause.wav");
+            _unpauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Unpause.wav");
+            _bossDeath = GD.Load<AudioStream>("res://Assets/Sounds/BossDefeated.wav");
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
             _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
@@ -69,7 +82,26 @@ namespace Cowball
         public override void _Process(double delta)
         {
             var pausing = Input.IsActionJustPressed("Pause");
-            if (pausing) GetTree().Paused = !GetTree().Paused;
+            if (pausing)
+            {
+                if (_state == State.GameOver)
+                {
+                    // Load main menu
+                }
+                if (GetTree().Paused)
+                {
+                    _audioPlayer.Stream = _unpauseSound;
+                    _audioPlayer.Play();
+                }
+                else
+                {
+                    _audioPlayer.Stream = _pauseSound;
+                    _audioPlayer.Play();
+                }
+
+                GetTree().Paused = !GetTree().Paused;
+
+            }
 
             switch (_state)
             {
@@ -88,7 +120,7 @@ namespace Cowball
                     }
                 case State.Playing:
                     {
-                        // Do nothing 
+                        // Do nothing
                         break;
                     }
             }
@@ -105,6 +137,7 @@ namespace Cowball
         {
             _player.SetCameraLimits(level.CameraBounds());
             _player.Position = level.PlayerSpawnPosition();
+            _player.SetSpawn(level.PlayerSpawnPosition());
 
             Queue<ItemParams> itemPool = CopyToShuffledQueue(ITEM_POOL);
             SpawnNodesInLevel(level, level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));
@@ -145,11 +178,27 @@ namespace Cowball
             }
         }
 
+        private void OnBossDeath()
+        {
+            _audioPlayer.Stream = _bossDeath;
+            _audioPlayer.Play();
+            GetTree().Paused = true;
+            _youWin.Visible = true;
+            _state = State.GameOver;
+        }
+
+        private void OnPlayerDeath()
+        {
+            GetTree().Paused = true;
+            _youLose.Visible = true;
+            _state = State.GameOver;
+        }
+
         // Items TODO:
         // Lead Underwear - Butt stomp does more damage
-        // Campfire - Flaming bullets
-        // Bigger bullets - Bigger bullets
-        // Hardhat - Can't take damage on your head
+        // Campfire - Flaming bullets (Pivot -- Damage Up)
+        // Bigger bullets - Bigger bullets (Pivot -- Damage Up)
+        // Hardhat - Can't take damage on your head (Pivot -- Health Up)
         private static ItemParams[] ITEM_POOL =
             {
                 new ItemParams("Soylent", "Soylent", StatToChange.Health, 1),
@@ -197,7 +246,7 @@ namespace Cowball
 
             // Return other levels to pool
             var otherLevels = GetTree().GetNodesInGroup("exits")
-                .Select(node => (Exit) node)
+                .Select(node => (Exit)node)
                 .Where(e => !System.Object.ReferenceEquals(e, exit))
                 .Select(exit => exit.NextLevelFilename);
             foreach (var otherLevel in otherLevels)
