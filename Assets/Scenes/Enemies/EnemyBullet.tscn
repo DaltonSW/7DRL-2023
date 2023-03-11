@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqneipbvo1nk2"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/EnemyBullet.cs" id="1_swoqh"]
+[ext_resource type="Texture2D" uid="uid://cp14c5qymksvr" path="res://Assets/Sprites/Bullet.png" id="2_6tlfg"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 6.0
+
+[node name="Bullet" type="Area2D" groups=["playerBullet"]]
+process_mode = 1
+rotation = 1.5708
+script = ExtResource("1_swoqh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["playerBullet"]]
+shape = SubResource("1")
+
+[node name="Sprite" type="Sprite2D" parent="." groups=["enemy"]]
+modulate = Color(1, 0.4, 0.4, 1)
+rotation = 1.5708
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_6tlfg")
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]

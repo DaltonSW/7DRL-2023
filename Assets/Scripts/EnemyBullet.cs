@@ -2,12 +2,11 @@ using Godot;
 
 namespace Cowball
 {
-    public partial class Bullet : Area2D
+    public partial class EnemyBullet : Area2D
     {
+        [Export] public float Damage = 0.5F;
 
-        [Export] public float Damage = 4F;
-
-        [Export] private int _speed = 700;
+        [Export] private int _speed = 300;
         [Export] private int _spread = 5;
         [Export] private int _distanceAllowed = 200;
         private double _distanceTravelled;
@@ -32,9 +31,9 @@ namespace Cowball
 
         private void OnBodyEntered(Node2D node)
         {
-            if (!node.IsInGroup("boss")) return;
-            var boss = (SlimeBoss)node;
-            boss.TakeDamage(Damage);
+            if (!node.IsInGroup("player")) return;
+            var player = (Player)node;
+            player.DamagePlayer(Damage);
             QueueFree();
         }
 
@@ -44,4 +43,3 @@ namespace Cowball
         }
     }
 }
-

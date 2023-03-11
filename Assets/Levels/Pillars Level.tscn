@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://drwyrrcpaffb3"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Level.cs" id="1_b32jd"]
+[ext_resource type="PackedScene" uid="uid://c0lxmrg5mi32y" path="res://Assets/Level Tilemaps/Jack Nightly/Pillars Tilemap.tscn" id="2_ilk5j"]
+[ext_resource type="PackedScene" uid="uid://dwrvwlao2orrd" path="res://Assets/Scenes/Enemies/CitySlicker.tscn" id="3_wos45"]
+
+[node name="Level" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_b32jd")
+
+[node name="TileMap2" parent="." instance=ExtResource("2_ilk5j")]
+
+[node name="PlayerSpawnPoint" type="Marker2D" parent="."]
+position = Vector2(385, 507)
+
+[node name="CitySlicker" parent="." instance=ExtResource("3_wos45")]
+position = Vector2(638, 268)
+
+[node name="CitySlicker2" parent="." instance=ExtResource("3_wos45")]
+position = Vector2(94, 301)
+
+[node name="CitySlicker3" parent="." instance=ExtResource("3_wos45")]
+position = Vector2(926, 172)
+
+[node name="CitySlicker4" parent="." instance=ExtResource("3_wos45")]
+position = Vector2(894, 524)
+
+[node name="CitySlicker5" parent="." instance=ExtResource("3_wos45")]
+position = Vector2(1182, 300)
+
+[node name="CitySlicker6" parent="." instance=ExtResource("3_wos45")]
+position = Vector2(350, 172)

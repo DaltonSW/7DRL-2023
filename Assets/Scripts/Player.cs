@@ -169,6 +169,10 @@ namespace Cowball
                     var anim = softDrop ? "softDrop" : "hardDrop";
                     _ballSprite.Play(anim);
                 }
+                else
+                {
+                    _ballSprite.Play("normal");
+                }
                 velocity.Y += Gravity * (float)delta;
             }
 
@@ -352,6 +356,13 @@ namespace Cowball
             {
                 var item = area.GetParent<Item>();
                 item.QueueFree();
+                return;
+            }
+
+            if (area.IsInGroup("exit_areas"))
+            {
+                Exit exit = area.GetParent<Exit>();
+                exit.OnPlayerEntered();
                 return;
             }
 
