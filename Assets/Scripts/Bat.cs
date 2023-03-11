@@ -5,6 +5,10 @@ namespace Cowball
 {
     public partial class Bat : Area2D
     {
+        #region Signals
+        [Signal] public delegate void DiedEventHandler();
+        #endregion
+
         private Player _player;
         [Export] public float Speed = 100F;
         private float _health = 10F;
@@ -39,14 +43,17 @@ namespace Cowball
             if (area.IsInGroup("enemy")) return;
             var bullet = (Bullet)area;
             TakeDamage(bullet.Damage);
-            area.QueueFree();
+            bullet.FreeBullet();
         }
 
         private void TakeDamage(float damage)
         {
             _sprite.Modulate = GetHurtColor;
             _health -= damage;
-            if (_health <= 0) QueueFree();
+            if (_health <= 0) {
+                EmitSignal(SignalName.Died);
+                QueueFree();
+            }
         }
     }
 }

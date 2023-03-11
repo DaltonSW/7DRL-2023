@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cjbnua4ug1p24"]
+[gd_scene load_steps=8 format=3 uid="uid://c81uxg0cjicrr"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Bat.cs" id="1_tenul"]
 [ext_resource type="Texture2D" uid="uid://cho11tbphho51" path="res://Assets/Sprites/Bat/aniWingFlap.png" id="1_y060b"]
@@ -39,7 +39,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Bat" type="Area2D" groups=["enemy"]]
+[node name="Bat" type="Area2D" groups=["enemy", "root_enemy"]]
 scale = Vector2(2, 2)
 script = ExtResource("1_tenul")
 

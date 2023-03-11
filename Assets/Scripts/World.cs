@@ -39,6 +39,8 @@ namespace Cowball
         private Queue<string> _randomLevelFilenames;
         private Queue<(string, PackedScene)> _nextLevels;
 
+        private int _enemiesLeftInLevel;
+
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
@@ -152,12 +154,42 @@ namespace Cowball
             SpawnNodesInLevel(level, level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));
 
             _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
-            // TODO: only spawn after enemies are all dead
-            SpawnNodesInLevel(level, level.ExitSpawnPoints, () =>
+
+            var enemies = FindEnemies();
+            foreach (var enemy in enemies)
             {
-                (string nextLevelFilename, PackedScene nextLevelScene) = _nextLevels.Dequeue();
-                return CreateExit(nextLevelFilename, nextLevelScene);
-            });
+                enemy.Connect("Died", Callable.From(() => OnEnemyDied(enemy)));
+            }
+            var boss = GetTree().GetFirstNodeInGroup("boss");
+            if (boss is not null)
+            {
+                boss.Connect("BossKilled", Callable.From(() => OnBossDeath(boss)));
+            }
+
+            SpawnExitsIfNoEnemiesRemain(null);
+        }
+
+        private Godot.Collections.Array<Node> FindEnemies()
+        {
+            return GetTree().GetNodesInGroup("root_enemy");
+        }
+
+        private void SpawnExitsIfNoEnemiesRemain(Node enemy)
+        {
+            var enemies = FindEnemies();
+            if (enemies.Count == 0 || (enemies.Count == 1 && System.Object.ReferenceEquals(enemies[0], enemy)))
+            {
+                SpawnNodesInLevel(_level, _level.ExitSpawnPoints, () =>
+                {
+                    (string nextLevelFilename, PackedScene nextLevelScene) = _nextLevels.Dequeue();
+                    return CreateExit(nextLevelFilename, nextLevelScene);
+                });
+            }
+        }
+
+        private void OnEnemyDied(Node enemy)
+        {
+            SpawnExitsIfNoEnemiesRemain(enemy);
         }
 
         private Queue<(string, PackedScene)> TakeAndLoadLevelsFromPool(int n)
@@ -187,7 +219,7 @@ namespace Cowball
             }
         }
 
-        private void OnBossDeath()
+        private void OnBossDeath(Node boss)
         {
             _audioPlayer.Stream = _bossDeath;
             _audioPlayer.Play();
@@ -247,11 +279,6 @@ namespace Cowball
 
         public void LoadNextLevel(Exit exit)
         {
-            _level.QueueFree();
-            _state = State.LoadingLevel;
-            _levelScene = exit.NextLevelScene;
-            _needToInstantiateLevelScene = true;
-
             // Return other levels to pool
             var otherLevels = GetTree().GetNodesInGroup("exits")
                 .Select(node => (Exit)node)
@@ -261,6 +288,11 @@ namespace Cowball
             {
                 _randomLevelFilenames.Enqueue(otherLevel);
             }
+
+            _level.QueueFree();
+            _state = State.LoadingLevel;
+            _levelScene = exit.NextLevelScene;
+            _needToInstantiateLevelScene = true;
         }
     }
 

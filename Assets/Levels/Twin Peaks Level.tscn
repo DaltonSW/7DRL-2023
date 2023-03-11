@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dgbihily7bk32"]
+[gd_scene load_steps=6 format=3 uid="uid://dgbihily7bk32"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Level.cs" id="1_t0xdi"]
 [ext_resource type="PackedScene" uid="uid://cwygn3qiss6aq" path="res://Assets/Level Tilemaps/Jack Nightly/Twin Peaks Tilemap.tscn" id="2_fq1x5"]
-[ext_resource type="PackedScene" path="res://Assets/Scenes/Enemies/Bat.tscn" id="3_yr1g5"]
+[ext_resource type="PackedScene" uid="uid://c81uxg0cjicrr" path="res://Assets/Scenes/Enemies/Bat.tscn" id="3_yr1g5"]
 [ext_resource type="PackedScene" uid="uid://dwrvwlao2orrd" path="res://Assets/Scenes/Enemies/CitySlicker.tscn" id="4_f0y6t"]
+[ext_resource type="PackedScene" uid="uid://8qjdvvp7ywv1" path="res://Assets/Scenes/ExitSpawnPoint.tscn" id="5_pu16c"]
 
 [node name="Level" type="Node2D"]
 process_mode = 1
@@ -32,3 +33,6 @@ position = Vector2(447, 206)
 
 [node name="PlayerSpawnPoint" type="Marker2D" parent="."]
 position = Vector2(79, 571)
+
+[node name="ExitSpawnPoint" parent="." instance=ExtResource("5_pu16c")]
+position = Vector2(1165, 161)

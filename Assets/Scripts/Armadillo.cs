@@ -5,6 +5,10 @@ namespace Cowball
 {
     public partial class Armadillo : CharacterBody2D
     {
+        #region Signals
+        [Signal] public delegate void DiedEventHandler();
+        #endregion
+
         private float _speed = 50.0f;
         private bool _onLedge;
         private bool _isFacingLeft;
@@ -56,13 +60,16 @@ namespace Cowball
             if (!area.IsInGroup("playerBullet")) return;
             var bullet = (Bullet)area;
             TakeDamage(bullet.Damage);
-            area.QueueFree();
+            bullet.FreeBullet();
         }
 
         private void TakeDamage(float damage)
         {
             _health -= damage;
-            if (_health <= 0) QueueFree();
+            if (_health <= 0) {
+                EmitSignal(SignalName.Died);
+                QueueFree();
+            }
         }
     }
 }
