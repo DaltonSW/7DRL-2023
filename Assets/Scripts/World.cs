@@ -11,13 +11,19 @@ namespace Cowball
         {
             LoadingLevel,
             Playing,
+            GameOver,
         }
         private State _state;
         private AudioStreamPlayer _audioPlayer;
         private AudioStream _pauseSound;
         private AudioStream _unpauseSound;
+        private AudioStream _bossDeath;
 
         private Player _player;
+        private SlimeBoss _boss;
+
+        private Sprite2D _youWin;
+        private Sprite2D _youLose;
 
         private bool _needToInstantiateLevelScene;
         private PackedScene _levelScene;
@@ -53,12 +59,18 @@ namespace Cowball
                 _needToInstantiateLevelScene = true;
             }
             _player = GetNode<Player>("Player");
+            _player.Connect("PlayerKilled", new Callable(this, nameof(OnPlayerDeath)));
+
+            _youWin = GetNode<Sprite2D>("YouWin");
+            _youLose = GetNode<Sprite2D>("YouLose");
+
             _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
             _audioPlayer.Autoplay = false;
             _audioPlayer.VolumeDb = -5f;
 
             _pauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Pause.wav");
             _unpauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Unpause.wav");
+            _bossDeath = GD.Load<AudioStream>("res://Assets/Sounds/BossDefeated.wav");
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
             _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
@@ -72,6 +84,10 @@ namespace Cowball
             var pausing = Input.IsActionJustPressed("Pause");
             if (pausing)
             {
+                if (_state == State.GameOver)
+                {
+                    // Load main menu
+                }
                 if (GetTree().Paused)
                 {
                     _audioPlayer.Stream = _unpauseSound;
@@ -160,6 +176,22 @@ namespace Cowball
                 level.AddChild(node);
                 node.Position = spawnPoint;
             }
+        }
+
+        private void OnBossDeath()
+        {
+            _audioPlayer.Stream = _bossDeath;
+            _audioPlayer.Play();
+            GetTree().Paused = true;
+            _youWin.Visible = true;
+            _state = State.GameOver;
+        }
+
+        private void OnPlayerDeath()
+        {
+            GetTree().Paused = true;
+            _youLose.Visible = true;
+            _state = State.GameOver;
         }
 
         // Items TODO:

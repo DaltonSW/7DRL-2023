@@ -401,6 +401,7 @@ namespace Cowball
             CurrentHealth -= damage;
             if (CurrentHealth <= 0)
             {
+                EmitSignal(SignalName.PlayerKilled);
                 QueueFree();
             }
         }
