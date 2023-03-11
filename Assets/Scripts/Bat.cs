@@ -8,11 +8,11 @@ namespace Cowball
     {
         private Player _player;
         [Export] public float Speed = 100F;
-        private float _health = 5F;
+        private float _health = 10F;
 
         public override void _Ready()
         {
-            _player = GetNode<Player>("../Player");
+            _player = GetNode<Player>("../../Player");
         }
 
         public override void _Process(double delta)
@@ -34,8 +34,15 @@ namespace Cowball
         {
             if (!area.IsInGroup("playerBullet")) return;
             if (area.IsInGroup("enemy")) return;
-            QueueFree();
+            var bullet = (Bullet)area;
+            TakeDamage(bullet.Damage);
             area.QueueFree();
+        }
+
+        private void TakeDamage(float damage)
+        {
+            _health -= damage;
+            if (_health <= 0) QueueFree();
         }
     }
 }

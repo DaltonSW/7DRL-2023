@@ -5,11 +5,11 @@ namespace Cowball
     public partial class Bullet : Area2D
     {
 
-        [Export] public float Damage = 100F;
+        [Export] public float Damage = 4F;
 
         [Export] private int _speed = 700;
         [Export] private int _spread = 5;
-        [Export] private int _distanceAllowed = 300;
+        [Export] private int _distanceAllowed = 200;
         private double _distanceTravelled;
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()

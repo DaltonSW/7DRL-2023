@@ -10,6 +10,7 @@ namespace Cowball
         private Sprite2D _hatSprite;
         private Node2D _armGunNode;
         private Player _player;
+        private float _health = 10f;
 
         // Shooting
         [Export] public double FireRate = 1;
@@ -70,8 +71,15 @@ namespace Cowball
         private void OnAreaEntered(Node area)
         {
             if (!area.IsInGroup("playerBullet")) return;
-            QueueFree();
+            var bullet = (Bullet)area;
+            TakeDamage(bullet.Damage);
             area.QueueFree();
+        }
+
+        private void TakeDamage(float damage)
+        {
+            _health -= damage;
+            if (_health <= 0) QueueFree();
         }
     }
 }

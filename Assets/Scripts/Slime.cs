@@ -11,7 +11,7 @@ namespace Cowball
 
         [Export] public float Damage = 0.5F;
 
-        [Export] private int _speed = 800;
+        [Export] private int _speed = 500;
         [Export] private int _spread = 15;
         [Export] private int _allowedBounces = 5;
         private int _currentBounces;

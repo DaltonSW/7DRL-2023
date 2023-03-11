@@ -88,7 +88,7 @@ namespace Cowball
                     }
                 case State.Playing:
                     {
-                        // Do nothing 
+                        // Do nothing
                         break;
                     }
             }
@@ -197,7 +197,7 @@ namespace Cowball
 
             // Return other levels to pool
             var otherLevels = GetTree().GetNodesInGroup("exits")
-                .Select(node => (Exit) node)
+                .Select(node => (Exit)node)
                 .Where(e => !System.Object.ReferenceEquals(e, exit))
                 .Select(exit => exit.NextLevelFilename);
             foreach (var otherLevel in otherLevels)
