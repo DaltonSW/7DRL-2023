@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Assets/Scripts/CitySlicker.cs" id="1_1wnvg"]
 [ext_resource type="Texture2D" uid="uid://77r4ey7f60jy" path="res://Assets/Sprites/Cowball/gun.png" id="2_cxeg3"]
-[ext_resource type="Texture2D" uid="uid://hrv3xkkwhtvl" path="res://Assets/Sprites/Enemies/City Slicker.png" id="3_ksgcb"]
+[ext_resource type="Texture2D" uid="uid://drjmh163nxjbe" path="res://Assets/Sprites/Enemies/City Slicker.png" id="3_ksgcb"]
 [ext_resource type="Texture2D" uid="uid://dagxk3ex64gko" path="res://Assets/Sprites/Cowball/hat.png" id="7_dtclv"]
 
 [node name="CitySlicker" type="CharacterBody2D" groups=["player"]]

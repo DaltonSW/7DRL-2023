@@ -169,6 +169,10 @@ namespace Cowball
                     var anim = softDrop ? "softDrop" : "hardDrop";
                     _ballSprite.Play(anim);
                 }
+                else
+                {
+                    _ballSprite.Play("normal");
+                }
                 velocity.Y += Gravity * (float)delta;
             }
 

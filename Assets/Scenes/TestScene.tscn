@@ -18,6 +18,7 @@ position = Vector2(284, 496)
 scale = Vector2(2, 2)
 
 [node name="PlayerHealth" parent="." instance=ExtResource("5_4ahbm")]
+visible = false
 scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
 
