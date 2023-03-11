@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7kh30"]
 size = Vector2(32, 14)
 
-[node name="Armadillo" type="CharacterBody2D" groups=["enemy"]]
+[node name="Armadillo" type="CharacterBody2D" groups=["enemy", "root_enemy"]]
 scale = Vector2(2, 2)
 script = ExtResource("1_ecblj")
 

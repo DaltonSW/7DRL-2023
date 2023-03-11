@@ -17,7 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://c2xbuqrytos1o" path="res://Assets/Collisions/SlimeBoss/squishFiveSeven.tscn" id="13_pxkik"]
 [ext_resource type="PackedScene" uid="uid://dc2l48fcn1fh1" path="res://Assets/Collisions/SlimeBoss/squishFourEight.tscn" id="14_bs37w"]
 
-[node name="SlimeBoss" type="CharacterBody2D" groups=["boss", "enemy"]]
+[node name="SlimeBoss" type="CharacterBody2D" groups=["boss", "enemy", "root_enemy"]]
 process_mode = 1
 script = ExtResource("1_hp5hd")
 
