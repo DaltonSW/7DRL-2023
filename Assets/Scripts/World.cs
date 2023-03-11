@@ -34,6 +34,7 @@ namespace Cowball
 
         private Random _rng;
 
+        private PackedScene _bossLevelScene; 
         private Queue<string> _randomLevelFilenames;
         private Queue<(string, PackedScene)> _nextLevels;
 
@@ -76,6 +77,7 @@ namespace Cowball
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
             _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
+            _bossLevelScene = LoadLevelScene("Boss Level");
 
             _state = State.LoadingLevel;
         }
@@ -144,7 +146,17 @@ namespace Cowball
             Queue<ItemParams> itemPool = CopyToShuffledQueue(ITEM_POOL);
             SpawnNodesInLevel(level, level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));
 
-            _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
+            GD.Print(_randomLevelFilenames.Count);
+            GD.Print(level.ExitSpawnPoints.Count);
+            if (_randomLevelFilenames.Count - 4 < level.ExitSpawnPoints.Count)
+            {
+                var bossLevels = 
+                    Enumerable.Range(0, level.ExitSpawnPoints.Count)
+                        .Select(i => ("Boss Level", _bossLevelScene));
+                _nextLevels = new Queue<(string, PackedScene)>(bossLevels);
+            } else {
+                _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
+            }
 
             var enemies = FindEnemies();
             foreach (var enemy in enemies)

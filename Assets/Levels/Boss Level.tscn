@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://d3xskiyje6mdi"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Level.cs" id="1_wmr4x"]
-[ext_resource type="PackedScene" path="res://Assets/Level Tilemaps/Jack Nightly/Boss Arena Tilemap.tscn" id="2_f4cf2"]
+[ext_resource type="PackedScene" uid="uid://d1vy30xegi3ak" path="res://Assets/Level Tilemaps/Jack Nightly/Boss Arena Tilemap.tscn" id="2_f4cf2"]
 [ext_resource type="PackedScene" uid="uid://ccgnyywbhh5sv" path="res://Assets/Scenes/Enemies/SlimeBoss.tscn" id="3_2a6rb"]
 [ext_resource type="PackedScene" uid="uid://c17rlpy0bqcle" path="res://Assets/Scenes/Enemies/BossHealth.tscn" id="4_y0os8"]
 
