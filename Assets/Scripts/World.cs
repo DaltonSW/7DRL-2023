@@ -14,8 +14,8 @@ namespace Cowball
         }
         private State _state;
         private AudioStreamPlayer _audioPlayer;
-        private AudioStream pauseSound;
-        private AudioStream unpauseSound;
+        private AudioStream _pauseSound;
+        private AudioStream _unpauseSound;
 
         private Player _player;
 
@@ -55,9 +55,10 @@ namespace Cowball
             _player = GetNode<Player>("Player");
             _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
             _audioPlayer.Autoplay = false;
+            _audioPlayer.VolumeDb = -5f;
 
-            pauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Pause.wav");
-            unpauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Unpause.wav");
+            _pauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Pause.wav");
+            _unpauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Unpause.wav");
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
             _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
@@ -69,7 +70,22 @@ namespace Cowball
         public override void _Process(double delta)
         {
             var pausing = Input.IsActionJustPressed("Pause");
-            if (pausing) GetTree().Paused = !GetTree().Paused;
+            if (pausing)
+            {
+                if (GetTree().Paused)
+                {
+                    _audioPlayer.Stream = _unpauseSound;
+                    _audioPlayer.Play();
+                }
+                else
+                {
+                    _audioPlayer.Stream = _pauseSound;
+                    _audioPlayer.Play();
+                }
+
+                GetTree().Paused = !GetTree().Paused;
+
+            }
 
             switch (_state)
             {
@@ -147,9 +163,9 @@ namespace Cowball
 
         // Items TODO:
         // Lead Underwear - Butt stomp does more damage
-        // Campfire - Flaming bullets
-        // Bigger bullets - Bigger bullets
-        // Hardhat - Can't take damage on your head
+        // Campfire - Flaming bullets (Pivot -- Damage Up)
+        // Bigger bullets - Bigger bullets (Pivot -- Damage Up)
+        // Hardhat - Can't take damage on your head (Pivot -- Health Up)
         private static ItemParams[] ITEM_POOL =
             {
                 new ItemParams("Soylent", "Soylent", StatToChange.Health, 1),
