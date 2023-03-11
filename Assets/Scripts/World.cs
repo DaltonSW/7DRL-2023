@@ -36,7 +36,7 @@ namespace Cowball
 
         private Random _rng;
 
-        private PackedScene _bossLevelScene; 
+        private PackedScene _bossLevelScene;
         private Queue<string> _randomLevelFilenames;
         private Queue<(string, PackedScene)> _nextLevels;
 
@@ -124,7 +124,7 @@ namespace Cowball
                         {
                             _level = _levelScene.Instantiate<Level>();
                             AddChild(_level);
-                            MoveChild(_level, 0);
+                            MoveChild(_level, 1);
                             _needToInstantiateLevelScene = false;
                         }
                         SetUpLevel(_level);
@@ -159,11 +159,13 @@ namespace Cowball
             GD.Print(level.ExitSpawnPoints.Count);
             if (_randomLevelFilenames.Count - 4 < level.ExitSpawnPoints.Count)
             {
-                var bossLevels = 
+                var bossLevels =
                     Enumerable.Range(0, level.ExitSpawnPoints.Count)
                         .Select(i => ("Boss Level", _bossLevelScene));
                 _nextLevels = new Queue<(string, PackedScene)>(bossLevels);
-            } else {
+            }
+            else
+            {
                 _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
             }
 
