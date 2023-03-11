@@ -34,9 +34,11 @@ collision_layer = 3
 collision_mask = 3
 
 [node name="Interaction" type="CollisionPolygon2D" parent="Area2D"]
+visible = false
 polygon = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
 
 [node name="Collision" type="CollisionPolygon2D" parent="."]
+visible = false
 polygon = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
 
 [connection signal="area_entered" from="Area2D" to="." method="OnAreaEntered"]
