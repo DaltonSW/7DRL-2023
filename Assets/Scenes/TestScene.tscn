@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://djsxh7pb0tl0f"]
+[gd_scene load_steps=5 format=3 uid="uid://djsxh7pb0tl0f"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.cs" id="1_4i0je"]
 [ext_resource type="PackedScene" uid="uid://dwxkex5p0wqqo" path="res://Assets/Levels/Level.tscn" id="2_mhv18"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="3_l17c1"]
 [ext_resource type="PackedScene" uid="uid://d0r1wadg5l20h" path="res://Assets/Scenes/PlayerHealth.tscn" id="5_4ahbm"]
-[ext_resource type="PackedScene" uid="uid://dwrvwlao2orrd" path="res://Assets/Scenes/Enemies/CitySlicker.tscn" id="6_jjeuw"]
 
 [node name="World" type="Node2D"]
 process_mode = 3
@@ -23,6 +22,3 @@ scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
-
-[node name="CitySlicker" parent="." instance=ExtResource("6_jjeuw")]
-position = Vector2(786, 458)
