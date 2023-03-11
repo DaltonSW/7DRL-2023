@@ -10,7 +10,7 @@ namespace Cowball
         [Export] private int _speed = 700;
         [Export] private int _spread = 5;
         [Export] private int _distanceAllowed = 400;
-        [Export] private double _distanceTravelled;
+        private double _distanceTravelled;
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
@@ -30,12 +30,11 @@ namespace Cowball
             }
         }
 
-        public void OnBodyEntered(Node2D node)
+        private void OnBodyEntered(Node2D node)
         {
             if (!node.IsInGroup("boss")) return;
             var boss = (SlimeBoss)node;
             boss.TakeDamage(Damage);
-            GD.Print("Pow");
             QueueFree();
         }
 

@@ -128,7 +128,7 @@ namespace Cowball
             {
                 foreach (var col in list)
                 {
-                    col.Disabled = true;
+                    col.SetDeferred("disabled", true);
                 }
             }
         }
@@ -150,7 +150,7 @@ namespace Cowball
             var frame = _sprite.Frame;
             if (frame == _prevSpriteFrame) return;
 
-            _currentCollision.Disabled = true;
+            _currentCollision.SetDeferred("disabled", true);
 
             _currentCollision.Visible = false;
 
@@ -169,7 +169,7 @@ namespace Cowball
                     _currentCollision = _squishCollisions[frame];
                     break;
             }
-            _currentCollision.Disabled = false;
+            _currentCollision.SetDeferred("disabled", false);
 
             _currentCollision.Visible = true;
         }
@@ -308,7 +308,7 @@ namespace Cowball
 
             if (_currentHealth > 0) return;
             _sprite.Play(DeathAnim);
-            _currentCollision.Disabled = true;
+            _currentCollision.SetDeferred("disabled", true);
         }
     }
 }
