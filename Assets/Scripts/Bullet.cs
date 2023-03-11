@@ -51,11 +51,11 @@ namespace Cowball
             Damage = damage;
         }
 
-        private void OnBodyEntered(Node2D node)
+        private void OnAreaEntered(Area2D area)
         {
             if (_isDisappearing) return;
-            if (!node.IsInGroup("boss")) return;
-            var boss = (SlimeBoss)node;
+            if (!area.IsInGroup("boss")) return;
+            var boss = (SlimeBoss)(area.GetParent());
             boss.TakeDamage(Damage);
             FreeBullet();
         }
@@ -67,4 +67,3 @@ namespace Cowball
         }
     }
 }
-

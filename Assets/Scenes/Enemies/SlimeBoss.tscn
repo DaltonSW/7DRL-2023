@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://ccgnyywbhh5sv"]
+[gd_scene load_steps=18 format=3 uid="uid://ccgnyywbhh5sv"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/SlimeBoss.cs" id="1_hp5hd"]
 [ext_resource type="SpriteFrames" uid="uid://o7ljpa5p4sqs" path="res://Assets/Scenes/Enemies/SlimeBossSpriteFrames.tres" id="2_4x2nc"]
@@ -16,6 +16,9 @@
 [ext_resource type="PackedScene" uid="uid://0fwut1bevtph" path="res://Assets/Collisions/SlimeBoss/jumpFour.tscn" id="12_ugipr"]
 [ext_resource type="PackedScene" uid="uid://c2xbuqrytos1o" path="res://Assets/Collisions/SlimeBoss/squishFiveSeven.tscn" id="13_pxkik"]
 [ext_resource type="PackedScene" uid="uid://dc2l48fcn1fh1" path="res://Assets/Collisions/SlimeBoss/squishFourEight.tscn" id="14_bs37w"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_00bh1"]
+radius = 67.0075
 
 [node name="SlimeBoss" type="CharacterBody2D" groups=["boss", "enemy", "root_enemy"]]
 process_mode = 1
@@ -91,3 +94,9 @@ rotation = -0.785398
 
 [node name="slimeSpawn5" type="Marker2D" parent="." groups=["slimeSpawns"]]
 position = Vector2(90, 0)
+
+[node name="Area2D" type="Area2D" parent="." groups=["boss"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 18)
+shape = SubResource("CircleShape2D_00bh1")
