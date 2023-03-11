@@ -40,4 +40,3 @@ polygon = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
 polygon = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
 
 [connection signal="area_entered" from="Area2D" to="." method="OnAreaEntered"]
-[connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]
