@@ -5,6 +5,7 @@ namespace Cowball
 {
     public partial class Exit : Node2D
     {
+        private World _world;
         public string NextLevelFilename { get; private set; }
         public PackedScene NextLevelScene { get; private set; }
 
@@ -18,10 +19,16 @@ namespace Cowball
         {
         }
 
-        public void Initialize(string nextLevelFilename, PackedScene nextLevelScene)
+        public void Initialize(World world, string nextLevelFilename, PackedScene nextLevelScene)
         {
             NextLevelFilename = nextLevelFilename;
             NextLevelScene = nextLevelScene;
+            _world = world;
+        }
+
+        public void OnPlayerEntered()
+        {
+            _world.LoadNextLevel(this);
         }
     }
 }

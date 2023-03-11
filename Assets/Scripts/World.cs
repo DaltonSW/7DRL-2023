@@ -38,8 +38,8 @@ namespace Cowball
             _randomLevelFilenames = CopyToShuffledQueue(levelFilenames);
 
             // TODO: make test scenes independent of World script
-            //       so we don't have to branch here or have a _level field.
-            Level levelAlreadyInTree = GetNode<Level>("Level");
+            //       so we don't have to branch here.
+            Level levelAlreadyInTree = GetNodeOrNull<Level>("Level");
             if (levelAlreadyInTree is not null)
             {
                 _level = levelAlreadyInTree;
@@ -90,7 +90,7 @@ namespace Cowball
         private Exit CreateExit(string nextLevelFilename, PackedScene nextLevelScene)
         {
             Exit exit = _exitScene.Instantiate<Exit>();
-            exit.Initialize(nextLevelFilename, nextLevelScene);
+            exit.Initialize(this, nextLevelFilename, nextLevelScene);
             return exit;
         }
 
@@ -100,11 +100,11 @@ namespace Cowball
             _player.Position = level.PlayerSpawnPosition();
 
             Queue<ItemParams> itemPool = CopyToShuffledQueue(ITEM_POOL);
-            SpawnNodes(level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));
+            SpawnNodesInLevel(level, level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));
 
             _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
             // TODO: only spawn after enemies are all dead
-            SpawnNodes(level.ExitSpawnPoints, () =>
+            SpawnNodesInLevel(level, level.ExitSpawnPoints, () =>
             {
                 (string nextLevelFilename, PackedScene nextLevelScene) = _nextLevels.Dequeue();
                 return CreateExit(nextLevelFilename, nextLevelScene);
@@ -128,12 +128,12 @@ namespace Cowball
             return ResourceLoader.Load<PackedScene>($"res://Assets/Levels/{levelFilename}.tscn");
         }
 
-        private void SpawnNodes(List<Vector2> spawnPoints, Func<Node2D> constructNode)
+        private void SpawnNodesInLevel(Level level, List<Vector2> spawnPoints, Func<Node2D> constructNode)
         {
             foreach (Vector2 spawnPoint in spawnPoints)
             {
                 Node2D node = constructNode();
-                GetParent().AddChild(node);
+                level.AddChild(node);
                 node.Position = spawnPoint;
             }
         }
@@ -181,6 +181,23 @@ namespace Cowball
             return item;
         }
 
+        public void LoadNextLevel(Exit exit)
+        {
+            _level.QueueFree();
+            _state = State.LoadingLevel;
+            _levelScene = exit.NextLevelScene;
+            _needToInstantiateLevelScene = true;
+
+            // Return other levels to pool
+            var otherLevels = GetTree().GetNodesInGroup("exits")
+                .Select(node => (Exit) node)
+                .Where(e => !System.Object.ReferenceEquals(e, exit))
+                .Select(exit => exit.NextLevelFilename);
+            foreach (var otherLevel in otherLevels)
+            {
+                _randomLevelFilenames.Enqueue(otherLevel);
+            }
+        }
     }
 
 }

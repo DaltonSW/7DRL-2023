@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dbqdfqobn7qsr"]
+[gd_scene load_steps=9 format=3 uid="uid://dbqdfqobn7qsr"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Exit.cs" id="1_lli88"]
 [ext_resource type="Texture2D" uid="uid://ca576ek6xgygo" path="res://Assets/Sprites/Teleporter/Teleporter.png" id="1_tr4s6"]
@@ -39,9 +39,19 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Exit" type="Node2D"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a1ggd"]
+radius = 4.0
+height = 18.0
+
+[node name="Exit" type="Node2D" groups=["exits"]]
 script = ExtResource("1_lli88")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -15)
 sprite_frames = SubResource("SpriteFrames_rhi6y")
+
+[node name="Area2D" type="Area2D" parent="." groups=["exit_areas"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -9)
+shape = SubResource("CapsuleShape2D_a1ggd")

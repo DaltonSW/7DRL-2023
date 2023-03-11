@@ -355,6 +355,13 @@ namespace Cowball
                 return;
             }
 
+            if (area.IsInGroup("exit_areas"))
+            {
+                Exit exit = area.GetParent<Exit>();
+                exit.OnPlayerEntered();
+                return;
+            }
+
             if (area.IsInGroup("enemy"))
             {
                 DamagePlayer(0.5F);
