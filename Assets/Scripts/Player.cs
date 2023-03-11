@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Cowball
 {
@@ -14,7 +13,6 @@ namespace Cowball
         #region Properties
         // Constants
         private const float InvincibilityBuffer = 0.5F;
-        private const int SpriteScale = 1;
 
         // Jump properties
         [Export] public float JumpHeight = 40; //pixels
@@ -85,8 +83,8 @@ namespace Cowball
 
         // Sounds
         private AudioStreamPlayer _audioPlayer;
-        private AudioStreamWav _jumpSound;
         private AudioStreamWav _shootSound;
+        private AudioStreamWav _jumpSound;
         private AudioStreamWav _hurtSound;
 
         // Other Child Nodes
@@ -106,6 +104,8 @@ namespace Cowball
         public override void _Ready()
         {
             base._Ready();
+
+            LoadSounds();
 
             _bulletScene = GD.Load<PackedScene>("res://Assets/Scenes/Bullet.tscn");
             _itemScene = GD.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
@@ -254,6 +254,8 @@ namespace Cowball
             if (IsOnFloor())
             {
                 velocity.Y = -jumpSpeed;
+                _audioPlayer.Stream = _jumpSound;
+                _audioPlayer.Play();
             }
 
             _isJumping = true;
@@ -307,6 +309,9 @@ namespace Cowball
 
         private void Shoot()
         {
+            _audioPlayer.Stream = _shootSound;
+            _audioPlayer.Play();
+
             var bullet = (Bullet)_bulletScene.Instantiate();
             var bulletSpawn = GetNode<Marker2D>("ArmGun/BulletSpawn");
             bullet.Position = bulletSpawn.GlobalPosition;
@@ -487,9 +492,9 @@ namespace Cowball
             _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
             _audioPlayer.VolumeDb = -18;
 
-            _jumpSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/jump.wav");
-            _shootSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/shoot.wav");
-            _hurtSound = GD.Load<AudioStreamWav>("res://Sounds/SFX/hurt.wav");
+            _jumpSound = GD.Load<AudioStreamWav>("res://Assets/Sounds/Player/jump.wav");
+            _shootSound = GD.Load<AudioStreamWav>("res://Assets/Sounds/Player/shoot.wav");
+            //_hurtSound = GD.Load<AudioStreamWav>("res://Assets/Sounds/Player/hurt.wav");
             //guitarHitSound = GD.Load<AudioStreamSample>("res://Sounds/SFX/guitar_hit.wav");
             //guitarMissSound = GD.Load<AudioStreamSample>("res://Sounds/SFX/guitar_miss.wav");
             GD.Print("Sounds");
