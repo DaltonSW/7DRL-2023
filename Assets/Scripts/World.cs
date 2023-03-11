@@ -16,6 +16,9 @@ namespace Cowball
         private State _state;
 
         private Player _player;
+
+        private bool _needToInstantiateLevelScene;
+        private PackedScene _levelScene;
         private Level _level;
 
         private PackedScene _itemScene;
@@ -34,10 +37,21 @@ namespace Cowball
             List<string> levelFilenames = LoadLevelFilenames();
             _randomLevelFilenames = CopyToShuffledQueue(levelFilenames);
 
-            _player = GetNode<Player>("Player");
+            // TODO: make test scenes independent of World script
+            //       so we don't have to branch here or have a _level field.
+            Level levelAlreadyInTree = GetNode<Level>("Level");
+            if (levelAlreadyInTree is not null)
+            {
+                _level = levelAlreadyInTree;
+                _needToInstantiateLevelScene = false;
+            }
+            else
+            {
+                _levelScene = LoadLevelScene(_randomLevelFilenames.Dequeue());
+                _needToInstantiateLevelScene = true;
+            }
 
-            // TODO: remove, load instead
-            _level = GetNode<Level>("Level");
+            _player = GetNode<Player>("Player");
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
             _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
@@ -54,6 +68,13 @@ namespace Cowball
             {
                 case State.LoadingLevel:
                     {
+                        if (_needToInstantiateLevelScene)
+                        {
+                            _level = _levelScene.Instantiate<Level>();
+                            AddChild(_level);
+                            MoveChild(_level, 0);
+                            _needToInstantiateLevelScene = false;
+                        }
                         SetUpLevel(_level);
                         _state = State.Playing;
                         break;
@@ -66,14 +87,14 @@ namespace Cowball
             }
         }
 
-        public Exit CreateExit(string nextLevelFilename, PackedScene nextLevelScene)
+        private Exit CreateExit(string nextLevelFilename, PackedScene nextLevelScene)
         {
             Exit exit = _exitScene.Instantiate<Exit>();
             exit.Initialize(nextLevelFilename, nextLevelScene);
             return exit;
         }
 
-        public void SetUpLevel(Level level)
+        private void SetUpLevel(Level level)
         {
             _player.SetCameraLimits(level.CameraBounds());
             _player.Position = level.PlayerSpawnPosition();
@@ -96,10 +117,15 @@ namespace Cowball
             for (int i = 0; i < n; i++)
             {
                 string levelFilename = _randomLevelFilenames.Dequeue();
-                PackedScene levelScene = ResourceLoader.Load<PackedScene>($"res://Assets/Levels/{levelFilename}.tscn");
+                PackedScene levelScene = LoadLevelScene(levelFilename);
                 randomLevels.Enqueue((levelFilename, levelScene));
             }
             return randomLevels;
+        }
+
+        private static PackedScene LoadLevelScene(string levelFilename)
+        {
+            return ResourceLoader.Load<PackedScene>($"res://Assets/Levels/{levelFilename}.tscn");
         }
 
         private void SpawnNodes(List<Vector2> spawnPoints, Func<Node2D> constructNode)
