@@ -14,7 +14,9 @@ namespace Cowball
             GameOver,
         }
         private State _state;
+        private AudioStreamPlayer _musicPlayer;
         private AudioStreamPlayer _audioPlayer;
+        private AudioStream _gameMusic;
         private AudioStream _pauseSound;
         private AudioStream _unpauseSound;
         private AudioStream _bossDeath;
@@ -64,13 +66,20 @@ namespace Cowball
             _youWin = GetNode<Sprite2D>("YouWin");
             _youLose = GetNode<Sprite2D>("YouLose");
 
-            _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
-            _audioPlayer.Autoplay = false;
-            _audioPlayer.VolumeDb = -5f;
-
             _pauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Pause.wav");
             _unpauseSound = GD.Load<AudioStream>("res://Assets/Sounds/Unpause.wav");
             _bossDeath = GD.Load<AudioStream>("res://Assets/Sounds/BossDefeated.wav");
+            _gameMusic = GD.Load<AudioStream>("res://Assets/Sounds/Game.wav");
+
+            _musicPlayer = GetNode<AudioStreamPlayer>("MusicPlayer");
+            _musicPlayer.Autoplay = true;
+            _musicPlayer.Stream = _gameMusic;
+            _musicPlayer.VolumeDb = -5f;
+            _musicPlayer.Play();
+
+            _audioPlayer = GetNode<AudioStreamPlayer>("AudioPlayer");
+            _audioPlayer.Autoplay = false;
+            _audioPlayer.VolumeDb = -5f;
 
             _itemScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Item.tscn");
             _exitScene = ResourceLoader.Load<PackedScene>("res://Assets/Scenes/Exit.tscn");
@@ -86,7 +95,7 @@ namespace Cowball
             {
                 if (_state == State.GameOver)
                 {
-                    // Load main menu
+                    GetTree().ChangeSceneToFile("res://Assets/Scenes/MainMenu.tscn");
                 }
                 if (GetTree().Paused)
                 {
