@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 
 namespace Cowball
 {
@@ -9,18 +8,26 @@ namespace Cowball
         private const string IdleAnim = "idle";
         private const string SquishAnim = "squish";
         private const string JumpAnim = "jump";
+        private const string DeathAnim = "death";
 
         private Random _random;
-
         private PackedScene _slimeScene;
-
         private AnimatedSprite2D _sprite;
+
+        // Health properties
+        [Export] private float _maxHealth = 100;
+        private float _currentHealth;
+
+        // Attack properties
         [Export] public int MinIdleLoopsBeforeJump = 4;
-        private int _idleLoopsCompleted;
         [Export] public int PercentChanceJump = 80;
+
+        // State properties
         private bool _isJumping;
         private bool _isFacingLeft;
         private bool _canFlip;
+        private int _idleLoopsCompleted;
+        private int _prevSpriteFrame;
 
         // Jump properties
         [Export] public float JumpHeight = 120; //pixels
@@ -44,12 +51,13 @@ namespace Cowball
 
             _random = new Random();
 
+            _currentHealth = _maxHealth;
+
             // Calculations from https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
             Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
             JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
 
             LoadCollisions();
-
         }
 
         private void LoadCollisions()
@@ -73,44 +81,44 @@ namespace Cowball
 
             CollisionPolygon2D[] idle =
             {
-            allZero,
-            idleOneFive,
-            idleTwoFour,
-            idleThree,
-            idleTwoFour,
-            idleOneFive
-        };
+                allZero,
+                idleOneFive,
+                idleTwoFour,
+                idleThree,
+                idleTwoFour,
+                idleOneFive
+            };
 
             CollisionPolygon2D[] jump =
             {
-            allZero,
-            jumpOne,
-            jumpTwo,
-            jumpThree,
-            jumpFour
-        };
+                allZero,
+                jumpOne,
+                jumpTwo,
+                jumpThree,
+                jumpFour
+            };
 
             CollisionPolygon2D[] squish =
             {
-            allZero,
-            squishOneEleven,
-            squishTwoTen,
-            squishThreeNine,
-            squishFourEight,
-            squishFiveSeven,
-            squishSix,
-            squishFiveSeven,
-            squishFourEight,
-            squishThreeNine,
-            squishTwoTen,
-            squishOneEleven
-        };
+                allZero,
+                squishOneEleven,
+                squishTwoTen,
+                squishThreeNine,
+                squishFourEight,
+                squishFiveSeven,
+                squishSix,
+                squishFiveSeven,
+                squishFourEight,
+                squishThreeNine,
+                squishTwoTen,
+                squishOneEleven
+            };
 
             CollisionPolygon2D[][] allCollisions = {
-            idle,
-            jump,
-            squish
-        };
+                idle,
+                jump,
+                squish
+            };
 
             _idleCollisions = idle;
             _jumpCollisions = jump;
@@ -127,10 +135,25 @@ namespace Cowball
 
         public override void _Process(double delta)
         {
-            if (!_sprite.IsPlaying()) return;
+            if (!_sprite.IsPlaying())
+            {
+                if (_sprite.Animation == DeathAnim)
+                {
+                    QueueFree();
+                }
+                return;
+            }
+            if (_sprite.Animation == DeathAnim)
+            {
+                return;
+            }
+            var frame = _sprite.Frame;
+            if (frame == _prevSpriteFrame) return;
 
             _currentCollision.Disabled = true;
-            var frame = _sprite.Frame;
+
+            _currentCollision.Visible = false;
+
             // ReSharper disable once ConvertSwitchStatementToSwitchExpression
             switch (_sprite.Animation)
             {
@@ -146,22 +169,26 @@ namespace Cowball
                     _currentCollision = _squishCollisions[frame];
                     break;
             }
-
             _currentCollision.Disabled = false;
+
+            _currentCollision.Visible = true;
         }
 
         public override void _PhysicsProcess(double delta)
         {
+            if (_sprite.Animation == DeathAnim)
+            {
+                return;
+            }
             var velocity = Velocity;
             velocity.Y += Gravity * (float)delta;
 
-            // Add the gravity.
             if (!IsOnFloor())
             {
                 if (IsOnWall() && _canFlip)
                 {
                     GD.Print("WALL");
-                    velocity.X *= -1;
+                    // velocity.X *= -1;
                     _canFlip = false;
                     _isFacingLeft = !_isFacingLeft;
                     _sprite.FlipH = !_sprite.FlipH;
@@ -172,12 +199,10 @@ namespace Cowball
             {
                 if (_isJumping)
                 {
-                    velocity.X = 0;
                     _isJumping = false;
                     _sprite.Play(IdleAnim);
                     _idleLoopsCompleted = 0;
                 }
-
             }
 
             if (_sprite.Animation == IdleAnim) // if idle anim...
@@ -221,7 +246,38 @@ namespace Cowball
             }
 
             Velocity = velocity;
-            MoveAndSlide();
+
+            var collision = MoveAndCollide(Velocity * (float)delta);
+            if (collision == null) return;
+            //if (collision.GetCollider().IsClass("Slime")) return;
+            var normal = collision.GetNormal();
+            if (normal == Vector2.Up)
+            {
+                if (_isJumping)
+                {
+                    _isJumping = false;
+                    _sprite.Play(IdleAnim);
+                    _idleLoopsCompleted = 0;
+                    // Shoot(); // If we want a "hard mode" thing where he shoots twice per boing
+                }
+                Velocity = new Vector2(0, 0);
+                _canFlip = true;
+            }
+
+            else if (normal == Vector2.Left || normal == Vector2.Right)
+            {
+                if (!_canFlip) return;
+                _isFacingLeft = !_isFacingLeft;
+                _sprite.FlipH = !_sprite.FlipH;
+                _canFlip = false;
+                Velocity = Velocity.Bounce(normal);
+            }
+
+            else
+            {
+                Velocity = Velocity.Bounce(normal);
+            }
+
         }
 
         private Vector2 Jump(Vector2 velocity)
@@ -230,22 +286,29 @@ namespace Cowball
             _canFlip = true;
             var dir = _isFacingLeft ? -1 : 1;
             return new Vector2(velocity.X + JumpSpeedHoriz * dir, velocity.Y - JumpSpeed);
-
-            // Shoot out projectiles in a circle around you
-            // Maybe shoot projectiles when you land as well, as a difficulty setting?
-
         }
 
         private void Shoot()
         {
-            foreach (Marker2D point in GetTree().GetNodesInGroup("slimeSpawns"))
+            foreach (var node in GetTree().GetNodesInGroup("slimeSpawns"))
             {
+                var point = (Marker2D)node;
                 var newSlime = (Slime)_slimeScene.Instantiate();
                 newSlime.GlobalPosition = point.GlobalPosition;
                 newSlime.GlobalRotation = point.GlobalRotation;
-                //newSlime.SetRotation(Rotation);
                 GetParent().AddChild(newSlime);
             }
+        }
+
+        public float GetHealthPercent() { return _currentHealth / _maxHealth * 100; }
+
+        public void TakeDamage(float damage)
+        {
+            _currentHealth -= damage;
+
+            if (_currentHealth > 0) return;
+            _sprite.Play(DeathAnim);
+            _currentCollision.Disabled = true;
         }
     }
 }

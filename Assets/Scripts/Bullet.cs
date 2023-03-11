@@ -5,7 +5,7 @@ namespace Cowball
     public partial class Bullet : Area2D
     {
 
-        [Export] public float Damage = 7.5F;
+        [Export] public float Damage = 100F;
 
         [Export] private int _speed = 700;
         [Export] private int _spread = 5;
@@ -28,6 +28,15 @@ namespace Cowball
             {
                 FreeBullet();
             }
+        }
+
+        public void OnBodyEntered(Node2D node)
+        {
+            if (!node.IsInGroup("boss")) return;
+            var boss = (SlimeBoss)node;
+            boss.TakeDamage(Damage);
+            GD.Print("Pow");
+            QueueFree();
         }
 
         private void FreeBullet()

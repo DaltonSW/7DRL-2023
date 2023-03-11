@@ -13,7 +13,6 @@ namespace Cowball
 
         #region Properties
         // Constants
-        [Export] private float _maxHealth = 5;
         private const float InvincibilityBuffer = 0.5F;
         private const int SpriteScale = 1;
 
@@ -64,8 +63,10 @@ namespace Cowball
         private bool _canSlide;
 
         // Health
-        private float _currentHealth;
+        [Export] public float MaxHealth = 5;
+        public float CurrentHealth;
         private float _currentInvincibility;
+        private PlayerHealth _healthHUD;
 
         // Shooting
         [Export] public double FireRate = 0.6;
@@ -124,6 +125,9 @@ namespace Cowball
             JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
 
             _items = new List<Item>();
+
+            CurrentHealth = MaxHealth;
+            _healthHUD = GetNode<PlayerHealth>("../PlayerHealth");
 
             // Set Project gravity at runtime
             PhysicsServer2D.AreaSetParam(GetViewport().FindWorld2D().Space, PhysicsServer2D.AreaParameter.Gravity, Gravity);
@@ -208,7 +212,6 @@ namespace Cowball
                 }
             }
 
-
             if (_shotCooldown == 0)
             {
                 if (shoot)
@@ -224,8 +227,6 @@ namespace Cowball
                 if (_shotCooldown >= FireRate) _shotCooldown = 0;
             }
 
-
-
             velocity.X = Mathf.MoveToward(velocity.X, 0, Friction);
 
             Velocity = velocity;
@@ -237,9 +238,6 @@ namespace Cowball
             base._Process(delta);
 
             _armGunNode.Rotation = _ballSprite.GetAngleTo(GetGlobalMousePosition());
-
-            // Animation checking / changing
-            // Timer countdowns and resets (invincibility, shooting cooldown, etc)
         }
 
         #region Movement Methods
@@ -248,11 +246,6 @@ namespace Cowball
             if (IsOnFloor())
             {
                 velocity.Y = -jumpSpeed;
-            }
-
-            else if (IsOnWall())
-            {
-                // Do wall jump, if we even have one
             }
 
             _isJumping = true;
@@ -326,7 +319,7 @@ namespace Cowball
             switch (newItem.StatToChange)
             {
                 case StatToChange.Health:
-                    _currentHealth += (int)newItem.AmountToChange;
+                    AddHealth();
                     break;
 
                 case StatToChange.Speed:
@@ -334,7 +327,7 @@ namespace Cowball
                     break;
 
                 case StatToChange.FireRate:
-                    // We'll need a shot cooldown
+                    FireRate += (float)newItem.AmountToChange;
                     break;
 
                 case StatToChange.JumpSpeed:
@@ -347,19 +340,50 @@ namespace Cowball
             }
         }
 
+        public void AddHealth()
+        {
+            CurrentHealth += 1;
+            _healthHUD.AddHeart();
+        }
+
         public void OnAreaEntered(Area2D area)
         {
-            if (!area.IsInGroup("items")) return;
-            var item = area.GetParent<Item>();
-            item.QueueFree();
+            if (area.IsInGroup("items"))
+            {
+                var item = area.GetParent<Item>();
+                item.QueueFree();
+                return;
+            }
+
+            if (area.IsInGroup("enemy"))
+            {
+                DamagePlayer(0.5F);
+            }
         }
 
-
-        public void RecalcPhysics()
+        public void OnBodyEntered(Node2D node)
         {
-            Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
-            JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
+            if (node.IsInGroup("enemy"))
+            {
+                DamagePlayer(0.5F);
+            }
         }
+
+        public void DamagePlayer(float damage)
+        {
+            CurrentHealth -= damage;
+            if (CurrentHealth <= 0)
+            {
+                QueueFree();
+            }
+        }
+
+
+        // public void RecalcPhysics()
+        // {
+        //     Gravity = (float)(JumpHeight / (2 * Math.Pow(TimeInAir, 2)));
+        //     JumpSpeed = (float)Math.Sqrt(2 * JumpHeight * Gravity);
+        // }
 
         public void KillPlayer()
         {
@@ -381,7 +405,7 @@ namespace Cowball
         {
             _animatedSprite.Play("fall_death");
             Die();
-            Tween tween = GetTree().CreateTween();
+            var tween = GetTree().CreateTween();
             var endPosition = new Vector2(Position.X, Position.Y + 200);
             tween.TweenProperty(this, "position", endPosition, .3f)
                 .SetTrans(Tween.TransitionType.Linear)
@@ -397,7 +421,7 @@ namespace Cowball
 
         public void HealPlayer()
         {
-            _currentHealth = _maxHealth;
+            CurrentHealth = MaxHealth;
             _healthSprite.Frame = 5;
         }
 
@@ -407,11 +431,11 @@ namespace Cowball
             {
                 _currentInvincibility = 0.016667F;
                 CycleTransparency(false);
-                _currentHealth--;
-                _healthSprite.Frame = (int)_currentHealth;
+                CurrentHealth--;
+                _healthSprite.Frame = (int)CurrentHealth;
                 _audioPlayer.Stream = _hurtSound;
                 _audioPlayer.Play();
-                if (_currentHealth == 0)
+                if (CurrentHealth == 0)
                 {
                     KillPlayer();
                 }

@@ -4,16 +4,19 @@
 [ext_resource type="Script" path="res://Assets/Scripts/Bullet.cs" id="1_xqopv"]
 
 [sub_resource type="CircleShape2D" id="1"]
-radius = 4.0
+radius = 6.0
 
-[node name="Bullet" type="Area2D"]
+[node name="Bullet" type="Area2D" groups=["playerBullet"]]
+process_mode = 1
 rotation = 1.5708
 script = ExtResource("1_xqopv")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("1")
-
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="Sprite" type="Sprite2D" parent="." groups=["playerBullet"]]
 rotation = 1.5708
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_h81ro")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["playerBullet"]]
+shape = SubResource("1")
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]

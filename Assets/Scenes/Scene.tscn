@@ -1,11 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://vgqhm30mywma"]
+[gd_scene load_steps=7 format=3 uid="uid://vgqhm30mywma"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.cs" id="1_4h4w2"]
 [ext_resource type="PackedScene" uid="uid://dwxkex5p0wqqo" path="res://Assets/Levels/Level.tscn" id="1_lc5sq"]
 [ext_resource type="PackedScene" uid="uid://8qr26ydkrbdo" path="res://Assets/Scenes/Player.tscn" id="2_fkqyy"]
 [ext_resource type="PackedScene" uid="uid://ccgnyywbhh5sv" path="res://Assets/Scenes/Enemies/SlimeBoss.tscn" id="4_kpmc1"]
+[ext_resource type="PackedScene" uid="uid://d0r1wadg5l20h" path="res://Assets/Scenes/PlayerHealth.tscn" id="5_o48m7"]
+[ext_resource type="PackedScene" uid="uid://c17rlpy0bqcle" path="res://Assets/Scenes/Enemies/BossHealth.tscn" id="6_v8dml"]
 
 [node name="World" type="Node2D"]
+process_mode = 3
+position = Vector2(-1, 0)
 script = ExtResource("1_4h4w2")
 
 [node name="Level" parent="." instance=ExtResource("1_lc5sq")]
@@ -15,6 +19,16 @@ position = Vector2(284, 496)
 scale = Vector2(2, 2)
 
 [node name="SlimeBoss" parent="." instance=ExtResource("4_kpmc1")]
-position = Vector2(580, 366)
+position = Vector2(767, 395)
 MinIdleLoopsBeforeJump = 1
 PercentChanceJump = 100
+
+[node name="PlayerHealth" parent="." instance=ExtResource("5_o48m7")]
+scale = Vector2(2, 2)
+transform = Transform2D(2, 0, 0, 2, 0, 0)
+
+[node name="BossHealth" parent="." instance=ExtResource("6_v8dml")]
+offset_left = 842.0
+offset_top = 8.0
+offset_right = 882.0
+offset_bottom = 48.0

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6iu5vg0jsoed"
-path="res://.godot/imported/16x Heart.png-758a8ec0d28b6e811b6d302ca0456590.ctex"
+uid="uid://vm4idtpo4446"
+path="res://.godot/imported/Spiked Head.png-55494969d53d6009f6e96661f886931c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/HUD/16x Heart.png"
-dest_files=["res://.godot/imported/16x Heart.png-758a8ec0d28b6e811b6d302ca0456590.ctex"]
+source_file="res://Assets/Sprites/Enemies/Spiked Head.png"
+dest_files=["res://.godot/imported/Spiked Head.png-55494969d53d6009f6e96661f886931c.ctex"]
 
 [params]
 

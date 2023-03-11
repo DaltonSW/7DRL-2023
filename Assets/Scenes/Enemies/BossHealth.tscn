@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://c17rlpy0bqcle"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/BossHealth.cs" id="1_wibcg"]
+[ext_resource type="Texture2D" uid="uid://cyl3evdaf0xoj" path="res://Assets/Sprites/HUD/BossUnder.png" id="2_trfb8"]
+[ext_resource type="Texture2D" uid="uid://d1ktfr2muhe82" path="res://Assets/Sprites/HUD/BossOver.png" id="3_bp1p4"]
+[ext_resource type="Texture2D" uid="uid://btf5j8gnai72n" path="res://Assets/Sprites/HUD/BossProgress.png" id="3_x6kia"]
+
+[node name="BossHealth" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_wibcg")
+
+[node name="Bar" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 32.0
+value = 70.0
+texture_under = ExtResource("2_trfb8")
+texture_over = ExtResource("3_bp1p4")
+texture_progress = ExtResource("3_x6kia")

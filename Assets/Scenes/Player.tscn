@@ -142,7 +142,10 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_57f4n"]
 radius = 8.0
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+process_mode = 1
+collision_layer = 3
+collision_mask = 3
 script = ExtResource("1_wxbm8")
 
 [node name="ArmGun" type="Node2D" parent="."]
@@ -177,7 +180,8 @@ position = Vector2(-0.5, -9)
 texture = ExtResource("8_ru85m")
 
 [node name="Area2D" type="Area2D" parent="."]
-visible = false
+collision_layer = 3
+collision_mask = 3
 
 [node name="InteractionPolygon" type="CollisionPolygon2D" parent="Area2D"]
 polygon = PackedVector2Array(8, -2, 7, -2, 7, -4, 6, -4, 6, -5, 5, -5, 5, -6, 4, -6, 4, -7, 2, -7, 2, -8, -2, -8, -2, -7, -4, -7, -4, -6, -5, -6, -5, -5, -6, -5, -6, -4, -7, -4, -7, -2, -8, -2, -8, 2, -7, 2, -7, 4, -6, 4, -6, 5, -5, 5, -5, 6, -4, 6, -4, 7, -2, 7, -2, 8, 2, 8, 2, 7, 4, 7, 4, 6, 5, 6, 5, 5, 6, 5, 6, 4, 7, 4, 7, 2, 8, 2)
@@ -187,3 +191,4 @@ position = Vector2(0, -57)
 limit_smoothed = true
 
 [connection signal="area_entered" from="Area2D" to="." method="OnAreaEntered"]
+[connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]

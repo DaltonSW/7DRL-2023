@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6iu5vg0jsoed"
-path="res://.godot/imported/16x Heart.png-758a8ec0d28b6e811b6d302ca0456590.ctex"
+uid="uid://btj0pfh6u0ncc"
+path="res://.godot/imported/BossProgressWithBorder.png-e922019e7bef3b8f244c538bd5ee3309.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/HUD/16x Heart.png"
-dest_files=["res://.godot/imported/16x Heart.png-758a8ec0d28b6e811b6d302ca0456590.ctex"]
+source_file="res://Assets/Sprites/HUD/BossProgressWithBorder.png"
+dest_files=["res://.godot/imported/BossProgressWithBorder.png-e922019e7bef3b8f244c538bd5ee3309.ctex"]
 
 [params]
 
