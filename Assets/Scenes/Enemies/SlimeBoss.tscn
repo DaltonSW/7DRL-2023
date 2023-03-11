@@ -20,7 +20,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_00bh1"]
 radius = 67.0075
 
-[node name="SlimeBoss" type="CharacterBody2D" groups=["boss", "enemy", "root_enemy"]]
+[node name="SlimeBoss" type="CharacterBody2D" groups=["boss", "root_enemy"]]
 process_mode = 1
 script = ExtResource("1_hp5hd")
 
