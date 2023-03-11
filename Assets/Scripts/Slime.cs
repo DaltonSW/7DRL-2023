@@ -14,7 +14,10 @@ namespace Cowball
         [Export] private int _speed = 500;
         [Export] private int _spread = 15;
         [Export] private int _allowedBounces = 5;
+        [Export] private float disappearTime = 0.15F;
         private int _currentBounces;
+        private bool _isDisappearing;
+        private double _disappearTimeRemaining;
 
         public override void _Ready()
         {
@@ -27,6 +30,17 @@ namespace Cowball
 
         public override void _Process(double delta)
         {
+            if (_isDisappearing)
+            {
+                _disappearTimeRemaining -= delta;
+                Modulate = new Color(1, 1, 1, (float)(_disappearTimeRemaining / disappearTime));
+                if (_disappearTimeRemaining < 0)
+                {
+                    QueueFree();
+                }
+                return;
+            }
+
             var collision = MoveAndCollide(Velocity * (float)delta);
 
 
@@ -37,7 +51,7 @@ namespace Cowball
                 {
                     var player = (Player)collision.GetCollider();
                     player.DamagePlayer(Damage);
-                    QueueFree();
+                    FreeSlime();
                 }
                 Velocity = Velocity.Bounce(collision.GetNormal());
                 _currentBounces += 1;
@@ -46,10 +60,14 @@ namespace Cowball
             _sprite.GlobalRotation = 0;
             if (_currentBounces >= _allowedBounces)
             {
-                QueueFree();
+                FreeSlime();
             }
         }
 
-
+        private void FreeSlime()
+        {
+            _isDisappearing = true;
+            _disappearTimeRemaining = disappearTime;
+        }
     }
 }

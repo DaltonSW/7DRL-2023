@@ -60,7 +60,7 @@ namespace Cowball
             if (!area.IsInGroup("playerBullet")) return;
             var bullet = (Bullet)area;
             TakeDamage(bullet.Damage);
-            area.QueueFree();
+            bullet.FreeBullet();
         }
 
         private void TakeDamage(float damage)
