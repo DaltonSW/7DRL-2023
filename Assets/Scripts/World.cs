@@ -5,42 +5,163 @@ using System.Collections.Generic;
 
 namespace Cowball
 {
+    /// <summary>
+    /// A top-level node for managing a single run of the game.
+    /// <para/>
+    /// Manages:
+    /// <list type="number">
+    ///   <item>
+    ///     Loading and populating levels as specified by the level scenes.
+    ///     This includes loading the set of possible items and populating 
+    ///     the levels with items.
+    ///   </item>
+    ///   <item>
+    ///     Loading and playing all audio.
+    ///   </item>
+    ///   <item>
+    ///     The run's state: loading the next level, playing, paused, won, or lost.
+    ///     These states mainly change whether the player has control over the game.
+    ///   </item>
+    ///   <item>
+    ///     Random number generation.
+    ///   </item>
+    /// </list>
+    /// </summary>
     public partial class World : Node2D
     {
+        /// <summary>
+        /// A state of a run.
+        /// </summary>
         private enum State
         {
+            /// <summary>
+            /// The game is loading the next level.
+            /// </summary>
             LoadingLevel,
+
+            /// <summary>
+            /// The player is in control of the player character and playing a level.
+            /// </summary>
             Playing,
+
+            /// <summary>
+            /// The run is over and the player can no longer control the player character.
+            /// The player has won or lost the run.
+            /// </summary>
             GameOver,
         }
+
+        /// <summary>
+        /// The state of the run.
+        /// </summary>
         private State _state;
+
+        /// <summary>
+        /// The audio player for music.
+        /// </summary>
         private AudioStreamPlayer _musicPlayer;
+
+        /// <summary>
+        // TODO: I think each player can only play one sound at once.
+        //       We need a different audio player for each sound that
+        //       we want to play simultaneously.
+        //       Should consider just defaulting to one player per sound effect.
+        /// The audio player for sound effects.
+        /// </summary>
         private AudioStreamPlayer _audioPlayer;
+
+        /// <summary>
+        /// The game music.
+        /// </summary>
         private AudioStream _gameMusic;
+        
+        /// <summary>
+        /// The sound played when the run becomes paused.
+        /// </summary>
         private AudioStream _pauseSound;
+
+        /// <summary>
+        /// The sound played when the run stops being paused.
+        /// </summary>
         private AudioStream _unpauseSound;
+
+        /// <summary>
+        /// The sound played when the slime boss dies.
+        /// </summary>
         private AudioStream _bossDeath;
 
+        /// <summary>
+        /// The player character.
+        /// </summary>
         private Player _player;
+
+        /// <summary>
+        /// The slime boss, if it is present in the level, otherwise null.
+        /// </summary>
         private SlimeBoss _boss;
 
+        /// <summary>
+        /// The overlay displayed when the player wins the run.
+        /// </summary>
         private Sprite2D _youWin;
+
+        /// <summary>
+        /// The overlay displayed when the player loses the run.
+        /// </summary>
         private Sprite2D _youLose;
 
+        /// <summary>
+        /// Whether the level must be instantiated from the packed scene
+        /// `_levelScene` in order to load it.
+        /// If false, the level is already present as a child of this node.
+        /// </summary>
         private bool _needToInstantiateLevelScene;
+
+        /// <summary>
+        /// Stores a packed level scene before it is instantiated.
+        /// If `_state` is `LoadingLevel` AND `_needToInstantiateLevelScene`,
+        /// this scene is instantiated and added as a child.
+        /// </summary>
         private PackedScene _levelScene;
+
+        /// <summary>
+        /// The current level, at least if `_state` is `Playing`.
+        /// </summary>
         private Level _level;
 
+        /// <summary>
+        /// The generic Item scene.
+        /// Must be instantiated then initialized to create items.
+        /// </summary>
         private PackedScene _itemScene;
+
+        /// <summary>
+        /// The generic Exit scene.
+        /// Must be instantiated then initialized to create exits.
+        /// </summary>
         private PackedScene _exitScene;
 
+        /// <summary>
+        /// The random number generator for the run.
+        /// </summary>
         private Random _rng;
 
+        /// <summary>
+        /// The boss level scene. 
+        /// </summary>
         private PackedScene _bossLevelScene;
+        
+        /// <summary>
+        /// A queue of all the levels which can be used in the run, shuffled.
+        /// Used to draw random levels to populate the exits in each level.
+        /// </summary>
         private Queue<string> _randomLevelFilenames;
-        private Queue<(string, PackedScene)> _nextLevels;
 
-        private int _enemiesLeftInLevel;
+        /// <summary>
+        /// A queue of all the levels which have been drawn for the exits
+        /// in the current level.
+        /// </summary>
+        private Queue<(string, PackedScene)> _nextLevels;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -139,6 +260,17 @@ namespace Cowball
             }
         }
 
+        /// <summary>
+        /// A "pseudo-constructor" for an Exit.
+        /// Instantiates a node from `_exitScene`
+        /// and initializes it with additional data it requires.
+        /// Does not add the node as a child,
+        /// so if you consider `_Ready` as part of the construction,
+        /// this doesn't cover that part.
+        /// </summary>
+        /// <param name="nextLevelFilename">The filename of the level to associate with the Exit.</param>
+        /// <param name="nextLevelScene">The packed scene of the level to associate with the Exit.</param>
+        /// <returns>The new Exit.</returns>
         private Exit CreateExit(string nextLevelFilename, PackedScene nextLevelScene)
         {
             Exit exit = _exitScene.Instantiate<Exit>();
@@ -146,17 +278,25 @@ namespace Cowball
             return exit;
         }
 
+        /// <summary>
+        /// Spawn random elements of the level such as items and exits,
+        /// set up the player based on the nodes present in the given Level,
+        /// and connect signals from nodes present in the level.
+        /// </summary>
+        /// <param name="level">The level to set up.</param>
         private void SetUpLevel(Level level)
         {
+            // Set up the player based on the level's specifications.
             _player.SetCameraLimits(level.CameraBounds());
             _player.Position = level.PlayerSpawnPosition();
             _player.SetSpawn(level.PlayerSpawnPosition());
 
+            // Spawn random items at each spawn point.
             Queue<ItemParams> itemPool = CopyToShuffledQueue(ITEM_POOL);
             SpawnNodesInLevel(level, level.ItemSpawnPoints, () => CreateItem(itemPool.Dequeue()));
 
-            GD.Print(_randomLevelFilenames.Count);
-            GD.Print(level.ExitSpawnPoints.Count);
+            // Set `_nextLevels` based on number of exits.
+            // If low on levels, use the Boss level for all `_nextLevels`.
             if (_randomLevelFilenames.Count - 4 < level.ExitSpawnPoints.Count)
             {
                 var bossLevels =
@@ -166,9 +306,11 @@ namespace Cowball
             }
             else
             {
+                // Otherwise, load random levels.
                 _nextLevels = TakeAndLoadLevelsFromPool(level.ExitSpawnPoints.Count);
             }
 
+            // Connect enemy signals.
             var enemies = FindEnemies();
             foreach (var enemy in enemies)
             {
@@ -180,14 +322,29 @@ namespace Cowball
                 boss.Connect("BossKilled", Callable.From(() => OnBossDeath(boss)));
             }
 
+            // If there are no enemies in the level, spawn the exits immediately.
             SpawnExitsIfNoEnemiesRemain(null);
         }
 
+        // TODO: cast to Enemy once we have a common interface for them?
+        /// <summary>
+        /// Get all the current enemy Nodes.
+        /// </summary>
+        /// <returns>An Array of the current enemy Nodes.</returns>
         private Godot.Collections.Array<Node> FindEnemies()
         {
             return GetTree().GetNodesInGroup("root_enemy");
         }
 
+        /// <summary>
+        /// Spawn the exits to the current level if no enemies remain.
+        /// <para/>
+        /// This method is set to be called on every enemy's death (see `OnEnemyDied`).
+        /// An enemy is not immediately removed from the tree when it dies,
+        /// so `OnEnemyDied` passes the enemy that just died to this method.
+        /// If that enemy is the only one remaining in the tree, the exits still spawn.
+        /// </summary>
+        /// <param name="enemy">An enemy that is in the process of dying, if any.</param>
         private void SpawnExitsIfNoEnemiesRemain(Node enemy)
         {
             var enemies = FindEnemies();
@@ -201,11 +358,21 @@ namespace Cowball
             }
         }
 
+        /// <summary>
+        /// Should be called every time an enemy dies.
+        /// </summary>
+        /// <param name="enemy">The enemy that died.</param>
         private void OnEnemyDied(Node enemy)
         {
             SpawnExitsIfNoEnemiesRemain(enemy);
         }
 
+        /// <summary>
+        /// Remove levels from the level pool, then load their corresponding scenes.
+        /// Return the levels and scenes that were removed and loaded.
+        /// </summary>
+        /// <param name="n">The number of levels to remove and load.</param>
+        /// <returns>A Queue of corresponding levels and loaded scenes.</returns>
         private Queue<(string, PackedScene)> TakeAndLoadLevelsFromPool(int n)
         {
             var randomLevels = new Queue<(string, PackedScene)>();
@@ -218,11 +385,24 @@ namespace Cowball
             return randomLevels;
         }
 
+        /// <summary>
+        /// Load the scene for a level.
+        /// </summary>
+        /// <param name="levelFilename">The filename of the level within the level folder.</param>
+        /// <returns>The scene.</returns>
         private static PackedScene LoadLevelScene(string levelFilename)
         {
             return ResourceLoader.Load<PackedScene>($"res://Assets/Levels/{levelFilename}.tscn");
         }
 
+        /// <summary>
+        /// Given a level and its spawn points, at each spawn point
+        /// generates a new node with the given constructor and adds
+        /// the node as a child of the level.
+        /// </summary>
+        /// <param name="level">The level to populate.</param>
+        /// <param name="spawnPoints">The positions where nodes will be spawned.</param>
+        /// <param name="constructNode">A function which returns unique nodes each time it is called.</param>
         private void SpawnNodesInLevel(Level level, List<Vector2> spawnPoints, Func<Node2D> constructNode)
         {
             foreach (Vector2 spawnPoint in spawnPoints)
@@ -233,6 +413,10 @@ namespace Cowball
             }
         }
 
+        /// <summary>
+        /// Should be called when a boss dies.
+        /// </summary>
+        /// <param name="boss">The boss that died.</param>
         private void OnBossDeath(Node boss)
         {
             _audioPlayer.Stream = _bossDeath;
@@ -242,6 +426,9 @@ namespace Cowball
             _state = State.GameOver;
         }
 
+        /// <summary>
+        /// Should be called when the player dies.
+        /// </summary>
         private void OnPlayerDeath()
         {
             GetTree().Paused = true;
@@ -249,6 +436,10 @@ namespace Cowball
             _state = State.GameOver;
         }
 
+        /// <summary>
+        /// The unique parameters of every item in the game.
+        /// Specifies which items will be used to populate the levels.
+        /// </summary>
         private static ItemParams[] ITEM_POOL =
             {
                 new ItemParams("Soylent", "Soylent", StatToChange.Health, 1),
@@ -262,6 +453,10 @@ namespace Cowball
                 new ItemParams("Lead Underwear", "Lead Underwear", StatToChange.Health, 1),
             };
 
+        /// <summary>
+        /// Load the list of all level filenames.
+        /// </summary>
+        /// <returns>The list of level filenames.</returns>
         private static List<string> LoadLevelFilenames()
         {
             // `using` closes the file when `file` goes out of scope.
@@ -278,12 +473,31 @@ namespace Cowball
             return levelFilenames;
         }
 
-        private Queue<T> CopyToShuffledQueue<T>(IEnumerable<T> list)
+        /// <summary>
+        /// Copy and shuffle all the elements of the given enumerable
+        /// and return them in a `Queue`. The given enumerable is not modified.
+        /// </summary>
+        /// <typeparam name="T">The enumerable's elements' type.</typeparam>
+        /// <param name="enumerable">An enumerable.</param>
+        /// <returns>A new queue containing copies of all the elements of `enumerable`, shuffled.</returns>
+        private Queue<T> CopyToShuffledQueue<T>(IEnumerable<T> enumerable)
         {
-            List<T> shuffledList = list.OrderBy(_ => _rng.Next()).ToList();
+            // TODO: try just passing the result of `OrderBy` to the `Queue`
+            //       constructor. Pretty sure there's no reason to collect in a `List`.
+            List<T> shuffledList = enumerable.OrderBy(_ => _rng.Next()).ToList();
             return new Queue<T>(shuffledList);
         }
 
+        /// <summary>
+        /// A "pseudo-constructor" for an Item.
+        /// Instantiates a node from `_itemScene`
+        /// and initializes it with additional data it requires.
+        /// Does not add the node as a child,
+        /// so if you consider `_Ready` as part of the construction,
+        /// this doesn't cover that part.
+        /// </summary>
+        /// <param name="itemParams">The argument to `Item::initialize`.</param>
+        /// <returns>The new item.</returns>
         private Item CreateItem(ItemParams itemParams)
         {
             Item item = _itemScene.Instantiate<Item>();
@@ -291,6 +505,10 @@ namespace Cowball
             return item;
         }
 
+        /// <summary>
+        /// Load the next level from the given exit.
+        /// </summary>
+        /// <param name="exit">An exit.</param>
         public void LoadNextLevel(Exit exit)
         {
             // Return other levels to pool
@@ -303,7 +521,10 @@ namespace Cowball
                 _randomLevelFilenames.Enqueue(otherLevel);
             }
 
+            // Queue the current level to be freed at the next tick.
             _level.QueueFree();
+            
+            // Prepare the next level to be loaded at the next tick.
             _state = State.LoadingLevel;
             _levelScene = exit.NextLevelScene;
             _needToInstantiateLevelScene = true;
