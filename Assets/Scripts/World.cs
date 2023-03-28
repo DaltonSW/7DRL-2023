@@ -49,6 +49,11 @@ namespace Cowball
             /// The player has won or lost the run.
             /// </summary>
             GameOver,
+
+            /// <summary>
+            /// The run is paused.
+            /// </summary>
+            Paused,
         }
 
         /// <summary>
@@ -216,27 +221,6 @@ namespace Cowball
         public override void _Process(double delta)
         {
             var pausing = Input.IsActionJustPressed("Pause");
-            if (pausing)
-            {
-                if (_state == State.GameOver)
-                {
-                    GetTree().ChangeSceneToFile("res://Assets/Scenes/MainMenu.tscn");
-                }
-                if (GetTree().Paused)
-                {
-                    _audioPlayer.Stream = _unpauseSound;
-                    _audioPlayer.Play();
-                }
-                else
-                {
-                    _audioPlayer.Stream = _pauseSound;
-                    _audioPlayer.Play();
-                }
-
-                GetTree().Paused = !GetTree().Paused;
-
-            }
-
             switch (_state)
             {
                 case State.LoadingLevel:
@@ -254,10 +238,40 @@ namespace Cowball
                     }
                 case State.Playing:
                     {
-                        // Do nothing
+                        if (pausing) {
+                            PlaySound(_pauseSound);
+                            GetTree().Paused = true;
+                            _state = State.Paused;
+                        }
+                        break;
+                    }
+                case State.Paused:
+                    {
+                        if (pausing) { // TODO: maybe assign new action for "unpause"
+                            PlaySound(_unpauseSound);
+                            GetTree().Paused = false;
+                            _state = State.Playing;
+                        }
+                        break;
+                    }
+                case State.GameOver:
+                    {
+                        if (pausing) { // TODO: assign new action for "return," probably to same button
+                            GetTree().ChangeSceneToFile("res://Assets/Scenes/MainMenu.tscn");
+                        }
                         break;
                     }
             }
+        }
+
+        /// <summary>
+        /// Play a sound with the World sound effect audio player.
+        /// </summary>
+        /// <param name="sound">The sound to play.</param>
+        private void PlaySound(AudioStream sound)
+        {
+            _audioPlayer.Stream = sound;
+            _audioPlayer.Play();
         }
 
         /// <summary>
@@ -419,8 +433,7 @@ namespace Cowball
         /// <param name="boss">The boss that died.</param>
         private void OnBossDeath(Node boss)
         {
-            _audioPlayer.Stream = _bossDeath;
-            _audioPlayer.Play();
+            PlaySound(_bossDeath);
             GetTree().Paused = true;
             _youWin.Visible = true;
             _state = State.GameOver;
